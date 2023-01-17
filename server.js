@@ -42,7 +42,11 @@ mongoose.connect(
 
 var cors = require('cors')
 
-app.use(cors())
+var corsOptions = {
+    origin: 'https:/lokman5er.github.io'
+}
+
+app.use(cors(corsOptions))
 
 
 
