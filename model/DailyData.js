@@ -17,6 +17,10 @@ const DailyDataSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    sunrise: {
+        type: String,
+        required: true
+    },
     dhuhr: {
         type: String,
         required: true

@@ -446,6 +446,7 @@ async function fetchMonthlyData(urlPara, highestDate) {
             date: createMongooseDate(element.gregorianDateShort),
             gregorianDateShort: element.gregorianDateShort,
             fajr: element.fajr,
+            sunrise: element.sunrise,
             dhuhr: element.dhuhr,
             asr: element.asr,
             maghrib: element.maghrib,
