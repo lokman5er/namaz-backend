@@ -386,9 +386,9 @@ app.get('/api/getDailyData', async (req, res) => {
         const highestDate = result.sort((a, b) => b.date - a.date)[0]
 
         // Check if the highest date is within 30 days of today's date
-        const thirtyDaysFromToday = new Date()
-        thirtyDaysFromToday.setDate(thirtyDaysFromToday.getDate() + 30)
-        if (!highestDate || highestDate.date < thirtyDaysFromToday) {
+        const twentyDaysFromToday = new Date()
+        twentyDaysFromToday.setDate(twentyDaysFromToday.getDate() + 20)
+        if (!highestDate || highestDate.date < twentyDaysFromToday) {
             // The next 30 days are not in the database, so fetch the data from the API
             await fetchMonthlyData(urlPara, highestDate)
         }
@@ -409,8 +409,10 @@ app.get('/api/getDailyData', async (req, res) => {
 
 const requestPromise = util.promisify(request)
 var myAccessToken = ''
+
 async function fetchMonthlyData(urlPara, highestDate) {
 
+    console.log("new daily date requested")
     const optionsLogin = {
         method: 'POST',
         url: 'https://awqatsalah.diyanet.gov.tr/Auth/Login',
