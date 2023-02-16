@@ -12,7 +12,6 @@ const UserSchema = new mongoose.Schema({
     },
     urlPara: {
         type: String,
-        unique: true,
         required: true
     },
     token: {
