@@ -1,0 +1,28 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 775.92 228.35">
+   <defs>
+        <style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900');</style>
+        <style type="text/css">@font-face {font-family: "Hafs"; src: url("/hafs.otf");font-weight: normal;}</style>
+      <style id="style" >.cls-1{fill:#2c7291;}.cls-2{fill:url(#linear-gradient);}.cls-3{fill:url(#linear-gradient-2);}.cls-4{fill:#1f5260;}</style>
+      <linearGradient id="linear-gradient" x1="-2062.93" y1="-2667.97" x2="-2063.02" y2="-2445.02" gradientTransform="translate(3593.03 954.87) rotate(-36.02)" gradientUnits="userSpaceOnUse">
+         <stop offset="0" stop-color="#083640"/>
+         <stop offset="0.81" stop-color="#083640" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="linear-gradient-2" x1="294.13" y1="93.89" x2="427.86" y2="16.68" gradientUnits="userSpaceOnUse">
+         <stop id="stop1" offset="0" stop-color="#2c7291"/>
+         <stop id="stop2" offset="1" stop-color="#1f5260"/>
+      </linearGradient>
+   </defs>
+   <rect id="s1" fill="#2c7291"   x="386.98" width="388.94" height="108.21"/>
+   <path id="s2" fill="url(#linear-gradient)"   d="M431,22.29h0A54.11,54.11,0,0,0,343.5,85.93h0l91.2,142.42,103.69-75.41Z"/>
+   <path id="s3" fill="url(#linear-gradient-2)"   d="M441.09,54.11A54.16,54.16,0,0,0,373.47,1.7h0L277.15,27.38,325.94,149l86.35-47,1-.55.23-.12h0A54.08,54.08,0,0,0,441.09,54.11Z"/>
+   <path id="s4" fill="#1f5260"   d="M277.15,27.38,300,21.29c-.7,0-1.39-.05-2.09-.05H70a66,66,0,0,0,0,132H297.92a65.77,65.77,0,0,0,27.35-5.94Z"/>
+   <path id="s1" fill="#2c7291"  d="M293.92,25.24c-.46,0-.9,0-1.35,0H67.36c-.45,0-.9,0-1.35,0a66,66,0,0,0,0,132h0v0H293.9v0h0a66,66,0,0,0,0-132Z"/>
+   <text id="tr" text-anchor="middle" dominant-baseline="middle" x="180" y="97" font-size="5em" fill="white" font-weight="bold" opacity="1" class="text" style="font-family: Montserrat, sans-serif">AKŞAM</text> 
+   <text id="ar" text-anchor="middle" dominant-baseline="middle" x="180" y="97" font-size="5em" fill="white" font-weight="bold" opacity="0" class="text" style="font-family: Hafs">المغرب</text> 
+   <text id="de" text-anchor="middle" dominant-baseline="middle" x="180" y="97" font-size="5em" fill="white" font-weight="bold" opacity="0" class="text" style="font-family: Montserrat, sans-serif; font-size: 3.7em">ABENDS</text> 
+   <text text-anchor="middle" x="535" y="80" font-size="4.5em" fill="white" font-weight="normal" class="hour1 time" style="font-family: Montserrat, sans-serif">0</text> 
+   <text text-anchor="middle" x="582" y="80" font-size="4.5em" fill="white" font-weight="normal" class="hour2 time" style="font-family: Montserrat, sans-serif">0</text> 
+   <text x="610" y="75" font-size="4.5em" fill="white" font-weight="normal" class="time" style="font-family: Montserrat, sans-serif">:</text> 
+   <text text-anchor="middle" x="653" y="80" font-size="4.5em" fill="white" font-weight="normal" class="minute1 time" style="font-family: Montserrat, sans-serif">0</text> 
+   <text text-anchor="middle" x="701" y="80" font-size="4.5em" fill="white" font-weight="normal" class="minute2 time" style="font-family: Montserrat, sans-serif">0</text> 
+</svg>

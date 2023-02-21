@@ -23,6 +23,7 @@
     "htmlparser2": "^8.0.1",
     "jsdom": "^20.0.3",
     "jsonwebtoken": "^8.5.1",
+    "mime": "^3.0.0",
     "moment": "^2.29.4",
     "moment-hijri": "^2.1.2",
     "mongoose": "^6.7.5",

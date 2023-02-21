@@ -51,6 +51,15 @@ app.use(cors())
 app.use('/', express.static(path.join(__dirname, 'static')))
 app.use(bodyParser.json())
 
+app.use(express.static(path.join(__dirname, 'frontend')));
+
+app.get('/', function (req, res) {
+    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+});
+
+app.get('/duyuru', function (req, res) {
+    res.sendFile(path.join(__dirname, 'frontend', 'admin.html'));
+});
 
 app.post('/api/register', async (req, res) => {
     const { username, password: plainTextPassword, urlPara, apiKey } = req.body
@@ -355,7 +364,17 @@ app.get('/api/check-token', async (req, res) => {
 });
 
 app.get('/api/getAllAnnouncements', async (req, res) => {
-    const urlPara = req.query.urlPara
+
+    const username = req.query.urlPara
+
+    const user = await User.findOne({
+        username
+    })
+
+    if (!user) return res.json({ status: 'error', error: 'No user found in DB' })
+
+    const urlPara = user.urlPara
+
     try {
         // Find all announcements whose endDate is greater than or equal to today at midnight
         const today = new Date()
@@ -608,6 +627,7 @@ async function fetchAndSaveDailyData(urlPara, highestDate) {
         });
     })
 }
+
 
 // app.post('/api/extend-token', async (req, res) => {
 //     const { token } = req.body;
