@@ -258,6 +258,9 @@ const dateHicri = document.querySelector('.dateHicri');
 const monthHicri = document.querySelector('.monthHicri');
 const yearHicri = document.querySelector('.yearHicri');
 
+const point1 = document.querySelector('#p1');
+const point2 = document.querySelector('#p2');
+
 
 function convertToArabic(number) {
     const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
@@ -353,11 +356,14 @@ function updateTimes() {
     hijriRaw.push(convertToArabic(hijriRaw[0]))
     //ramadan is true
     if (hijriRaw[1] == '9') {
+        point1.style.display = 'none';
+
         isRamadan = true;
         yearHicri.style.display = 'none'
         dateHicri.innerHTML = 'Ramazan'
         monthHicri.innerHTML = hijriRaw[0]
     } else {
+        point1.style.display = 'block';
         dateHicri.innerHTML = (parseInt(hijriRaw[0]) < 10) ? `0${hijriRaw[0]}` : hijriRaw[0]
         monthHicri.innerHTML = (parseInt(hijriRaw[1]) < 10) ? `0${hijriRaw[1]}` : hijriRaw[1]
         yearHicri.innerHTML = hijriRaw[2]
@@ -869,6 +875,27 @@ const changeLanguage = (language) => {
             .delay(50)
             .style("opacity", "1");
 
+
+        if (language === "ar") {
+
+            d3.select(point2)
+                .transition()
+                .duration(1000)
+                .style("opacity", "0")
+
+
+        } else {
+
+            d3.select(point2)
+                .transition()
+                .duration(1000)
+                .style("opacity", "0")
+                .transition()
+                .duration(1000)
+                .delay(50)
+                .style("opacity", "1");
+        }
+
     }
 
     setTimeout(() => {
@@ -903,10 +930,6 @@ const changeLanguage = (language) => {
 
             infoTitle.style.fontFamily = 'Hafs'
 
-            // namazText.forEach((text) => {
-            //     text.setAttribute('style', 'font-family: Hafs')
-            // });
-
             importantDate1Text.style.fontStyle = 'normal'
             importantDate2Text.style.fontStyle = 'normal'
 
@@ -929,10 +952,6 @@ const changeLanguage = (language) => {
             }
 
             infoTitle.style.fontFamily = "'Montserrat', sans-serif"
-            // namazText.forEach((text) => {
-            //     text.setAttribute('style', 'font-family: Montserrat, sans-serif')
-            // });
-
             importantDate1Text.style.fontStyle = 'italic'
             importantDate2Text.style.fontStyle = 'italic'
 
@@ -950,11 +969,14 @@ const changeLanguage = (language) => {
                 dateHicri.fontFamily = 'Hafs'
                 dateHicri.innerHTML = hijriRaw[3]
 
+                point1.style.display = 'none'
+                point2.style.display = 'none'
             } else if (language === "de") {
                 monthHicri.innerHTML = hijriRaw[0]
                 dateHicri.innerHTML = 'RAMADAN'
                 monthHicri.fontFamily = "'Montserrat', sans-serif"
                 dateHicri.fontFamily = "'Montserrat', sans-serif"
+                point2.style.display = 'block'
 
             } else {
                 dateHicri.innerHTML = 'RAMAZAN'
