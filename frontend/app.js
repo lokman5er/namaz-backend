@@ -966,7 +966,7 @@ const changeLanguage = (language) => {
             if (language === "ar") {
                 monthHicri.innerHTML = "رمضان"
                 monthHicri.style.fontFamily = 'Hafs'
-                dateHicri.style.fontFamily = 'Hafs'
+                // dateHicri.style.fontFamily = 'Hafs'
                 dateHicri.innerHTML = hijriRaw[3]
 
                 point1.style.display = 'none'
@@ -975,7 +975,7 @@ const changeLanguage = (language) => {
                 monthHicri.innerHTML = hijriRaw[0]
                 dateHicri.innerHTML = 'RAMADAN'
                 monthHicri.style.fontFamily = "'Montserrat', sans-serif"
-                dateHicri.style.fontFamily = "'Montserrat', sans-serif"
+                // dateHicri.style.fontFamily = "'Montserrat', sans-serif"
                 point2.style.display = 'block'
 
             } else {
