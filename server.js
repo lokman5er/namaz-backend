@@ -23,6 +23,9 @@ const PORT = process.env.PORT
 
 const app = express()
 
+mongoose.set('strictQuery', false);
+
+// noinspection JSUnresolvedFunction
 mongoose.connect(
     //`mongodb+srv://${MONGODB_CREDENTIALS}@namazapp.ccw7t1d.mongodb.net/?retryWrites=true&w=majority`,
     `mongodb+srv://${MONGODB_CREDENTIALS}@namazwork.3gpx1eu.mongodb.net/?retryWrites=true&w=majority`,
@@ -41,13 +44,9 @@ mongoose.connect(
     }
 );
 
-var cors = require('cors')
-
-
+const cors = require('cors');
 
 app.use(cors())
-
-
 
 app.use('/', express.static(path.join(__dirname, 'static')))
 app.use(bodyParser.json())
@@ -128,20 +127,21 @@ app.post('/api/change-password', async (req, res) => {
     }
 
 
+    let _id;
     try {
-        const user = await User.findOne({ urlPara })
+        const user = await User.findOne({urlPara})
         _id = user.id
 
         const password = await bcrypt.hash(newpassword, 12)
 
         await User.updateOne(
-            { _id },
+            {_id},
             {
-                $set: { password }
+                $set: {password}
             })
-        res.json({ status: 'ok' })
+        res.json({status: 'ok'})
     } catch (error) {
-        res.json({ status: 'error', error: 'try harder' })
+        res.json({status: 'error', error: 'try harder'})
     }
 
 })
@@ -408,7 +408,9 @@ app.get('/api/getDailyData', async (req, res) => {
         const result = await DailyData.find({
             urlPara,
             date: { $gte: today }
-        })
+        }).lean()
+
+        result.get('date')
 
         // Get the highest date in the result
         const highestDate = result.sort((a, b) => b.date - a.date)[0]
@@ -434,7 +436,7 @@ app.get('/api/getDailyData', async (req, res) => {
 })
 
 const requestPromise = util.promisify(request)
-var myAccessToken = ''
+let myAccessToken = '';
 
 async function fetchMonthlyData(urlPara, highestDate) {
 
@@ -450,8 +452,8 @@ async function fetchMonthlyData(urlPara, highestDate) {
         })
     };
 
-    const responseLogin = await requestPromise(optionsLogin)
-    loginBody = JSON.parse(responseLogin.body)
+    const responseLogin = await requestPromise(optionsLogin,null)
+    let loginBody = JSON.parse(responseLogin.body)
     myAccessToken = loginBody.data.accessToken
     const optionsMonthlyData = {
         method: 'GET',
@@ -462,9 +464,9 @@ async function fetchMonthlyData(urlPara, highestDate) {
         }
     };
 
-    const responseMonthlyData = await requestPromise(optionsMonthlyData);
+    const responseMonthlyData = await requestPromise(optionsMonthlyData,null);
     const monthlyBody = JSON.parse(responseMonthlyData.body);
-    var monthlyData = []
+    const monthlyData = [];
     monthlyBody.data.forEach(element => {
         monthlyData.push({
             urlPara: urlPara,
@@ -476,14 +478,13 @@ async function fetchMonthlyData(urlPara, highestDate) {
             asr: element.asr,
             maghrib: element.maghrib,
             isha: element.isha,
-            shapeMoon: getMoon(element.shapeMoonUrl),
-            hijriDate: element.hijriDateShort
+            shapeMoon: getMoon(element["shapeMoonUrl"]),
+            hijriDate: element["hijriDateShort"]
         })
     })
 
-
-    // If there is no highest date (i.e., this is the first time this function is being called)
     if (!highestDate) {
+        // (i.e., this is the first time this function is being called)
         await saveData(monthlyData)
             .then(() => {
                 console.log("Data saved successfully!")
@@ -492,7 +493,7 @@ async function fetchMonthlyData(urlPara, highestDate) {
                 console.log("Error saving data: ", error)
             });
     } else if (highestDate) {
-        // If there is a highest date, filter the data to only include data with a date greater than the highest date
+        // only include data with a date greater than the highest date
         const filteredData = monthlyData.map(datum => {
             if (datum.date > highestDate.date) {
                 return datum
@@ -502,14 +503,11 @@ async function fetchMonthlyData(urlPara, highestDate) {
         // Save the filtered data to the database
         await saveData(filteredData)
     }
-
-
-
 }
 
 function getMoon(url) {
-    var regex = /http:\/\/namazvakti\.diyanet\.gov\.tr\/images\/(.*?)\.gif/;
-    var match = url.match(regex);
+    const regex = /http:\/\/namazvakti\.diyanet\.gov\.tr\/images\/(.*?)\.gif/;
+    const match = url.match(regex);
     if (match) {
         return match[1];
     }
@@ -521,7 +519,7 @@ function createMongooseDate(input) {
     const day = parseInt(dateComponents[0]);
     const month = parseInt(dateComponents[1]) - 1;
     const year = parseInt(dateComponents[2]);
-    var date = new Date(Date.UTC(year, month, day));
+    const date = new Date(Date.UTC(year, month, day));
     date.setUTCHours(0);
     date.setUTCMinutes(0);
     date.setUTCSeconds(0);
@@ -538,128 +536,3 @@ async function saveData(data) {
         return false
     }
 }
-
-//old methode to grab prayerData
-async function fetchAndSaveDailyData(urlPara, highestDate) {
-    // Set the headers for the request to the Diyanet API
-    const headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Max-Age': '3600',
-        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'
-    };
-
-    // Build the URL for the request to the Diyanet API
-    const url = `https://namazvakitleri.diyanet.gov.tr/de-DE/${urlPara}`;
-
-    // Return a new Promise that resolves or rejects based on the success or failure of the request
-    return new Promise((resolve, reject) => {
-        // Make the request to the Diyanet API
-        request(url, { headers }, (error, response, html) => {
-            // If the request was successful (status code 200)
-            if (!error && response.statusCode === 200) {
-                // Use cheerio to parse the HTML response
-                const $ = cheerio.load(html)
-
-                // Find the table in the HTML with the prayer times
-                const table = $('#tab-1 tbody tr')
-
-                // Initialize an empty array to store the data
-                const data = []
-
-                // For each row in the table
-                table.each((i, elem) => {
-                    // Find the cells in the row
-                    const cells = $(elem).find('td')
-
-                    // Push an object with the data from the cells to the data array
-                    data.push({
-                        urlPara: urlPara,
-                        date: new Date(cells.eq(0).text().split('.').reverse().join('-')),
-                        imsak: cells.eq(1).text(),
-                        guenes: cells.eq(2).text(),
-                        oegle: cells.eq(3).text(),
-                        ikindi: cells.eq(4).text(),
-                        aksam: cells.eq(5).text(),
-                        yatsi: cells.eq(6).text()
-                    })
-                })
-
-                // If there is no highest date (i.e., this is the first time this function is being called)
-                if (!highestDate) {
-                    // Save all of the data to the database
-                    DailyData.create(data, (error) => {
-                        // If there was an error saving the data
-                        if (error) {
-                            // Log the error and reject the Promise
-                            console.log(error)
-                            reject(error)
-                        } else {
-                            // Otherwise, resolve the Promise
-                            resolve()
-                        }
-                    })
-                } else if (highestDate) {
-                    // If there is a highest date, filter the data to only include data with a date greater than the highest date
-                    const filteredData = data.map(datum => {
-                        if (datum.date > highestDate.date) {
-                            return datum
-                        }
-                    }).filter(datum => datum !== undefined)
-
-                    // Save the filtered data to the database
-                    DailyData.create(filteredData, (error) => {
-                        // If there was an error saving the data
-                        if (error) {
-                            // Log the error and reject the Promise
-                            console.log(error)
-                            reject(error)
-                        } else {
-                            // Otherwise, resolve the Promise
-                            resolve()
-                        }
-                    })
-                }
-            } else {
-                // If the request was not successful, reject the Promise with the error
-                reject(error)
-            }
-        });
-    })
-}
-
-
-// app.post('/api/extend-token', async (req, res) => {
-//     const { token } = req.body;
-
-//     if (!token) {
-//         return res.json({ status: 'error' })
-//     }
-
-//     // Check if token is expired
-//     const decodedToken = jwt.decode(token, { complete: true });
-//     if (decodedToken.payload.exp < Date.now() / 1000) {
-//         return res.json({ status: 'expired' })
-//     }
-
-//     try {
-//         // Verify the token and get the user ID
-//         const { id } = jwt.verify(token, JWT_SECRET);
-
-//         // Find the user in the database
-//         const user = await User.findById(id);
-//         if (!user) throw new Error('Invalid token');
-
-//         // Generate a new token with an expiration date of 60 minutes in the future
-//         const newToken = jwt.sign({ id }, JWT_SECRET, { expiresIn: '60m' });
-
-//         // Update the user's token in the database
-//         await User.findByIdAndUpdate(id, { token: newToken });
-
-//         return res.json({ status: 'ok', data: newToken });
-//     } catch (error) {
-//         console.error(error);
-//         return res.json({ status: 'error', error: 'Invalid token' });
-//     }
-// });
