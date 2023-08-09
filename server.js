@@ -24,7 +24,8 @@ const PORT = process.env.PORT
 const app = express()
 
 mongoose.connect(
-    `mongodb+srv://${MONGODB_CREDENTIALS}@namazapp.ccw7t1d.mongodb.net/?retryWrites=true&w=majority`,
+    //`mongodb+srv://${MONGODB_CREDENTIALS}@namazapp.ccw7t1d.mongodb.net/?retryWrites=true&w=majority`,
+    `mongodb+srv://${MONGODB_CREDENTIALS}@namazwork.3gpx1eu.mongodb.net/?retryWrites=true&w=majority`,
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -662,5 +663,3 @@ async function fetchAndSaveDailyData(urlPara, highestDate) {
 //         return res.json({ status: 'error', error: 'Invalid token' });
 //     }
 // });
-
-

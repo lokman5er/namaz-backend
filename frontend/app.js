@@ -1,10 +1,9 @@
-
 const serverUrl = "https://namaz-backend.herokuapp.com"
 
-var now = new Date();
+let now = new Date();
 
-var todaysAnnouncement;
-var todayIsAnAnnouncement;
+let todaysAnnouncement;
+let todayIsAnAnnouncement;
 
 
 function getDateString(date) {
@@ -15,20 +14,19 @@ function getDateString(date) {
 }
 
 Date.prototype.withoutTime = function () {
-    var d = new Date(this);
+    const d = new Date(this);
     d.setHours(0, 0, 0, 0);
     return d;
 }
 
-var todayWithoutTime = getDateString(now);
-
+getDateString(now);
 const url = window.location.search;
 const urlParams = new URLSearchParams(url);
 let urlPara = urlParams.get('urlPara');
 urlPara = urlPara === '11023' ? 'muenster' : urlPara
 
 
-var initalRun = true;
+let initalRun = true;
 
 const infoTitle = document.querySelector('.l-4-1 ')
 const infoText = document.querySelector('.l-4-2')
@@ -38,9 +36,9 @@ infoText.innerHTML = ""
 
 const infobox = [infoTitle, infoText, infoSource]
 
-var todaysKnowledge;
-var todaysKnowledgeArray;
-var todaysKnowledgeSourceArabic;
+let todaysKnowledge;
+let todaysKnowledgeArray;
+let todaysKnowledgeSourceArabic;
 
 function getVersesOrHadiths() {
     fetch("versesAndHadiths.json")
@@ -48,23 +46,23 @@ function getVersesOrHadiths() {
         .then(json => {
             todaysKnowledgeArray = json
             todaysKnowledge = json[now.getDate() - 1]
-            infoTitle.innerHTML = prayerLng == 0 ? infoTitleLanguages[todaysKnowledge['type']]['tr'] : prayerLng == 1 ? infoTitleLanguages[todaysKnowledge['type']]['ar'] : infoTitleLanguages[todaysKnowledge['type']]['de']
-            infoText.innerHTML = prayerLng == 0 ? todaysKnowledge['tr'] : prayerLng == 1 ? todaysKnowledge['ar'] : todaysKnowledge['de']
+            infoTitle.innerHTML = prayerLng === 0 ? infoTitleLanguages[todaysKnowledge['type']]['tr'] : prayerLng === 1 ? infoTitleLanguages[todaysKnowledge['type']]['ar'] : infoTitleLanguages[todaysKnowledge['type']]['de']
+            infoText.innerHTML = prayerLng === 0 ? todaysKnowledge['tr'] : prayerLng === 1 ? todaysKnowledge['ar'] : todaysKnowledge['de']
 
 
-            var sourceNumbers = todaysKnowledge['source'].match(/\d+/g).map(Number);
+            const sourceNumbers = todaysKnowledge['source'].match(/\d+/g).map(Number);
             todaysKnowledgeSourceArabic = `[${convertToArabic(sourceNumbers[0])}:${convertToArabic(sourceNumbers[1])}]`
 
             infoSource.innerHTML = todaysKnowledge['source']
 
-            infoSource.innerHTML = prayerLng == 1 ? todaysKnowledgeSourceArabic : todaysKnowledge['source']
+            infoSource.innerHTML = prayerLng === 1 ? todaysKnowledgeSourceArabic : todaysKnowledge['source']
 
             autoSizeText();
         })
 }
 
 
-var announcements = []
+let announcements = [];
 
 function getAllAnnouncements() {
     fetch(`${serverUrl}/api/getAllAnnouncements?urlPara=${urlPara}`)
@@ -92,14 +90,14 @@ function updateInfobox() {
     infoSource.style.display = 'block'
     if (announcements.length > 0) {
 
-        var todayWithoutTime = getDateString(now);
+        const todayWithoutTime = getDateString(now);
 
         if (announcements[0]['startDate'] <= todayWithoutTime && announcements[0]['endDate'] >= todayWithoutTime) {
             //announcement for today, show announcement
             todayIsAnAnnouncement = true;
             todaysAnnouncement = announcements[0]['text']
             infoTitle.innerText = prayerLng === 1 ? "رسالة" : prayerLng === 0 ? "DUYURU" : "MITTEILUNG";
-            infoText.innerText = prayerLng == 0 ? todaysAnnouncement['tr'] : prayerLng === 1 ? todaysAnnouncement['ar'] : todaysAnnouncement['de']
+            infoText.innerText = prayerLng === 0 ? todaysAnnouncement['tr'] : prayerLng === 1 ? todaysAnnouncement['ar'] : todaysAnnouncement['de']
             infoSource.style.display = 'none'
 
         } else {
@@ -113,33 +111,31 @@ function updateInfobox() {
     }
 }
 
-var nextPrayer;
+let nextPrayer;
 
 function getCurrentPrayer() {
     // Get current time
-    var currentHours = now.getHours();
+    let currentHours = now.getHours();
     currentHours = currentHours < 10 ? "0" + currentHours : currentHours;
-    var currentMinutes = now.getMinutes();
+    let currentMinutes = now.getMinutes();
     currentMinutes = currentMinutes < 10 ? "0" + currentMinutes : currentMinutes;
-    var currentTime = currentHours + ":" + currentMinutes;
+    const currentTime = currentHours + ":" + currentMinutes;
 
     // Find the next prayer by looping through the prayer times
 
-    for (var i = 0; i < todaysPrayerTimes.length; i++) {
+    for (let i = 0; i < todaysPrayerTimes.length; i++) {
 
         if (currentTime < todaysPrayerTimes[i] || i === todaysPrayerTimes.length - 1) {
             if (i === todaysPrayerTimes.length - 1 && currentTime > todaysPrayerTimes[i]) {
                 animateSvg(5);
                 nextPrayer = 0;
 
-            }
-            else if (i === todaysPrayerTimes.length - 1 && currentTime < todaysPrayerTimes[i]) {
+            } else if (i === todaysPrayerTimes.length - 1 && currentTime < todaysPrayerTimes[i]) {
                 animateSvg(4);
                 nextPrayer = 5;
                 //error
 
-            }
-            else {
+            } else {
                 animateSvg(i === 0 ? 5 : i - 1);
                 nextPrayer = i
             }
@@ -168,8 +164,6 @@ function updateCountdown(startTime, endTime) {
 }
 
 
-
-
 // needed to start in exact second
 setTimeout(function () {
 
@@ -177,28 +171,30 @@ setTimeout(function () {
 
 }, (60000 - now.getMilliseconds() - now.getSeconds() * 1000))
 
-var interval = 60000;
-var adjustedInterval = interval;
-var expectedCycleTime = 0;
+const interval = 60000;
+let adjustedInterval = interval;
+let expectedCycleTime = 0;
+
+let hours;
+let timeNow;
 
 function runEveryMinute() {
-    var now2 = Date.now()
+    const now2 = Date.now();
 
     updateClock();
 
     checkIfNextPrayer();
 
     if (nextPrayer === 0 && hours > parseInt(todaysPrayerTimes[nextPrayer].substring(0, 2))) {
-        endTime2 = monthlyData[monthlyDataPointer + 1]['fajr']
+        let endTime2 = monthlyData[monthlyDataPointer + 1]['fajr']
         updateCountdown(timeNow, endTime2)
     } else {
         updateCountdown(timeNow, todaysPrayerTimes[nextPrayer])
     }
 
-    if (expectedCycleTime == 0) {
+    if (expectedCycleTime === 0) {
         expectedCycleTime = now2 + interval;
-    }
-    else {
+    } else {
         adjustedInterval = interval - (now2 - expectedCycleTime);
         expectedCycleTime += interval;
     }
@@ -209,8 +205,11 @@ function runEveryMinute() {
     }, adjustedInterval);
 }
 
-var hours, minutes;
-var timeNow;
+let minutes;
+
+
+//function to show important dates
+let importantDates;
 
 function updateClock() {
     now = new Date();
@@ -228,8 +227,7 @@ function updateClock() {
     timeNow = `${hours}:${minutes}`
 
 
-
-    if (hours == "00" && minutes == "00") {
+    if (hours === "00" && minutes === "00") {
         // new day
         fontSizeImportantDatesTr = 'n'
         fontSizeImportantDatesAr = 'n'
@@ -244,7 +242,7 @@ function updateClock() {
             fetchMonthlyData();
         }, 10000)
 
-    } else if (minutes == "00") {
+    } else if (minutes === "00") {
         getAllAnnouncements();
     }
 }
@@ -277,57 +275,53 @@ const moonDirection = ["dolunay", "d1", "d2", "d3", "d4", "d5", "d6", "d65", "d7
 
 // ictima und ruyet beide mit yeniAy ersetzen
 
-const moonElements = [
-    document.querySelector('.moon1'),
-    document.querySelector('.moon2'),
-    document.querySelector('.moon3'),
-    document.querySelector('.moon4'),
-    document.querySelector('.moon5')]
+const moonElements = [document.querySelector('.moon1'), document.querySelector('.moon2'), document.querySelector('.moon3'), document.querySelector('.moon4'), document.querySelector('.moon5')]
 
 function updateMoonSvgs() {
-    var moonUrlToday = monthlyData[monthlyDataPointer]['shapeMoon']
+
+    let moonUrlToday = monthlyData[monthlyDataPointer]['shapeMoon'];
+
+    const moonIndex3 = moonDirection.indexOf(moonUrlToday);
 
     if (moonUrlToday === "ictima" || moonUrlToday === 'ruyet') {
         moonUrlToday = 'yeniAy'
-        var moonIndex3 = moonDirection.indexOf(moonUrlToday)
-    } else {
-        var moonIndex3 = moonDirection.indexOf(moonUrlToday)
     }
 
     moonElements[2].setAttribute('src', `images/moons/${moonUrlToday}.svg`)
 
-    var moonIndex2 = (moonIndex3 - 1 + moonDirection.length) % moonDirection.length
+    const moonIndex2 = (moonIndex3 - 1 + moonDirection.length) % moonDirection.length;
     moonElements[1].setAttribute('src', `images/moons/${moonDirection[moonIndex2]}.svg`)
 
-    var moonIndex1 = (moonIndex3 - 2 + moonDirection.length) % moonDirection.length
+    const moonIndex1 = (moonIndex3 - 2 + moonDirection.length) % moonDirection.length;
     moonElements[0].setAttribute('src', `images/moons/${moonDirection[moonIndex1]}.svg`)
 
-    var moonIndex4 = (moonIndex3 + 1) % moonDirection.length
+    const moonIndex4 = (moonIndex3 + 1) % moonDirection.length;
     moonElements[3].setAttribute('src', `images/moons/${moonDirection[moonIndex4]}.svg`)
 
-    var moonIndex5 = (moonIndex3 + 2) % moonDirection.length
+    const moonIndex5 = (moonIndex3 + 2) % moonDirection.length;
     moonElements[4].setAttribute('src', `images/moons/${moonDirection[moonIndex5]}.svg`)
 }
 
-var todaysPrayerTimes = []
-var isRamadan = false;
-var hijriRaw;
+let todaysPrayerTimes = [];
+let isRamadan = false;
+let hijriRaw;
+
 function updateTimes() {
     isRamadan = false;
-    yearHicri.style.display = 'visible'
+    yearHicri.style.display = 'visible';
 
     let day = now.getDate() < 10 ? '0' + now.getDate() : now.getDate();
-    let month = (now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : now.getMonth + 1
+    let month = (now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : now.getMonth + 1;
     let year = now.getFullYear();
-    let targetDate = `${day}.${month}.${year}`
-    monthlyDataPointer = monthlyData.findIndex(element => element.gregorianDateShort === targetDate)
+    let targetDate = `${day}.${month}.${year}`;
+    monthlyDataPointer = monthlyData.findIndex(element => element.gregorianDateShort === targetDate);
 
-    imsakRaw = monthlyData[monthlyDataPointer]['fajr'];
-    gunesRaw = monthlyData[monthlyDataPointer]['sunrise'];
-    ogleRaw = monthlyData[monthlyDataPointer]['dhuhr'];
-    ikindiRaw = monthlyData[monthlyDataPointer]['asr'];
-    aksamRaw = monthlyData[monthlyDataPointer]['maghrib'];
-    yatsiRaw = monthlyData[monthlyDataPointer]['isha'];
+    let imsakRaw = monthlyData[monthlyDataPointer]['fajr'];
+    let gunesRaw = monthlyData[monthlyDataPointer]['sunrise'];
+    let ogleRaw = monthlyData[monthlyDataPointer]['dhuhr'];
+    let ikindiRaw = monthlyData[monthlyDataPointer]['asr'];
+    let aksamRaw = monthlyData[monthlyDataPointer]['maghrib'];
+    let yatsiRaw = monthlyData[monthlyDataPointer]['isha'];
 
     // imsakRaw = '19:20';
     // gunesRaw = '19:25';
@@ -336,10 +330,10 @@ function updateTimes() {
     // aksamRaw = '15:33';
     // yatsiRaw = '19:22';
 
-    todaysPrayerTimes = []
+    todaysPrayerTimes = [];
     todaysPrayerTimes.push(imsakRaw, gunesRaw, ogleRaw, ikindiRaw, aksamRaw, yatsiRaw);
 
-    updateMoonSvgs()
+    updateMoonSvgs();
 
     updateTimeSvg(imsakSVG, imsakRaw);
     updateTimeSvg(gunesSVG, gunesRaw);
@@ -348,14 +342,14 @@ function updateTimes() {
     updateTimeSvg(aksamSVG, aksamRaw);
     updateTimeSvg(yatsiSVG, yatsiRaw);
 
-    dateNormal.innerText = day
+    dateNormal.innerText = day;
     monthNormal.innerHTML = month;
-    yearNormal.innerHTML = year
+    yearNormal.innerHTML = year;
 
     hijriRaw = monthlyData[monthlyDataPointer]['hijriDate'].split('.');
     hijriRaw.push(convertToArabic(hijriRaw[0]))
     //ramadan is true
-    if (hijriRaw[1] == '9') {
+    if (hijriRaw[1] === '9') {
         point1.style.display = 'none';
 
         isRamadan = true;
@@ -369,7 +363,7 @@ function updateTimes() {
         yearHicri.innerHTML = hijriRaw[2]
     }
 
-};
+}
 
 function updateTimeSvg(el, raw) {
     el.querySelector('.hour1').innerHTML = raw.substring(0, 1)
@@ -384,82 +378,38 @@ const timeLeftAfter = document.querySelector(".timeLeft-after");
 
 
 const countdownTextArr = [{
-    tr: 'İMSAKA KALAN SÜRE:',
-    de: 'VERBLEIBENDE ZEIT BIS ZUM MORGENSG.:',
-    ar: 'الوقت المتبقي لصلاة الفجر',
-},
-{
-    tr: 'GÜNEŞE KALAN SÜRE:',
-    de: 'VERBLEIBENDE ZEIT BIS ZUM SONNENA.:',
-    ar: 'الوقت المتبقي لشروق الشمس',
-},
-{
-    tr: 'ÖĞLEYE KALAN SÜRE:',
-    de: 'VERBLEIBENDE ZEIT BIS ZUM MITTAGSG.:',
-    ar: 'الوقت المتبقي لصلاة الظهر',
-},
-{
-    tr: 'İKİNDİYE KALAN SÜRE:',
-    de: 'VERBLEIBENDE ZEIT BIS ZUM NACHM.:',
-    ar: 'الوقت المتبقي لصلاة العصر',
-},
-{
-    tr: 'AKŞAMA KALAN SÜRE:',
-    de: 'VERBLEIBENDE ZEIT BIS ZUM ABENDSG.:',
-    ar: 'الوقت المتبقي لصلاة المغرب',
-},
-{
-    tr: 'YATSIYE KALAN SÜRE:',
-    de: 'VERBLEIBENDE ZEIT BIS ZUM NACHTSG.:',
-    ar: 'الوقت المتبقي لصلاة العشاء',
-},
-];
+    tr: 'İMSAKA KALAN SÜRE:', de: 'VERBLEIBENDE ZEIT BIS ZUM MORGENSG.:', ar: 'الوقت المتبقي لصلاة الفجر',
+}, {
+    tr: 'GÜNEŞE KALAN SÜRE:', de: 'VERBLEIBENDE ZEIT BIS ZUM SONNENA.:', ar: 'الوقت المتبقي لشروق الشمس',
+}, {
+    tr: 'ÖĞLEYE KALAN SÜRE:', de: 'VERBLEIBENDE ZEIT BIS ZUM MITTAGSG.:', ar: 'الوقت المتبقي لصلاة الظهر',
+}, {
+    tr: 'İKİNDİYE KALAN SÜRE:', de: 'VERBLEIBENDE ZEIT BIS ZUM NACHM.:', ar: 'الوقت المتبقي لصلاة العصر',
+}, {
+    tr: 'AKŞAMA KALAN SÜRE:', de: 'VERBLEIBENDE ZEIT BIS ZUM ABENDSG.:', ar: 'الوقت المتبقي لصلاة المغرب',
+}, {
+    tr: 'YATSIYE KALAN SÜRE:', de: 'VERBLEIBENDE ZEIT BIS ZUM NACHTSG.:', ar: 'الوقت المتبقي لصلاة العشاء',
+},];
 
-const prayerNames = [
-    {
-        tr: "İMSAK",
-        de: "MORGENS",
-        ar: "الإمساك"
-    },
-    {
-        tr: "GÜNEŞ",
-        de: "SONNENA.",
-        ar: "الأيام الدينة"
-    },
-    {
-        tr: "ÖĞLE",
-        de: "MITTAGS",
-        ar: "الظهر"
-    },
-    {
-        tr: "İKİNDİ",
-        de: "NACHM.",
-        ar: "العصر"
-    },
-    {
-        tr: "AKŞAM",
-        de: "ABENDS",
-        ar: "المغرب"
-    },
-    {
-        tr: "YATSI",
-        de: "NACHTS",
-        ar: "العشاء"
-    }
-]
+// const prayerNames = [{
+//     tr: "İMSAK", de: "MORGENS", ar: "الإمساك"
+// }, {
+//     tr: "GÜNEŞ", de: "SONNENA.", ar: "الأيام الدينة"
+// }, {
+//     tr: "ÖĞLE", de: "MITTAGS", ar: "الظهر"
+// }, {
+//     tr: "İKİNDİ", de: "NACHM.", ar: "العصر"
+// }, {
+//     tr: "AKŞAM", de: "ABENDS", ar: "المغرب"
+// }, {
+//     tr: "YATSI", de: "NACHTS", ar: "العشاء"
+// }]
 
-const infoTitleLanguages = [
-    {
-        "tr": "AYET",
-        "ar": "آية قرآنية",
-        "de": "VERS"
-    },
-    {
-        "tr": "HADIS",
-        "ar": "حديث",
-        "de": "HADITH"
-    }
-]
+const infoTitleLanguages = [{
+    "tr": "AYET", "ar": "آية قرآنية", "de": "VERS"
+}, {
+    "tr": "HADIS", "ar": "حديث", "de": "HADITH"
+}]
 
 function checkIfNextPrayer() {
     if (todaysPrayerTimes.indexOf(timeNow) !== -1) {
@@ -470,13 +420,6 @@ function checkIfNextPrayer() {
     }
 
 }
-
-
-
-
-
-
-
 
 
 const importantDate1 = document.querySelector('#box1')
@@ -492,15 +435,14 @@ const importantDate2Month = document.querySelector('#importantDate2Month')
 
 const importantDate1Year = document.querySelector('#importantDate1Year')
 const importantDate2Year = document.querySelector('#importantDate2Year')
-
-//function to show important dates 
-var importantDates;
-var importantDatesPointer = 0;
+let importantDatesPointer = 0;
 
 function updateImportantDates() {
     fetch("importantDates.json")
         .then(response => response.json())
-        .then(json => { importantDates = json })
+        .then(json => {
+            importantDates = json
+        })
         .then(() => getNextImportantDate(importantDates))
 
 }
@@ -517,7 +459,7 @@ function getNextImportantDate(arr) {
 
         let jsonDate = new Date(`${jsonYear}-${jsonMonth}-${jsonDay}`);
 
-        if (now.withoutTime() - jsonDate.withoutTime() == 0) {
+        if (now.withoutTime() - jsonDate.withoutTime() === 0) {
             importantDate1.style.backgroundColor = '#3db6c4'
             importantDate1.style.color = 'white'
         }
@@ -547,9 +489,17 @@ function getNextImportantDate(arr) {
     }
 }
 
-activateFromTop = true;
-deactiveFromTop = true;
 function animateSvg(idx) {
+
+    let activateFromTop = true;
+    let deactiveFromTop = true;
+    let elClass = '';
+    let el = '';
+    let aVal = '';
+    let dEl = '';
+    let dElClass = '';
+    let dVal = '';
+
     switch (idx) {
         case 0:
             el = imsakSVG;
@@ -632,36 +582,43 @@ function animateSvg(idx) {
 
     const timeBold = el.querySelectorAll('.time')
 
+    // noinspection TypeScriptUMDGlobal
     d3.selectAll(s1)
         .transition()
         .duration(1000)
         .attr("fill", "#11b6c4")
 
+    // noinspection TypeScriptUMDGlobal
     d3.select(s2)
         .transition()
         .duration(1000)
         .attr("fill", "url(#linear-gradient)")
 
+    // noinspection TypeScriptUMDGlobal
     d3.select(s3)
         .transition()
         .duration(1000)
         .attr("fill", "url(#linear-gradient-2)")
 
+    // noinspection TypeScriptUMDGlobal
     d3.select(s4)
         .transition()
         .duration(1000)
         .attr("fill", "#0c7f82")
 
+    // noinspection TypeScriptUMDGlobal
     d3.select(stop1)
         .transition()
         .duration(1000)
         .attr("stop-color", "#11b6c4")
 
+    // noinspection TypeScriptUMDGlobal
     d3.select(stop2)
         .transition()
         .duration(1000)
         .attr("stop-color", "#0c7f82")
 
+    // noinspection TypeScriptUMDGlobal
     d3.selectAll(timeBold)
         .transition()
         .duration(1000)
@@ -686,36 +643,43 @@ function animateSvg(idx) {
 
     const timeNormal = dEl.querySelectorAll('.time')
 
+    // noinspection TypeScriptUMDGlobal
     d3.selectAll(dS1)
         .transition()
         .duration(1000)
         .attr("fill", "#2c7291")
 
+    // noinspection TypeScriptUMDGlobal
     d3.select(dS2)
         .transition()
         .duration(1000)
         .attr("fill", "url(#linear-gradient)")
 
+    // noinspection TypeScriptUMDGlobal
     d3.select(dS3)
         .transition()
         .duration(1000)
         .attr("fill", "url(#linear-gradient-2)")
 
+    // noinspection TypeScriptUMDGlobal
     d3.select(dS4)
         .transition()
         .duration(1000)
         .attr("fill", "#1f5260")
 
+    // noinspection TypeScriptUMDGlobal
     d3.select(dStop1)
         .transition()
         .duration(1000)
         .attr("stop-color", "#2c7291")
 
+    // noinspection TypeScriptUMDGlobal
     d3.select(dStop2)
         .transition()
         .duration(1000)
         .attr("stop-color", "#1f5260")
 
+    // noinspection TypeScriptUMDGlobal
     d3.selectAll(timeNormal)
         .transition()
         .duration(1000)
@@ -730,7 +694,6 @@ function animateSvg(idx) {
         document.querySelector(dElClass).style.bottom = dVal
     }
 }
-
 
 
 let namazTextTr = []
@@ -763,32 +726,11 @@ function getSvgElements() {
         yatsiSVG = yatsiSvg.contentDocument;
 
 
-        namazTextTr.push(
-            imsakSVG.querySelector('#tr'),
-            gunesSVG.querySelector('#tr'),
-            ogleSVG.querySelector('#tr'),
-            ikindiSVG.querySelector('#tr'),
-            aksamSVG.querySelector('#tr'),
-            yatsiSVG.querySelector('#tr')
-        )
+        namazTextTr.push(imsakSVG.querySelector('#tr'), gunesSVG.querySelector('#tr'), ogleSVG.querySelector('#tr'), ikindiSVG.querySelector('#tr'), aksamSVG.querySelector('#tr'), yatsiSVG.querySelector('#tr'))
 
-        namazTextAr.push(
-            imsakSVG.querySelector('#ar'),
-            gunesSVG.querySelector('#ar'),
-            ogleSVG.querySelector('#ar'),
-            ikindiSVG.querySelector('#ar'),
-            aksamSVG.querySelector('#ar'),
-            yatsiSVG.querySelector('#ar')
-        )
+        namazTextAr.push(imsakSVG.querySelector('#ar'), gunesSVG.querySelector('#ar'), ogleSVG.querySelector('#ar'), ikindiSVG.querySelector('#ar'), aksamSVG.querySelector('#ar'), yatsiSVG.querySelector('#ar'))
 
-        namazTextDe.push(
-            imsakSVG.querySelector('#de'),
-            gunesSVG.querySelector('#de'),
-            ogleSVG.querySelector('#de'),
-            ikindiSVG.querySelector('#de'),
-            aksamSVG.querySelector('#de'),
-            yatsiSVG.querySelector('#de')
-        )
+        namazTextDe.push(imsakSVG.querySelector('#de'), gunesSVG.querySelector('#de'), ogleSVG.querySelector('#de'), ikindiSVG.querySelector('#de'), aksamSVG.querySelector('#de'), yatsiSVG.querySelector('#de'))
 
 
         updateTimes();
@@ -806,7 +748,10 @@ const countdownContainer = document.querySelector('.timeLeft')
 const changeLanguages = [importantDate1Text, importantDate2Text, countdownContainer]
 const ramadanLanguages = [dateHicri, monthHicri]
 
-prayerLng = 0
+let prayerLng = 0
+let fontSizeInfoTr;
+let fontSizeInfoAr;
+let fontSizeInfoDe;
 //change text every 30s
 const changeLanguage = (language) => {
     if (language === "ar") {
@@ -984,9 +929,7 @@ const changeLanguage = (language) => {
         }
 
 
-
-
-        // for resize 
+        // for resize
         if (fontSizeImportantDatesDe === "n" || fontSizeImportantDatesTr === "n" || fontSizeImportantDatesAr === "n") {
             infoText.style.fontSize = "2.5vw"
             importantDate1Text.style.fontSize = "1.5vw"
@@ -1011,7 +954,6 @@ const changeLanguage = (language) => {
         }
 
 
-
     }, 1000);
 };
 
@@ -1029,27 +971,22 @@ setInterval(() => {
 }, 30000);
 
 
-
-var fontSizeInfoTr;
-var fontSizeInfoAr;
-var fontSizeInfoDe;
-var fontSizeImportantDatesTr = 'n';
-var fontSizeImportantDatesAr = 'n';
-var fontSizeImportantDatesDe = 'n';
+let fontSizeImportantDatesTr = 'n';
+let fontSizeImportantDatesAr = 'n';
+let fontSizeImportantDatesDe = 'n';
 
 // prayerLng -> 0 : tr, 1 : ar, 2 : de
 function autoSizeText() {
-    var elements = document.querySelectorAll('.resize');
+    const elements = document.querySelectorAll('.resize');
 
     if (elements.length <= 0) {
         return;
     }
 
-    for (var i = 0; i < elements.length; i++) {
+    for (let i = 0; i < elements.length; i++) {
         (function (el) {
-            var resizeText = function () {
-                var elNewFontSize = (parseInt(window.getComputedStyle(el).fontSize.slice(0, -2)) - 1) + 'px';
-                el.style.fontSize = elNewFontSize;
+            const resizeText = function () {
+                el.style.fontSize = (parseInt(window.getComputedStyle(el).fontSize.slice(0, -2)) - 1) + 'px';
             };
 
             while (el.scrollHeight > el.offsetHeight) {
@@ -1082,11 +1019,10 @@ function autoSizeText() {
     } else if (prayerLng === 2) {
         fontSizeImportantDatesDe = importantDate1Text.style.fontSize;
     }
-
 }
 
 
-addEventListener("resize", (event) => {
+addEventListener("resize", () => {
     fontSizeImportantDatesTr = 'n';
     fontSizeImportantDatesAr = 'n';
     fontSizeImportantDatesDe = 'n';
@@ -1098,8 +1034,7 @@ var monthlyDataPointer = 0;
 
 function fetchMonthlyData() {
     fetch(`${serverUrl}/api/getDailyData?urlPara=${urlPara}`, {
-        method: 'GET',
-        headers: {
+        method: 'GET', headers: {
             'Content-Type': 'application/json'
         }
     })
