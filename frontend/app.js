@@ -287,7 +287,7 @@ function updateMoonSvgs() {
     let moonUrlToday;
 
     if (typeof monthlyData[monthlyDataPointer]['shapeMoon'] === 'string') {
-         moonUrlToday = (monthlyData[monthlyDataPointer]['shapeMoon']);
+        moonUrlToday = (monthlyData[monthlyDataPointer]['shapeMoon']);
     }
 
     const moonIndex3 = moonDirection.indexOf(moonUrlToday);
