@@ -12,8 +12,6 @@ const util = require('util')
 
 require("dotenv").config()
 
-// const cheerio = require('cheerio');
-
 const API_KEY = process.env.API_KEY
 const JWT_SECRET = process.env.JWT_SECRET
 const MONGODB_CREDENTIALS = process.env.MONGODB
@@ -26,8 +24,8 @@ const app = express()
 mongoose.set('strictQuery', false);
 
 // noinspection JSUnresolvedFunction
-mongoose.connect(//`mongodb+srv://${MONGODB_CREDENTIALS}@namazapp.ccw7t1d.mongodb.net/?retryWrites=true&w=majority`,
-    `mongodb+srv://${MONGODB_CREDENTIALS}@namazwork.3gpx1eu.mongodb.net/?retryWrites=true&w=majority`, {
+mongoose.connect(
+    `mongodb+srv://${MONGODB_CREDENTIALS}@namazapp.ccw7t1d.mongodb.net/?retryWrites=true&w=majority`, {
         useNewUrlParser: true, useUnifiedTopology: true,
     }, (err) => {
         if (err) {
@@ -119,7 +117,6 @@ app.post('/api/change-password', async (req, res) => {
         return res.json({status: 'error', error: 'Password too long.'})
     }
 
-
     let _id;
     try {
         const user = await User.findOne({urlPara})
@@ -134,7 +131,6 @@ app.post('/api/change-password', async (req, res) => {
     } catch (error) {
         res.json({status: 'error', error: 'try harder'})
     }
-
 })
 
 app.post('/api/login/', async (req, res) => {
@@ -166,7 +162,6 @@ app.post('/api/login/', async (req, res) => {
         return res.json({status: 'ok', data: token})
     }
 
-
     res.json({status: 'error', error: 'Invalid username/password'})
 })
 
@@ -174,13 +169,13 @@ app.post('/api/logout', async (req, res) => {
     const {token} = req.body;
 
     if (!token) {
-        return res.json({status})
+        return res.status(400).json({message: "Token is required"});
     }
 
     // Check if token is expired
     const decodedToken = jwt.decode(token, {complete: true});
     if (decodedToken.payload.exp < Date.now() / 1000) {
-        return res.json({status: 'expired'})
+        return res.status(401).json({message: "Token has expired"});
     }
 
     // Verify the token and get the user ID
@@ -188,8 +183,6 @@ app.post('/api/logout', async (req, res) => {
 
     // Find the user in the database and delete the token field
     await User.findByIdAndUpdate(id, {$unset: {token: 1}});
-
-
 });
 
 app.post('/api/new-an', async (req, res) => {
