@@ -5,6 +5,8 @@ let now = new Date();
 let todaysAnnouncement;
 let todayIsAnAnnouncement;
 
+let monthlyData;
+let monthlyDataPointer = 0;
 
 function getDateString(date) {
     let year = date.getFullYear();
@@ -39,6 +41,9 @@ const infobox = [infoTitle, infoText, infoSource]
 let todaysKnowledge;
 let todaysKnowledgeArray;
 let todaysKnowledgeSourceArabic;
+
+//get the text element inside svg for prayer names
+let imsakSVG, gunesSVG, ogleSVG, ikindiSVG, aksamSVG, yatsiSVG;
 
 function getVersesOrHadiths() {
     fetch("versesAndHadiths.json")
@@ -279,7 +284,11 @@ const moonElements = [document.querySelector('.moon1'), document.querySelector('
 
 function updateMoonSvgs() {
 
-    let moonUrlToday = monthlyData[monthlyDataPointer]['shapeMoon'];
+    let moonUrlToday;
+
+    if (typeof monthlyData[monthlyDataPointer]['shapeMoon'] === 'string') {
+         moonUrlToday = (monthlyData[monthlyDataPointer]['shapeMoon']);
+    }
 
     const moonIndex3 = moonDirection.indexOf(moonUrlToday);
 
@@ -312,7 +321,7 @@ function updateTimes() {
 
     let day = now.getDate() < 10 ? '0' + now.getDate() : now.getDate();
     let month = (now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : now.getMonth + 1;
-    let year = now.getFullYear();
+    let year = now.getFullYear().toString();
     let targetDate = `${day}.${month}.${year}`;
     monthlyDataPointer = monthlyData.findIndex(element => element.gregorianDateShort === targetDate);
 
@@ -700,9 +709,6 @@ let namazTextTr = []
 let namazTextAr = []
 let namazTextDe = []
 
-//get the text element inside svg for prayer names
-var imsakSVG, gunesSVG, ogleSVG, ikindiSVG, aksamSVG, yatsiSVG;
-
 function getSvgElements() {
 
 
@@ -755,11 +761,13 @@ let fontSizeInfoDe;
 //change text every 30s
 const changeLanguage = (language) => {
     if (language === "ar") {
+        // noinspection TypeScriptUMDGlobal
         d3.selectAll(namazTextTr)
             .transition()
             .duration(1000)
             .attr("opacity", "0")
 
+        // noinspection TypeScriptUMDGlobal
         d3.selectAll(namazTextAr)
             .transition()
             .duration(1000)
@@ -768,11 +776,13 @@ const changeLanguage = (language) => {
 
     } else if (language === "de") {
 
+        // noinspection TypeScriptUMDGlobal
         d3.selectAll(namazTextAr)
             .transition()
             .duration(1000)
             .attr("opacity", "0")
 
+        // noinspection TypeScriptUMDGlobal
         d3.selectAll(namazTextDe)
             .transition()
             .duration(1000)
@@ -780,11 +790,13 @@ const changeLanguage = (language) => {
             .attr("opacity", "1")
 
     } else {
+        // noinspection TypeScriptUMDGlobal
         d3.selectAll(namazTextDe)
             .transition()
             .duration(1000)
             .attr("opacity", "0")
 
+        // noinspection TypeScriptUMDGlobal
         d3.selectAll(namazTextTr)
             .transition()
             .duration(1000)
@@ -792,6 +804,7 @@ const changeLanguage = (language) => {
             .attr("opacity", "1")
     }
 
+    // noinspection TypeScriptUMDGlobal
     d3.selectAll(infobox)
         .transition()
         .duration(1000)
@@ -801,6 +814,7 @@ const changeLanguage = (language) => {
         .delay(50)
         .style("opacity", "1");
 
+    // noinspection TypeScriptUMDGlobal
     d3.selectAll(changeLanguages)
         .transition()
         .duration(1000)
@@ -811,6 +825,7 @@ const changeLanguage = (language) => {
         .style("opacity", "1");
 
     if (isRamadan) {
+        // noinspection TypeScriptUMDGlobal
         d3.selectAll(ramadanLanguages)
             .transition()
             .duration(1000)
@@ -823,6 +838,7 @@ const changeLanguage = (language) => {
 
         if (language === "ar") {
 
+            // noinspection TypeScriptUMDGlobal
             d3.select(point2)
                 .transition()
                 .duration(1000)
@@ -831,6 +847,7 @@ const changeLanguage = (language) => {
 
         } else {
 
+            // noinspection TypeScriptUMDGlobal
             d3.select(point2)
                 .transition()
                 .duration(1000)
@@ -1028,9 +1045,6 @@ addEventListener("resize", () => {
     fontSizeImportantDatesDe = 'n';
     autoSizeText()
 });
-
-var monthlyData;
-var monthlyDataPointer = 0;
 
 function fetchMonthlyData() {
     fetch(`${serverUrl}/api/getDailyData?urlPara=${urlPara}`, {
