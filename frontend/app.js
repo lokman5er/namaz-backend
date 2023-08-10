@@ -27,7 +27,6 @@ const urlParams = new URLSearchParams(url);
 let urlPara = urlParams.get('urlPara');
 urlPara = urlPara === '11023' ? 'muenster' : urlPara
 
-
 let initalRun = true;
 
 const infoTitle = document.querySelector('.l-4-1 ')
@@ -66,7 +65,6 @@ function getVersesOrHadiths() {
         })
 }
 
-
 let announcements = [];
 
 function getAllAnnouncements() {
@@ -88,7 +86,6 @@ function getAllAnnouncements() {
             console.log('error')
         }); // Catch the rejected Promise
 }
-
 
 function updateInfobox() {
     todayIsAnAnnouncement = false;
@@ -127,7 +124,6 @@ function getCurrentPrayer() {
     const currentTime = currentHours + ":" + currentMinutes;
 
     // Find the next prayer by looping through the prayer times
-
     for (let i = 0; i < todaysPrayerTimes.length; i++) {
 
         if (currentTime < todaysPrayerTimes[i] || i === todaysPrayerTimes.length - 1) {
@@ -168,12 +164,9 @@ function updateCountdown(startTime, endTime) {
     countdownMinute.innerText = minutes;
 }
 
-
 // needed to start in exact second
 setTimeout(function () {
-
     runEveryMinute();
-
 }, (60000 - now.getMilliseconds() - now.getSeconds() * 1000))
 
 const interval = 60000;
@@ -212,7 +205,6 @@ function runEveryMinute() {
 
 let minutes;
 
-
 //function to show important dates
 let importantDates;
 
@@ -230,7 +222,6 @@ function updateClock() {
     document.querySelector('.l-3-3').innerHTML = minutes
 
     timeNow = `${hours}:${minutes}`
-
 
     if (hours === "00" && minutes === "00") {
         // new day
@@ -252,7 +243,6 @@ function updateClock() {
     }
 }
 
-
 const dateNormal = document.querySelector('.dateNormal');
 const monthNormal = document.querySelector('.monthNormal');
 const yearNormal = document.querySelector('.yearNormal');
@@ -264,7 +254,6 @@ const yearHicri = document.querySelector('.yearHicri');
 const point1 = document.querySelector('#p1');
 const point2 = document.querySelector('#p2');
 
-
 function convertToArabic(number) {
     const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
     let arabicNum = '';
@@ -275,11 +264,9 @@ function convertToArabic(number) {
     return arabicNum;
 }
 
-
 const moonDirection = ["dolunay", "d1", "d2", "d3", "d4", "d5", "d6", "d65", "d7", "sondordun", "sd1", "sd2", "sd3", "sd4", "sd5", "sd6", "yeniAy", "r1", "r2", "r3", "r4", "r45", "r5", "ilkdordun", "i1", "i2", "i3", "i4", "i5", "i6", "i7"];
 
 // ictima und ruyet beide mit yeniAy ersetzen
-
 const moonElements = [document.querySelector('.moon1'), document.querySelector('.moon2'), document.querySelector('.moon3'), document.querySelector('.moon4'), document.querySelector('.moon5')]
 
 function updateMoonSvgs() {
@@ -342,14 +329,17 @@ function updateTimes() {
     todaysPrayerTimes = [];
     todaysPrayerTimes.push(imsakRaw, gunesRaw, ogleRaw, ikindiRaw, aksamRaw, yatsiRaw);
 
-    updateMoonSvgs();
-
-    updateTimeSvg(imsakSVG, imsakRaw);
-    updateTimeSvg(gunesSVG, gunesRaw);
-    updateTimeSvg(ogleSVG, ogleRaw);
-    updateTimeSvg(ikindiSVG, ikindiRaw);
-    updateTimeSvg(aksamSVG, aksamRaw);
-    updateTimeSvg(yatsiSVG, yatsiRaw);
+    checkIfAllMoonImagesExist().then(result => {
+        if (result) {
+            updateMoonSvgs();
+            updateTimeSvg(imsakSVG, imsakRaw);
+            updateTimeSvg(gunesSVG, gunesRaw);
+            updateTimeSvg(ogleSVG, ogleRaw);
+            updateTimeSvg(ikindiSVG, ikindiRaw);
+            updateTimeSvg(aksamSVG, aksamRaw);
+            updateTimeSvg(yatsiSVG, yatsiRaw);
+        }
+    })
 
     dateNormal.innerText = day;
     monthNormal.innerHTML = month;
@@ -371,7 +361,58 @@ function updateTimes() {
         monthHicri.innerHTML = (parseInt(hijriRaw[1]) < 10) ? `0${hijriRaw[1]}` : hijriRaw[1]
         yearHicri.innerHTML = hijriRaw[2]
     }
+}
 
+function checkIfFileExistsAndIsSvg(fullUrl) {
+
+    return fetch(fullUrl)
+        .then(response => {
+
+            // first check if it is actually a file
+            if (!response.ok) {
+                //TODO some kind of notification service
+                throw new Error(`URL not found: ${fullUrl}`);
+            }
+
+            return response.text();
+
+        })
+        .then(svgText => {
+
+            // then check if it is a valid svg
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(svgText, "image/svg+xml");
+
+            if (!xmlDoc.getElementsByTagName('svg').length) {
+                throw new Error(`URL is not a valid SVG: ${url}`);
+            }
+
+            return true;
+
+        })
+        .catch(error => {
+            console.error(error);
+            return false;
+        });
+}
+
+function checkIfAllMoonImagesExist() {
+    const baseURL = 'images/moons/';
+    const promise = moonDirection.map(file => {
+
+        const fullUrl = `${baseURL}${file}.svg`;
+        return checkIfFileExistsAndIsSvg(fullUrl)
+            .then(fileIsValid => {
+                if (!fileIsValid) {
+                    //TODO some kind of notification service
+                    console.log(`file ${fullUrl} is not valid`);
+                }
+                return fileIsValid;
+            });
+    });
+
+    return Promise.all(promise)
+        .then(results => results.every(Boolean));
 }
 
 function updateTimeSvg(el, raw) {
@@ -384,7 +425,6 @@ function updateTimeSvg(el, raw) {
 const timeLeft = document.querySelector(".timeLeft");
 const countdownText = document.querySelector('.timeLeft-before')
 const timeLeftAfter = document.querySelector(".timeLeft-after");
-
 
 const countdownTextArr = [{
     tr: 'İMSAKA KALAN SÜRE:', de: 'VERBLEIBENDE ZEIT BIS ZUM MORGENSG.:', ar: 'الوقت المتبقي لصلاة الفجر',
@@ -400,20 +440,6 @@ const countdownTextArr = [{
     tr: 'YATSIYE KALAN SÜRE:', de: 'VERBLEIBENDE ZEIT BIS ZUM NACHTSG.:', ar: 'الوقت المتبقي لصلاة العشاء',
 },];
 
-// const prayerNames = [{
-//     tr: "İMSAK", de: "MORGENS", ar: "الإمساك"
-// }, {
-//     tr: "GÜNEŞ", de: "SONNENA.", ar: "الأيام الدينة"
-// }, {
-//     tr: "ÖĞLE", de: "MITTAGS", ar: "الظهر"
-// }, {
-//     tr: "İKİNDİ", de: "NACHM.", ar: "العصر"
-// }, {
-//     tr: "AKŞAM", de: "ABENDS", ar: "المغرب"
-// }, {
-//     tr: "YATSI", de: "NACHTS", ar: "العشاء"
-// }]
-
 const infoTitleLanguages = [{
     "tr": "AYET", "ar": "آية قرآنية", "de": "VERS"
 }, {
@@ -427,9 +453,7 @@ function checkIfNextPrayer() {
         animateSvg(idx)
         nextPrayer = idx === 5 ? 0 : idx + 1
     }
-
 }
-
 
 const importantDate1 = document.querySelector('#box1')
 
@@ -444,6 +468,7 @@ const importantDate2Month = document.querySelector('#importantDate2Month')
 
 const importantDate1Year = document.querySelector('#importantDate1Year')
 const importantDate2Year = document.querySelector('#importantDate2Year')
+
 let importantDatesPointer = 0;
 
 function updateImportantDates() {
@@ -453,7 +478,6 @@ function updateImportantDates() {
             importantDates = json
         })
         .then(() => getNextImportantDate(importantDates))
-
 }
 
 function getNextImportantDate(arr) {
@@ -489,12 +513,10 @@ function getNextImportantDate(arr) {
             importantDate2Month.innerText = importantDate2Date.slice(3, 5)
             importantDate2Year.innerText = importantDate2Date.slice(6, 10)
 
-
             autoSizeText();
 
             break;
         }
-
     }
 }
 
