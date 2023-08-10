@@ -25,7 +25,7 @@ mongoose.set('strictQuery', false);
 
 // noinspection JSUnresolvedFunction
 mongoose.connect(
-    `mongodb+srv://${MONGODB_CREDENTIALS}@namazapp.ccw7t1d.mongodb.net/?retryWrites=true&w=majority`, {
+    `mongodb+srv://${MONGODB_CREDENTIALS}@namazapp.on8qwgx.mongodb.net/?retryWrites=true&w=majority`, {
         useNewUrlParser: true, useUnifiedTopology: true,
     }, (err) => {
         if (err) {
