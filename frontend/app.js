@@ -96,110 +96,145 @@ let todaysKnowledge;
 let todaysKnowledgeArray;
 let todaysKnowledgeSourceArabic;
 
+const languageKeys = ['tr', 'ar', 'de'];
+
 function getVersesOrHadiths() {
     fetch("versesAndHadiths.json")
         .then(response => response.json())
         .then(json => {
             todaysKnowledgeArray = json;
             todaysKnowledge = json[now.getDate() - 1];
-            infoTitle.innerHTML = prayerLng === 0 ? infoTitleLanguages[todaysKnowledge['type']]['tr'] : prayerLng === 1 ? infoTitleLanguages[todaysKnowledge['type']]['ar'] : infoTitleLanguages[todaysKnowledge['type']]['de'];
-            infoText.innerHTML = prayerLng === 0 ? todaysKnowledge['tr'] : prayerLng === 1 ? todaysKnowledge['ar'] : todaysKnowledge['de'];
 
+            const currentLangKey = languageKeys[prayerLng];
+
+            infoTitle.innerHTML = infoTitleLanguages[todaysKnowledge['type']][currentLangKey];
+            infoText.innerHTML = todaysKnowledge[currentLangKey];
 
             const sourceNumbers = todaysKnowledge['source'].match(/\d+/g).map(Number);
             todaysKnowledgeSourceArabic = `[${convertToArabic(sourceNumbers[0])}:${convertToArabic(sourceNumbers[1])}]`;
 
-            infoSource.innerHTML = todaysKnowledge['source'];
-
-            infoSource.innerHTML = prayerLng === 1 ? todaysKnowledgeSourceArabic : todaysKnowledge['source'];
+            infoSource.innerHTML = currentLangKey === 'ar' ? todaysKnowledgeSourceArabic : todaysKnowledge['source'];
 
             autoSizeText();
-        })
+        });
 }
-
 
 let announcements = [];
 
 function getAllAnnouncements() {
     fetch(`${serverUrl}/api/getAllAnnouncements?urlPara=${urlPara}`)
         .then(res => {
-            // Check if the status is not 200
             if (res.status !== 200) {
-                updateInfobox();
-                return Promise.reject(); // Return a rejected Promise to stop executing the rest of the code in this function
+                throw new Error('Failed to fetch announcements');
             }
             return res.json();
         })
         .then(json => {
             announcements = json['result'];
         })
-        .then(() => updateInfobox())
-        .catch(() => {
+        .catch(error => {
+            console.log('Error fetching announcements:', error);
+        })
+        .finally(() => {
             updateInfobox();
-            console.log('error');
-        }); // Catch the rejected Promise
+        });
 }
 
-
 function updateInfobox() {
+    const currentLangKey = languageKeys[prayerLng];
+    const titles = {
+        tr: 'DUYURU',
+        ar: 'رسالة',
+        de: 'MITTEILUNG'
+    };
+
     todayIsAnAnnouncement = false;
     infoSource.style.display = 'block';
-    if (announcements.length > 0) {
 
+    if (announcements.length > 0) {
         const todayWithoutTime = getDateString(now);
 
         if (announcements[0]['startDate'] <= todayWithoutTime && announcements[0]['endDate'] >= todayWithoutTime) {
-            //announcement for today, show announcement
             todayIsAnAnnouncement = true;
-            todaysAnnouncement = announcements[0]['text']
-            infoTitle.innerText = prayerLng === 1 ? "رسالة" : prayerLng === 0 ? "DUYURU" : "MITTEILUNG";
-            infoText.innerText = prayerLng === 0 ? todaysAnnouncement['tr'] : prayerLng === 1 ? todaysAnnouncement['ar'] : todaysAnnouncement['de']
-            infoSource.style.display = 'none'
-
+            todaysAnnouncement = announcements[0]['text'];
+            infoTitle.innerText = titles[currentLangKey];
+            infoText.innerText = todaysAnnouncement[currentLangKey];
+            infoSource.style.display = 'none';
         } else {
-            //no announcements for today, show one hadith or vers
-            getVersesOrHadiths()
+            //no announcement for today
+            getVersesOrHadiths();
         }
-        autoSizeText();
     } else {
         getVersesOrHadiths();
-        autoSizeText();
     }
+
+    autoSizeText();
 }
 
 let nextPrayer;
 
-function getCurrentPrayer() {
-    // Get current time
-    let currentHours = now.getHours();
-    currentHours = currentHours < 10 ? "0" + currentHours : currentHours;
-    let currentMinutes = now.getMinutes();
-    currentMinutes = currentMinutes < 10 ? "0" + currentMinutes : currentMinutes;
-    const currentTime = currentHours + ":" + currentMinutes;
+// function getCurrentPrayer() {
+//     // Get current time
+//     let currentHours = now.getHours();
+//     currentHours = currentHours < 10 ? "0" + currentHours : currentHours;
+//     let currentMinutes = now.getMinutes();
+//     currentMinutes = currentMinutes < 10 ? "0" + currentMinutes : currentMinutes;
+//     const currentTime = currentHours + ":" + currentMinutes;
+//
+//     // Find the next prayer by looping through the prayer times
+//
+//     for (let i = 0; i < todaysPrayerTimes.length; i++) {
+//
+//         if (currentTime < todaysPrayerTimes[i] || i === todaysPrayerTimes.length - 1) {
+//             if (i === todaysPrayerTimes.length - 1 && currentTime > todaysPrayerTimes[i]) {
+//                 animateSvg(5);
+//                 nextPrayer = 0;
+//
+//             } else if (i === todaysPrayerTimes.length - 1 && currentTime < todaysPrayerTimes[i]) {
+//                 animateSvg(4);
+//                 nextPrayer = 5;
+//                 //error
+//
+//             } else {
+//                 animateSvg(i === 0 ? 5 : i - 1);
+//                 nextPrayer = i
+//             }
+//
+//             break;
+//         }
+//     }
+// }
 
-    // Find the next prayer by looping through the prayer times
+function formatTime(number) {
+    return number < 10 ? "0" + number : number.toString();
+}
+
+function getCurrentPrayer() {
+    const currentTime = formatTime(now.getHours()) + ":" + formatTime(now.getMinutes());
 
     for (let i = 0; i < todaysPrayerTimes.length; i++) {
-
         if (currentTime < todaysPrayerTimes[i] || i === todaysPrayerTimes.length - 1) {
-            if (i === todaysPrayerTimes.length - 1 && currentTime > todaysPrayerTimes[i]) {
-                animateSvg(5);
-                nextPrayer = 0;
-
-            } else if (i === todaysPrayerTimes.length - 1 && currentTime < todaysPrayerTimes[i]) {
-                animateSvg(4);
-                nextPrayer = 5;
-                //error
-
-            } else {
-                animateSvg(i === 0 ? 5 : i - 1);
-                nextPrayer = i
-            }
-
+            determineNextPrayer(currentTime, i);
             break;
         }
     }
 }
+
+function determineNextPrayer(currentTime, index) {
+    if (index === todaysPrayerTimes.length - 1) {
+        if (currentTime > todaysPrayerTimes[index]) {
+            animateSvg(5);
+            nextPrayer = 0;
+        } else {
+            animateSvg(4);
+            nextPrayer = 5;
+        }
+    } else {
+        animateSvg(index === 0 ? 5 : index - 1);
+        nextPrayer = index;
+    }
+}
+
 
 function updateCountdown(startTime, endTime) {
     const start = new Date("1970-01-01 " + startTime + " UTC").getTime() / 1000;
@@ -210,8 +245,8 @@ function updateCountdown(startTime, endTime) {
     }
     let hours = Math.floor(difference / 3600);
     let minutes = Math.floor((difference % 3600) / 60);
-    hours = hours < 10 ? "0" + hours : hours;
-    minutes = minutes < 10 ? "0" + minutes : minutes;
+    hours = formatTime(hours);
+    minutes = formatTime(minutes);
     countdownHour.innerText = hours;
     countdownMinute.innerText = minutes;
 }
@@ -266,15 +301,9 @@ let importantDates;
 function updateClock() {
     now = new Date();
 
-    hours = now.getHours();
-    if (hours < 10) {
-        hours = "0" + hours;
-    }
+    hours = formatTime(now.getHours());
 
-    minutes = now.getMinutes();
-    if (minutes < 10) {
-        minutes = "0" + minutes;
-    }
+    minutes = formatTime(now.getMinutes());
 
     hoursHTML.innerHTML = hours;
     minutesHTML.innerHTML = minutes;
@@ -354,9 +383,9 @@ function updateTimes() {
     isRamadan = false;
     yearHicri.style.display = 'visible';
 
-    let day = now.getDate() < 10 ? '0' + now.getDate() : now.getDate();
-    let month = (now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : now.getMonth + 1;
-    let year = now.getFullYear();
+    let day = formatTime(now.getDate());
+    let month = formatTime(now.getMonth() + 1);
+    let year = now.getFullYear() + "";
     let targetDate = `${day}.${month}.${year}`;
     monthlyDataPointer = monthlyData.findIndex(element => element.gregorianDateShort === targetDate);
 
@@ -406,8 +435,8 @@ function updateTimes() {
         monthHicri.innerHTML = hijriRaw[0]
     } else {
         point1.style.display = 'block';
-        dateHicri.innerHTML = (parseInt(hijriRaw[0]) < 10) ? `0${hijriRaw[0]}` : hijriRaw[0]
-        monthHicri.innerHTML = (parseInt(hijriRaw[1]) < 10) ? `0${hijriRaw[1]}` : hijriRaw[1]
+        dateHicri.innerHTML = formatTime(parseInt(hijriRaw[0]));
+        monthHicri.innerHTML = formatTime(parseInt(hijriRaw[1]));
         yearHicri.innerHTML = hijriRaw[2]
     }
 
@@ -1041,17 +1070,6 @@ const changeLanguage = (language) => {
 
     }, 1000);
 };
-
-function adjustFontSizeForImportantDates() {
-    const minFontSize = Math.min(
-        parseInt(importantDate1Text.style.fontSize),
-        parseInt(importantDate2Text.style.fontSize)
-    );
-
-    importantDate1Text.style.fontSize = minFontSize + 'px';
-    importantDate2Text.style.fontSize = minFontSize + 'px';
-}
-
 
 setInterval(() => {
     if (prayerLng === 0) {
