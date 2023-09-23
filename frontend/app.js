@@ -1,10 +1,71 @@
 const serverUrl = "https://namaz-backend.herokuapp.com"
 
+// edit these for local testing
+/**
+ * Specifies the number of minutes in which a new day is simulated.
+ * If set to 5, for instance, a new day is simulated every 5 minutes.
+ * @type {number}
+ * @default 60
+ */
+const intervalMinutes = 60;
+
+const secondsToChangeLanguage = 30000;
+
 let now = new Date();
 
 let todaysAnnouncement;
 let todayIsAnAnnouncement;
 
+//HTML-Elements
+const hoursHTML = document.querySelector('.l-3-1');
+const minutesHTML = document.querySelector('.l-3-3');
+
+const countdownHour = document.querySelector('.countdown-hour');
+const countdownMinute = document.querySelector('.countdown-minute');
+
+const infoTitle = document.querySelector('.l-4-1 ');
+const infoText = document.querySelector('.l-4-2');
+const infoSource = document.querySelector('.l-4-3');
+
+const dateNormal = document.querySelector('.dateNormal');
+const monthNormal = document.querySelector('.monthNormal');
+const yearNormal = document.querySelector('.yearNormal');
+
+const dateHicri = document.querySelector('.dateHicri');
+const monthHicri = document.querySelector('.monthHicri');
+const yearHicri = document.querySelector('.yearHicri');
+
+const point1 = document.querySelector('#p1');
+const point2 = document.querySelector('#p2');
+
+const moonElements = [
+    document.querySelector('.moon1'),
+    document.querySelector('.moon2'),
+    document.querySelector('.moon3'),
+    document.querySelector('.moon4'),
+    document.querySelector('.moon5')
+]
+
+const timeLeft = document.querySelector(".timeLeft");
+const countdownText = document.querySelector('.timeLeft-before')
+const timeLeftAfter = document.querySelector(".timeLeft-after");
+
+
+const importantDate1 = document.querySelector('#box1')
+
+const importantDate1Text = document.querySelector('.l-6-2-2')
+const importantDate2Text = document.querySelector('.l-6-4-2')
+
+const importantDate1Day = document.querySelector('#importantDate1Day')
+const importantDate2Day = document.querySelector('#importantDate2Day')
+
+const importantDate1Month = document.querySelector('#importantDate1Month')
+const importantDate2Month = document.querySelector('#importantDate2Month')
+
+const importantDate1Year = document.querySelector('#importantDate1Year')
+const importantDate2Year = document.querySelector('#importantDate2Year')
+
+const countdownContainer = document.querySelector('.timeLeft')
 
 function getDateString(date) {
     let year = date.getFullYear();
@@ -19,8 +80,6 @@ Date.prototype.withoutTime = function () {
     return d;
 }
 
-var todayWithoutTime = getDateString(now);
-
 const url = window.location.search;
 const urlParams = new URLSearchParams(url);
 let urlPara = urlParams.get('urlPara');
@@ -28,10 +87,6 @@ urlPara = urlPara === '11023' ? 'muenster' : urlPara
 
 
 let initialRun = true;
-
-const infoTitle = document.querySelector('.l-4-1 ')
-const infoText = document.querySelector('.l-4-2')
-const infoSource = document.querySelector('.l-4-3')
 
 infoText.innerHTML = ""
 
@@ -45,18 +100,18 @@ function getVersesOrHadiths() {
     fetch("versesAndHadiths.json")
         .then(response => response.json())
         .then(json => {
-            todaysKnowledgeArray = json
-            todaysKnowledge = json[now.getDate() - 1]
-            infoTitle.innerHTML = prayerLng === 0 ? infoTitleLanguages[todaysKnowledge['type']]['tr'] : prayerLng === 1 ? infoTitleLanguages[todaysKnowledge['type']]['ar'] : infoTitleLanguages[todaysKnowledge['type']]['de']
-            infoText.innerHTML = prayerLng === 0 ? todaysKnowledge['tr'] : prayerLng === 1 ? todaysKnowledge['ar'] : todaysKnowledge['de']
+            todaysKnowledgeArray = json;
+            todaysKnowledge = json[now.getDate() - 1];
+            infoTitle.innerHTML = prayerLng === 0 ? infoTitleLanguages[todaysKnowledge['type']]['tr'] : prayerLng === 1 ? infoTitleLanguages[todaysKnowledge['type']]['ar'] : infoTitleLanguages[todaysKnowledge['type']]['de'];
+            infoText.innerHTML = prayerLng === 0 ? todaysKnowledge['tr'] : prayerLng === 1 ? todaysKnowledge['ar'] : todaysKnowledge['de'];
 
 
             const sourceNumbers = todaysKnowledge['source'].match(/\d+/g).map(Number);
-            todaysKnowledgeSourceArabic = `[${convertToArabic(sourceNumbers[0])}:${convertToArabic(sourceNumbers[1])}]`
+            todaysKnowledgeSourceArabic = `[${convertToArabic(sourceNumbers[0])}:${convertToArabic(sourceNumbers[1])}]`;
 
-            infoSource.innerHTML = todaysKnowledge['source']
+            infoSource.innerHTML = todaysKnowledge['source'];
 
-            infoSource.innerHTML = prayerLng === 1 ? todaysKnowledgeSourceArabic : todaysKnowledge['source']
+            infoSource.innerHTML = prayerLng === 1 ? todaysKnowledgeSourceArabic : todaysKnowledge['source'];
 
             autoSizeText();
         })
@@ -70,7 +125,7 @@ function getAllAnnouncements() {
         .then(res => {
             // Check if the status is not 200
             if (res.status !== 200) {
-                updateInfobox()
+                updateInfobox();
                 return Promise.reject(); // Return a rejected Promise to stop executing the rest of the code in this function
             }
             return res.json();
@@ -80,15 +135,15 @@ function getAllAnnouncements() {
         })
         .then(() => updateInfobox())
         .catch(() => {
-            updateInfobox()
-            console.log('error')
+            updateInfobox();
+            console.log('error');
         }); // Catch the rejected Promise
 }
 
 
 function updateInfobox() {
     todayIsAnAnnouncement = false;
-    infoSource.style.display = 'block'
+    infoSource.style.display = 'block';
     if (announcements.length > 0) {
 
         const todayWithoutTime = getDateString(now);
@@ -146,9 +201,6 @@ function getCurrentPrayer() {
     }
 }
 
-const countdownHour = document.querySelector('.countdown-hour');
-const countdownMinute = document.querySelector('.countdown-minute');
-
 function updateCountdown(startTime, endTime) {
     const start = new Date("1970-01-01 " + startTime + " UTC").getTime() / 1000;
     const end = new Date("1970-01-01 " + endTime + " UTC").getTime() / 1000;
@@ -176,8 +228,9 @@ const interval = 60000;
 let adjustedInterval = interval;
 let expectedCycleTime = 0;
 
-let hours;
 let timeNow;
+let hours;
+let minutes;
 
 function runEveryMinute() {
     const now2 = Date.now();
@@ -206,59 +259,51 @@ function runEveryMinute() {
     }, adjustedInterval);
 }
 
-let minutes;
-
 
 //function to show important dates
 let importantDates;
 
 function updateClock() {
     now = new Date();
+
     hours = now.getHours();
     if (hours < 10) {
         hours = "0" + hours;
     }
+
     minutes = now.getMinutes();
     if (minutes < 10) {
         minutes = "0" + minutes;
     }
-    document.querySelector('.l-3-1').innerHTML = hours
-    document.querySelector('.l-3-3').innerHTML = minutes
+
+    hoursHTML.innerHTML = hours;
+    minutesHTML.innerHTML = minutes;
 
     timeNow = `${hours}:${minutes}`
 
-
-    if (hours === "00" && minutes === "00") {
-        // new day
-        fontSizeImportantDatesTr = 'n'
-        fontSizeImportantDatesAr = 'n'
-        fontSizeImportantDatesDe = 'n'
-        now = new Date();
-        initialRun = false;
-        getAllAnnouncements();
-        getNextImportantDate(importantDates)
-        updateTimes();
-
-        setTimeout(() => {
-            fetchMonthlyData();
-        }, 10000)
-
-    } else if (minutes === "00") {
-        getAllAnnouncements();
+    if (intervalMinutes === 60 && hours === "00" && minutes === "00") {
+        runOnNewDay();
+    } else if (minutes % intervalMinutes === 0) {
+        runOnNewDay();
     }
 }
 
 
-const dateNormal = document.querySelector('.dateNormal');
-const monthNormal = document.querySelector('.monthNormal');
-const yearNormal = document.querySelector('.yearNormal');
+function runOnNewDay() {
+    fontSizeImportantDates.tr = 'n';
+    fontSizeImportantDates.ar = 'n';
+    fontSizeImportantDates.de = 'n';
+    now = new Date();
+    initialRun = false;
+    getAllAnnouncements();
+    getNextImportantDate(importantDates)
+    updateTimes();
 
-const dateHicri = document.querySelector('.dateHicri');
-const monthHicri = document.querySelector('.monthHicri');
-const yearHicri = document.querySelector('.yearHicri');
-
-const point1 = document.querySelector('#p1');
-const point2 = document.querySelector('#p2');
+    setTimeout(() => {
+        fetchMonthlyData();
+        // todo: hier varianz berechnen, damit nicht alle moscheen gleichzeitig ziehen
+    }, 10000)
+}
 
 
 function convertToArabic(number) {
@@ -275,14 +320,6 @@ function convertToArabic(number) {
 const moonDirection = ["dolunay", "d1", "d2", "d3", "d4", "d5", "d6", "d65", "d7", "sondordun", "sd1", "sd2", "sd3", "sd4", "sd5", "sd6", "yeniAy", "r1", "r2", "r3", "r4", "r45", "r5", "ilkdordun", "i1", "i2", "i3", "i4", "i5", "i6", "i7"];
 
 // ictima und ruyet beide mit yeniAy ersetzen
-
-const moonElements = [
-    document.querySelector('.moon1'),
-    document.querySelector('.moon2'),
-    document.querySelector('.moon3'),
-    document.querySelector('.moon4'),
-    document.querySelector('.moon5')
-]
 
 function updateMoonSvgs() {
 
@@ -340,7 +377,11 @@ function updateTimes() {
     todaysPrayerTimes = [];
     todaysPrayerTimes.push(imsakRaw, gunesRaw, ogleRaw, ikindiRaw, aksamRaw, yatsiRaw);
 
-    updateMoonSvgs();
+    checkIfAllMoonImagesExist().then(result => {
+        if (result) {
+            updateMoonSvgs();
+        }
+    })
 
     updateTimeSvg(imsakSVG, imsakRaw);
     updateTimeSvg(gunesSVG, gunesRaw);
@@ -372,6 +413,58 @@ function updateTimes() {
 
 }
 
+function checkIfFileExistsAndIsSvg(fullUrl) {
+
+    return fetch(fullUrl)
+        .then(response => {
+
+            // first check if it is actually a file
+            if (!response.ok) {
+                //TODO some kind of notification service
+                throw new Error(`URL not found: ${fullUrl}`);
+            }
+
+            return response.text();
+
+        })
+        .then(svgText => {
+
+            // then check if it is a valid svg
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(svgText, "image/svg+xml");
+
+            if (!xmlDoc.getElementsByTagName('svg').length) {
+                throw new Error(`URL is not a valid SVG: ${url}`);
+            }
+
+            return true;
+
+        })
+        .catch(error => {
+            console.error(error);
+            return false;
+        });
+}
+
+function checkIfAllMoonImagesExist() {
+    const baseURL = 'images/moons/';
+    const promise = moonDirection.map(file => {
+
+        const fullUrl = `${baseURL}${file}.svg`;
+        return checkIfFileExistsAndIsSvg(fullUrl)
+            .then(fileIsValid => {
+                if (!fileIsValid) {
+                    //TODO some kind of notification service
+                    console.log(`file ${fullUrl} is not valid`);
+                }
+                return fileIsValid;
+            });
+    });
+
+    return Promise.all(promise)
+        .then(results => results.every(Boolean));
+}
+
 function updateTimeSvg(el, raw) {
     el.querySelector('.hour1').innerHTML = raw.substring(0, 1)
     el.querySelector('.hour2').innerHTML = raw.substring(1, 2)
@@ -379,41 +472,36 @@ function updateTimeSvg(el, raw) {
     el.querySelector('.minute2').innerHTML = raw.substring(4, 5)
 }
 
-const timeLeft = document.querySelector(".timeLeft");
-const countdownText = document.querySelector('.timeLeft-before')
-const timeLeftAfter = document.querySelector(".timeLeft-after");
-
-
 const countdownTextArr = [{
     tr: 'İMSAKA KALAN SÜRE:',
     de: 'VERBLEIBENDE ZEIT BIS ZUM MORGENSG.:',
     ar: 'الوقت المتبقي لصلاة الفجر',
 },
-{
-    tr: 'GÜNEŞE KALAN SÜRE:',
-    de: 'VERBLEIBENDE ZEIT BIS ZUM SONNENA.:',
-    ar: 'الوقت المتبقي لشروق الشمس',
-},
-{
-    tr: 'ÖĞLEYE KALAN SÜRE:',
-    de: 'VERBLEIBENDE ZEIT BIS ZUM MITTAGSG.:',
-    ar: 'الوقت المتبقي لصلاة الظهر',
-},
-{
-    tr: 'İKİNDİYE KALAN SÜRE:',
-    de: 'VERBLEIBENDE ZEIT BIS ZUM NACHM.:',
-    ar: 'الوقت المتبقي لصلاة العصر',
-},
-{
-    tr: 'AKŞAMA KALAN SÜRE:',
-    de: 'VERBLEIBENDE ZEIT BIS ZUM ABENDSG.:',
-    ar: 'الوقت المتبقي لصلاة المغرب',
-},
-{
-    tr: 'YATSIYE KALAN SÜRE:',
-    de: 'VERBLEIBENDE ZEIT BIS ZUM NACHTSG.:',
-    ar: 'الوقت المتبقي لصلاة العشاء',
-},
+    {
+        tr: 'GÜNEŞE KALAN SÜRE:',
+        de: 'VERBLEIBENDE ZEIT BIS ZUM SONNENA.:',
+        ar: 'الوقت المتبقي لشروق الشمس',
+    },
+    {
+        tr: 'ÖĞLEYE KALAN SÜRE:',
+        de: 'VERBLEIBENDE ZEIT BIS ZUM MITTAGSG.:',
+        ar: 'الوقت المتبقي لصلاة الظهر',
+    },
+    {
+        tr: 'İKİNDİYE KALAN SÜRE:',
+        de: 'VERBLEIBENDE ZEIT BIS ZUM NACHM.:',
+        ar: 'الوقت المتبقي لصلاة العصر',
+    },
+    {
+        tr: 'AKŞAMA KALAN SÜRE:',
+        de: 'VERBLEIBENDE ZEIT BIS ZUM ABENDSG.:',
+        ar: 'الوقت المتبقي لصلاة المغرب',
+    },
+    {
+        tr: 'YATSIYE KALAN SÜRE:',
+        de: 'VERBLEIBENDE ZEIT BIS ZUM NACHTSG.:',
+        ar: 'الوقت المتبقي لصلاة العشاء',
+    },
 ];
 
 const infoTitleLanguages = [
@@ -439,26 +527,14 @@ function checkIfNextPrayer() {
 
 }
 
-
-const importantDate1 = document.querySelector('#box1')
-
-const importantDate1Text = document.querySelector('.l-6-2-2')
-const importantDate2Text = document.querySelector('.l-6-4-2')
-
-const importantDate1Day = document.querySelector('#importantDate1Day')
-const importantDate2Day = document.querySelector('#importantDate2Day')
-
-const importantDate1Month = document.querySelector('#importantDate1Month')
-const importantDate2Month = document.querySelector('#importantDate2Month')
-
-const importantDate1Year = document.querySelector('#importantDate1Year')
-const importantDate2Year = document.querySelector('#importantDate2Year')
 let importantDatesPointer = 0;
 
 function updateImportantDates() {
     fetch("importantDates.json")
         .then(response => response.json())
-        .then(json => { importantDates = json })
+        .then(json => {
+            importantDates = json
+        })
         .then(() => getNextImportantDate(importantDates))
 
 }
@@ -507,7 +583,19 @@ function getNextImportantDate(arr) {
 
 activateFromTop = true;
 deactiveFromTop = true;
+
 function animateSvg(idx) {
+
+    let el;
+    let elClass;
+    let activateFromTop;
+    let aVal;
+
+    let dEl;
+    let dElClass;
+    let deactivateFromTop;
+    let dVal;
+
     switch (idx) {
         case 0:
             el = imsakSVG;
@@ -518,7 +606,7 @@ function animateSvg(idx) {
             //following are for deactivating the active status
             dEl = yatsiSVG;
             dElClass = '.yatsi';
-            deactiveFromTop = false;
+            deactivateFromTop = false;
             dVal = '2%'
             break;
         case 1:
@@ -529,7 +617,7 @@ function animateSvg(idx) {
 
             dEl = imsakSVG;
             dElClass = '.imsak';
-            deactiveFromTop = true;
+            deactivateFromTop = true;
             dVal = '2%'
             break;
         case 2:
@@ -540,7 +628,7 @@ function animateSvg(idx) {
 
             dEl = gunesSVG;
             dElClass = '.gunes';
-            deactiveFromTop = true;
+            deactivateFromTop = true;
             dVal = '19.5%'
             break;
         case 3:
@@ -551,7 +639,7 @@ function animateSvg(idx) {
 
             dEl = ogleSVG;
             dElClass = '.ogle';
-            deactiveFromTop = true;
+            deactivateFromTop = true;
             dVal = '35%'
             break;
         case 4:
@@ -562,7 +650,7 @@ function animateSvg(idx) {
 
             dEl = ikindiSVG;
             dElClass = '.ikindi';
-            deactiveFromTop = false;
+            deactivateFromTop = false;
             dVal = '35%'
 
             break;
@@ -574,7 +662,7 @@ function animateSvg(idx) {
 
             dEl = aksamSVG;
             dElClass = '.aksam';
-            deactiveFromTop = false;
+            deactivateFromTop = false;
             dVal = '20%'
 
             break;
@@ -681,7 +769,7 @@ function animateSvg(idx) {
 
     document.querySelector(dElClass).style.width = "37vw"
 
-    if (deactiveFromTop) {
+    if (deactivateFromTop) {
         document.querySelector(dElClass).style.top = dVal
 
     } else {
@@ -690,16 +778,14 @@ function animateSvg(idx) {
 }
 
 
-
 let namazTextTr = []
 let namazTextAr = []
 let namazTextDe = []
 
 //get the text element inside svg for prayer names
-var imsakSVG, gunesSVG, ogleSVG, ikindiSVG, aksamSVG, yatsiSVG;
+let imsakSVG, gunesSVG, ogleSVG, ikindiSVG, aksamSVG, yatsiSVG;
 
 function getSvgElements() {
-
 
     setTimeout(() => {
         const imsakSvg = document.querySelector('.imsak')
@@ -760,12 +846,11 @@ function getSvgElements() {
     }, 4000)
 }
 
-const countdownContainer = document.querySelector('.timeLeft')
 const changeLanguages = [importantDate1Text, importantDate2Text, countdownContainer]
 const ramadanLanguages = [dateHicri, monthHicri]
 
-prayerLng = 0
-//change text every 30s
+let prayerLng = 0
+
 const changeLanguage = (language) => {
     if (language === "ar") {
         d3.selectAll(namazTextTr)
@@ -943,32 +1028,30 @@ const changeLanguage = (language) => {
 
 
         // for resize
-        if (fontSizeImportantDatesDe === "n" || fontSizeImportantDatesTr === "n" || fontSizeImportantDatesAr === "n") {
-            infoText.style.fontSize = "2.5vw"
-            importantDate1Text.style.fontSize = "1.5vw"
-            importantDate2Text.style.fontSize = "1.5vw"
+        if (fontSizeImportantDates[language] === "n") {
+            infoText.style.fontSize = "2.5vw";
+            importantDate1Text.style.fontSize = "1.5vw";
+            importantDate2Text.style.fontSize = "1.5vw";
             autoSizeText();
         } else {
-
-            if (language === "tr") {
-                infoText.style.fontSize = fontSizeInfoTr
-                importantDate1Text.style.fontSize = fontSizeImportantDatesTr
-                importantDate2Text.style.fontSize = fontSizeImportantDatesTr
-            } else if (language === "ar") {
-                infoText.style.fontSize = fontSizeInfoAr
-                importantDate1Text.style.fontSize = fontSizeImportantDatesAr
-                importantDate2Text.style.fontSize = fontSizeImportantDatesAr
-            } else {
-                infoText.style.fontSize = fontSizeInfoDe
-                importantDate1Text.style.fontSize = fontSizeImportantDatesDe
-                importantDate2Text.style.fontSize = fontSizeImportantDatesDe
-            }
-
+            infoText.style.fontSize = fontSizeInfo[language];
+            importantDate1Text.style.fontSize = fontSizeImportantDates[language];
+            importantDate2Text.style.fontSize = fontSizeImportantDates[language];
         }
-
 
     }, 1000);
 };
+
+function adjustFontSizeForImportantDates() {
+    const minFontSize = Math.min(
+        parseInt(importantDate1Text.style.fontSize),
+        parseInt(importantDate2Text.style.fontSize)
+    );
+
+    importantDate1Text.style.fontSize = minFontSize + 'px';
+    importantDate2Text.style.fontSize = minFontSize + 'px';
+}
+
 
 setInterval(() => {
     if (prayerLng === 0) {
@@ -981,69 +1064,59 @@ setInterval(() => {
         changeLanguage("tr");
         prayerLng = 0;
     }
-}, 30000);
-
-
-let fontSizeImportantDatesTr = 'n';
-let fontSizeImportantDatesAr = 'n';
-let fontSizeImportantDatesDe = 'n';
+}, secondsToChangeLanguage);
 
 // prayerLng -> 0 : tr, 1 : ar, 2 : de
+
+const fontSizeInfo = {
+    tr: 'n',
+    ar: 'n',
+    de: 'n'
+};
+
+const fontSizeImportantDates = {
+    tr: 'n',
+    ar: 'n',
+    de: 'n'
+};
+
 function autoSizeText() {
     const elements = document.querySelectorAll('.resize');
 
-    if (elements.length <= 0) {
-        return;
-    }
+    elements.forEach(el => {
+        while (el.scrollHeight > el.offsetHeight) {
+            el.style.fontSize = (parseInt(window.getComputedStyle(el).fontSize.slice(0, -2)) - 1) + 'px';
+        }
 
-    for (let i = 0; i < elements.length; i++) {
-        (function (el) {
-            const resizeText = function () {
-                el.style.fontSize = (parseInt(window.getComputedStyle(el).fontSize.slice(0, -2)) - 1) + 'px';
-            };
+        if (el.id === "infoText") {
+            fontSizeInfo[prayerLng] = el.style.fontSize;
+        }
+    });
 
-            while (el.scrollHeight > el.offsetHeight) {
-                resizeText();
-            }
+    const minFontSize = Math.min(
+        parseInt(importantDate1Text.style.fontSize),
+        parseInt(importantDate2Text.style.fontSize)
+    ) + 'px';
 
-            if (el.id === "infoText") {
-                if (prayerLng === 0) {
-                    fontSizeInfoTr = infoText.style.fontSize;
-                } else if (prayerLng === 1) {
-                    fontSizeInfoAr = infoText.style.fontSize;
-                } else if (prayerLng === 2) {
-                    fontSizeInfoDe = infoText.style.fontSize;
-                }
-            }
+    importantDate1Text.style.fontSize = minFontSize;
+    importantDate2Text.style.fontSize = minFontSize;
 
-        })(elements[i]);
-    }
-
-    if (importantDate1Text.style.fontSize < importantDate2Text.style.fontSize) {
-        importantDate2Text.style.fontSize = importantDate1Text.style.fontSize
-    } else if (importantDate1Text.style.fontSize > importantDate2Text.style.fontSize) {
-        importantDate1Text.style.fontSize = importantDate2Text.style.fontSize
-    }
-
-    if (prayerLng === 0) {
-        fontSizeImportantDatesTr = importantDate1Text.style.fontSize;
-    } else if (prayerLng === 1) {
-        fontSizeImportantDatesAr = importantDate1Text.style.fontSize;
-    } else if (prayerLng === 2) {
-        fontSizeImportantDatesDe = importantDate1Text.style.fontSize;
-    }
+    fontSizeImportantDates[prayerLng] = minFontSize;
 }
 
-
 addEventListener("resize", () => {
-    fontSizeImportantDatesTr = 'n';
-    fontSizeImportantDatesAr = 'n';
-    fontSizeImportantDatesDe = 'n';
-    autoSizeText()
+
+    fontSizeImportantDates.tr = 'n';
+    fontSizeImportantDates.ar = 'n';
+    fontSizeImportantDates.de = 'n';
+
+    //todo: hier fehlt doch noch infoText???
+
+    autoSizeText();
 });
 
-var monthlyData;
-var monthlyDataPointer = 0;
+let monthlyData;
+let monthlyDataPointer = 0;
 
 function fetchMonthlyData() {
     fetch(`${serverUrl}/api/getDailyData?urlPara=${urlPara}`, {
@@ -1074,4 +1147,7 @@ function fetchMonthlyData() {
 
 }
 
-fetchMonthlyData()
+fetchMonthlyData();
+
+
+//todo: werden font size von importantDates UND infoText überhaupt um Mitternacht angepasst, oder nur bei einem reload der Seite?
