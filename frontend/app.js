@@ -9,7 +9,25 @@ const serverUrl = "https://namaz-backend.herokuapp.com"
  */
 const intervalMinutes = 60;
 
-const secondsToChangeLanguage = 30000;
+/**
+ * Specifies the interval (in minutes) to adjust the prayer times for testing purposes.
+ * When set, the prayer times will be adjusted based on this interval.
+ * For example, if set to 5, and the website is accessed at 1:00, the `imsak` prayer time will be set to 1:01, `gunes` to 1:06, and so on.
+ * If not set or null, the actual prayer times from the data source will be used.
+ *
+ * @type {?number}
+ * @default null
+ */
+let testInterval = null;
+
+/**
+ * Specifies the interval (in milliseconds) after which the language should change.
+ * For example, if set to 30000, the language will change every 30 seconds.
+ *
+ * @type {number}
+ * @default 30
+ */
+const secondsToChangeLanguage = 5;
 
 let now = new Date();
 
@@ -380,6 +398,7 @@ let isRamadan = false;
 let hijriRaw;
 
 function updateTimes() {
+    //this is for fetching the prayer times
     isRamadan = false;
     yearHicri.style.display = 'visible';
 
@@ -396,12 +415,14 @@ function updateTimes() {
     let aksamRaw = monthlyData[monthlyDataPointer]['maghrib'];
     let yatsiRaw = monthlyData[monthlyDataPointer]['isha'];
 
-    // imsakRaw = '19:20';
-    // gunesRaw = '19:25';
-    // ogleRaw = '19:30';
-    // ikindiRaw = '19:35';
-    // aksamRaw = '15:33';
-    // yatsiRaw = '19:22';
+    if (testInterval !== null) {
+        imsakRaw = increaseTimeByInterval(1);
+        gunesRaw = increaseTimeByInterval(1 * testInterval + 1);
+        ogleRaw = increaseTimeByInterval(2 * testInterval + 1);
+        ikindiRaw = increaseTimeByInterval(3 * testInterval + 1);
+        aksamRaw = increaseTimeByInterval(4 * testInterval + 1);
+        yatsiRaw = increaseTimeByInterval(5 * testInterval + 1);
+    }
 
     todaysPrayerTimes = [];
     todaysPrayerTimes.push(imsakRaw, gunesRaw, ogleRaw, ikindiRaw, aksamRaw, yatsiRaw);
@@ -425,11 +446,11 @@ function updateTimes() {
 
     hijriRaw = monthlyData[monthlyDataPointer]['hijriDate'].split('.');
     hijriRaw.push(convertToArabic(hijriRaw[0]))
-    //ramadan is true
+
     if (hijriRaw[1] === '9') {
+        isRamadan = true;
         point1.style.display = 'none';
 
-        isRamadan = true;
         yearHicri.style.display = 'none'
         dateHicri.innerHTML = 'Ramazan'
         monthHicri.innerHTML = hijriRaw[0]
@@ -440,6 +461,13 @@ function updateTimes() {
         yearHicri.innerHTML = hijriRaw[2]
     }
 
+}
+
+// only needed for local testing
+function increaseTimeByInterval(minutesToAdd) {
+    let date = new Date();
+    date.setTime(date.getTime() + minutesToAdd * 60 * 1000);
+    return formatTime(date.getHours()) + ":" + formatTime(date.getMinutes());
 }
 
 function checkIfFileExistsAndIsSvg(fullUrl) {
@@ -873,6 +901,7 @@ function getSvgElements() {
         countdownText.innerHTML = countdownTextArr[nextPrayer]['tr']
 
     }, 4000)
+    // todo: das muss ohne timeout funktionieren
 }
 
 const changeLanguages = [importantDate1Text, importantDate2Text, countdownContainer]
@@ -978,6 +1007,7 @@ const changeLanguage = (language) => {
         countdownText.innerHTML = countdownTextArr[nextPrayer][language]
 
         if (todayIsAnAnnouncement) {
+            // todo: refactor mit const title
             infoTitle.innerHTML = language === "ar" ? "رسالة" : language === "tr" ? "DUYURU" : "MITTEILUNG";
             infoText.innerHTML = todaysAnnouncement[language];
         } else {
@@ -1008,7 +1038,6 @@ const changeLanguage = (language) => {
             timeLeft.removeChild(timeLeftAfter);
             timeLeft.insertBefore(timeLeftAfter, countdownText);
             countdownText.style.fontFamily = "Hafs"
-
 
         } else if (language === "de") {
             importantDate1Text.style.fontFamily = "'Montserrat', sans-serif"
@@ -1082,7 +1111,7 @@ setInterval(() => {
         changeLanguage("tr");
         prayerLng = 0;
     }
-}, secondsToChangeLanguage);
+}, secondsToChangeLanguage * 1000);
 
 // prayerLng -> 0 : tr, 1 : ar, 2 : de
 
@@ -1107,7 +1136,7 @@ function autoSizeText() {
         }
 
         if (el.id === "infoText") {
-            fontSizeInfo[prayerLng] = el.style.fontSize;
+            fontSizeInfo[languageKeys[prayerLng]] = el.style.fontSize;
         }
     });
 
@@ -1119,7 +1148,7 @@ function autoSizeText() {
     importantDate1Text.style.fontSize = minFontSize;
     importantDate2Text.style.fontSize = minFontSize;
 
-    fontSizeImportantDates[prayerLng] = minFontSize;
+    fontSizeImportantDates[languageKeys[prayerLng]] = minFontSize;
 }
 
 addEventListener("resize", () => {
@@ -1169,3 +1198,5 @@ fetchMonthlyData();
 
 
 //todo: werden font size von importantDates UND infoText überhaupt um Mitternacht angepasst, oder nur bei einem reload der Seite?
+
+//todo: im arabischen wird Punkt als Vers-Trenner interpretiert, problematisch bei importantDates
