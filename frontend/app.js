@@ -27,7 +27,7 @@ let testInterval = null;
  * @type {number}
  * @default 30
  */
-const secondsToChangeLanguage = 5;
+const secondsToChangeLanguage = 30;
 
 let now = new Date();
 
@@ -1130,26 +1130,37 @@ const fontSizeImportantDates = {
 function autoSizeText() {
     const elements = document.querySelectorAll('.resize');
 
+    let fontSizeImportantDateLeft, fontSizeImportantDateRight;
+
     elements.forEach(el => {
+        let computedFontSize = window.getComputedStyle(el).fontSize;
         while (el.scrollHeight > el.offsetHeight) {
-            el.style.fontSize = (parseInt(window.getComputedStyle(el).fontSize.slice(0, -2)) - 1) + 'px';
+            computedFontSize = (parseInt(computedFontSize.slice(0, -2)) - 1) + 'px';
+            el.style.fontSize = computedFontSize;
         }
 
-        if (el.id === "infoText") {
-            fontSizeInfo[languageKeys[prayerLng]] = el.style.fontSize;
+        if (el.id === "importantDate1Text") {
+            fontSizeImportantDateLeft = computedFontSize;
+        } else if (el.id === "importantDate2Text") {
+            fontSizeImportantDateRight = computedFontSize;
+        } else if (el.id === "infoText") {
+            fontSizeInfo[languageKeys[prayerLng]] = computedFontSize;
         }
     });
 
-    const minFontSize = Math.min(
-        parseInt(importantDate1Text.style.fontSize),
-        parseInt(importantDate2Text.style.fontSize)
-    ) + 'px';
+    if (fontSizeImportantDateLeft && fontSizeImportantDateRight) {
+        const minFontSize = Math.min(
+            parseInt(fontSizeImportantDateLeft, 10),
+            parseInt(fontSizeImportantDateRight, 10)
+        ) + 'px';
 
-    importantDate1Text.style.fontSize = minFontSize;
-    importantDate2Text.style.fontSize = minFontSize;
+        importantDate1Text.style.fontSize = minFontSize;
+        importantDate2Text.style.fontSize = minFontSize;
 
-    fontSizeImportantDates[languageKeys[prayerLng]] = minFontSize;
+        fontSizeImportantDates[languageKeys[prayerLng]] = minFontSize;
+    }
 }
+
 
 addEventListener("resize", () => {
 
