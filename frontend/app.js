@@ -22,7 +22,7 @@ let testInterval = null;
 
 /**
  * Specifies the interval (in milliseconds) after which the language should change.
- * For example, if set to 30000, the language will change every 30 seconds.
+ * For example, if set to 30, the language will change every 30 seconds.
  *
  * @type {number}
  * @default 30
@@ -1139,9 +1139,9 @@ function autoSizeText() {
             el.style.fontSize = computedFontSize;
         }
 
-        if (el.id === "importantDate1Text") {
+        if (el.id === "importantDateTextLeft") {
             fontSizeImportantDateLeft = computedFontSize;
-        } else if (el.id === "importantDate2Text") {
+        } else if (el.id === "importantDateTextRight") {
             fontSizeImportantDateRight = computedFontSize;
         } else if (el.id === "infoText") {
             fontSizeInfo[languageKeys[prayerLng]] = computedFontSize;
