@@ -900,7 +900,7 @@ function getSvgElements() {
 
         countdownText.innerHTML = countdownTextArr[nextPrayer]['tr']
 
-    }, 4000)
+    }, 10000)
     // todo: das muss ohne timeout funktionieren
 }
 
