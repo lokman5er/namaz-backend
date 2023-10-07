@@ -347,9 +347,23 @@ function runOnNewDay() {
     updateTimes();
 
     setTimeout(() => {
+
         fetchMonthlyData();
-        // todo: hier varianz berechnen, damit nicht alle moscheen gleichzeitig ziehen
-    }, 10000)
+
+    }, generateDelay())
+}
+
+/**
+ * Generates a random delay between 500 and 10,000 milliseconds (inclusive).
+ *
+ * @returns {number} The randomly generated delay in milliseconds.
+ */
+function generateDelay() {
+
+    let max = 10_000
+    let min = 500
+
+    return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
 
