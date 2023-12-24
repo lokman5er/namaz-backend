@@ -7,7 +7,7 @@ const serverUrl = "https://namaz-backend.herokuapp.com"
  * @type {number}
  * @default 60
  */
-const intervalMinutes = 60;
+const intervalMinutes = 1;
 
 /**
  * Specifies the interval (in minutes) to adjust the prayer times for testing purposes.
@@ -18,7 +18,7 @@ const intervalMinutes = 60;
  * @type {?number}
  * @default null
  */
-let testInterval = null;
+let testInterval = 5;
 
 /**
  * Specifies the interval (in milliseconds) after which the language should change.
@@ -27,7 +27,7 @@ let testInterval = null;
  * @type {number}
  * @default 30
  */
-const secondsToChangeLanguage = 30;
+const secondsToChangeLanguage = 10;
 
 let now = new Date();
 
@@ -92,7 +92,7 @@ function getDateString(date) {
     return `${year}-${month}-${day}T00:00:00.000Z`;
 }
 
-Date.prototype.withoutTime = function () {
+Date.prototype.withoutTime = function() {
     const d = new Date(this);
     d.setHours(0, 0, 0, 0);
     return d;
@@ -271,13 +271,13 @@ function updateCountdown(startTime, endTime) {
 
 
 // needed to start in exact second
-setTimeout(function () {
+setTimeout(function() {
 
     runEveryMinute();
 
 }, (60000 - now.getMilliseconds() - now.getSeconds() * 1000))
 
-const interval = 60000;
+const interval = 60;
 let adjustedInterval = interval;
 let expectedCycleTime = 0;
 
@@ -307,7 +307,7 @@ function runEveryMinute() {
     }
 
     // function calls itself after delay of adjustedInterval
-    setTimeout(function () {
+    setTimeout(function() {
         runEveryMinute();
     }, adjustedInterval);
 }
@@ -349,7 +349,7 @@ function runOnNewDay() {
     setTimeout(() => {
         fetchMonthlyData();
         // todo: hier varianz berechnen, damit nicht alle moscheen gleichzeitig ziehen
-    }, 10000)
+    }, 100)
 }
 
 
@@ -389,8 +389,7 @@ function updateMoonSvgs() {
     const moonIndex4 = (moonIndex3 + 1) % moonDirection.length;
     moonElements[3].setAttribute('src', `images/moons/${moonDirection[moonIndex4]}.svg`)
 
-    const moonIndex5 = (moonIndex3 + 2) % moonDirection.length;
-    moonElements[4].setAttribute('src', `images/moons/${moonDirection[moonIndex5]}.svg`)
+    moonElements[4] = document.querySelector('.moon5')
 }
 
 let todaysPrayerTimes = [];
@@ -470,40 +469,31 @@ function increaseTimeByInterval(minutesToAdd) {
     return formatTime(date.getHours()) + ":" + formatTime(date.getMinutes());
 }
 
-function checkIfFileExistsAndIsSvg(fullUrl) {
+async function checkIfFileExistsAndIsSvg(fullUrl) {
 
-    return fetch(fullUrl)
-        .then(response => {
+    try {
+        const response = await fetch(fullUrl);
+        // first check if it is actually a file
+        if (!response.ok) {
+            //TODO some kind of notification service
+            throw new Error(`URL not found: ${fullUrl}`);
+        }
+        const svgText = await response.text();
+        // then check if it is a valid svg
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(svgText, "image/svg+xml");
 
-            // first check if it is actually a file
-            if (!response.ok) {
-                //TODO some kind of notification service
-                throw new Error(`URL not found: ${fullUrl}`);
-            }
-
-            return response.text();
-
-        })
-        .then(svgText => {
-
-            // then check if it is a valid svg
-            const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(svgText, "image/svg+xml");
-
-            if (!xmlDoc.getElementsByTagName('svg').length) {
-                throw new Error(`URL is not a valid SVG: ${url}`);
-            }
-
-            return true;
-
-        })
-        .catch(error => {
-            console.error(error);
-            return false;
-        });
+        if (!xmlDoc.getElementsByTagName('svg').length) {
+            throw new Error(`URL is not a valid SVG: ${url}`);
+        }
+        return true;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
 }
 
-function checkIfAllMoonImagesExist() {
+async function checkIfAllMoonImagesExist() {
     const baseURL = 'images/moons/';
     const promise = moonDirection.map(file => {
 
@@ -518,8 +508,8 @@ function checkIfAllMoonImagesExist() {
             });
     });
 
-    return Promise.all(promise)
-        .then(results => results.every(Boolean));
+    const results = await Promise.all(promise);
+    return results.every(Boolean);
 }
 
 function updateTimeSvg(el, raw) {
@@ -534,31 +524,31 @@ const countdownTextArr = [{
     de: 'VERBLEIBENDE ZEIT BIS ZUM MORGENSG.:',
     ar: 'الوقت المتبقي لصلاة الفجر',
 },
-    {
-        tr: 'GÜNEŞE KALAN SÜRE:',
-        de: 'VERBLEIBENDE ZEIT BIS ZUM SONNENA.:',
-        ar: 'الوقت المتبقي لشروق الشمس',
-    },
-    {
-        tr: 'ÖĞLEYE KALAN SÜRE:',
-        de: 'VERBLEIBENDE ZEIT BIS ZUM MITTAGSG.:',
-        ar: 'الوقت المتبقي لصلاة الظهر',
-    },
-    {
-        tr: 'İKİNDİYE KALAN SÜRE:',
-        de: 'VERBLEIBENDE ZEIT BIS ZUM NACHM.:',
-        ar: 'الوقت المتبقي لصلاة العصر',
-    },
-    {
-        tr: 'AKŞAMA KALAN SÜRE:',
-        de: 'VERBLEIBENDE ZEIT BIS ZUM ABENDSG.:',
-        ar: 'الوقت المتبقي لصلاة المغرب',
-    },
-    {
-        tr: 'YATSIYE KALAN SÜRE:',
-        de: 'VERBLEIBENDE ZEIT BIS ZUM NACHTSG.:',
-        ar: 'الوقت المتبقي لصلاة العشاء',
-    },
+{
+    tr: 'GÜNEŞE KALAN SÜRE:',
+    de: 'VERBLEIBENDE ZEIT BIS ZUM SONNENA.:',
+    ar: 'الوقت المتبقي لشروق الشمس',
+},
+{
+    tr: 'ÖĞLEYE KALAN SÜRE:',
+    de: 'VERBLEIBENDE ZEIT BIS ZUM MITTAGSG.:',
+    ar: 'الوقت المتبقي لصلاة الظهر',
+},
+{
+    tr: 'İKİNDİYE KALAN SÜRE:',
+    de: 'VERBLEIBENDE ZEIT BIS ZUM NACHM.:',
+    ar: 'الوقت المتبقي لصلاة العصر',
+},
+{
+    tr: 'AKŞAMA KALAN SÜRE:',
+    de: 'VERBLEIBENDE ZEIT BIS ZUM ABENDSG.:',
+    ar: 'الوقت المتبقي لصلاة المغرب',
+},
+{
+    tr: 'YATSIYE KALAN SÜRE:',
+    de: 'VERBLEIBENDE ZEIT BIS ZUM NACHTSG.:',
+    ar: 'الوقت المتبقي لصلاة العشاء',
+},
 ];
 
 const infoTitleLanguages = [
@@ -842,27 +832,65 @@ let namazTextDe = []
 //get the text element inside svg for prayer names
 let imsakSVG, gunesSVG, ogleSVG, ikindiSVG, aksamSVG, yatsiSVG;
 
+
+// look up elements and store them in previous array
+document.addEventListener("DOMContentLoaded", function() {
+    // array for storing information
+    const svgArray = {
+        '.imsak': imsakSVG,
+        '.gunes': gunesSVG,
+        '.ogle': ogleSVG,
+        '.ikindi': ikindiSVG,
+        '.aksam': aksamSVG,
+        '.yatsi': yatsiSVG,
+    }
+
+    Object.entries(svgArray).forEach(([k, v]) => {
+        const svgElement = document.querySelector(k);
+        switch (k) {
+            case '.imsak':
+                imsakSVG = svgElement
+                break;
+            case '.gunes':
+                gunesSVG = svgElement
+                break;
+            case '.ogle':
+                ogleSVG = svgElement
+                break;
+            case '.ikindi':
+                ikindiSVG = svgElement
+                break;
+            case '.aksam':
+                aksamSVG = svgElement
+                break;
+            case '.yatsi':
+                yatsiSVG = svgElement
+                break;
+        }
+    })
+});
+
 function getSvgElements() {
 
     setTimeout(() => {
-        const imsakSvg = document.querySelector('.imsak')
-        imsakSVG = imsakSvg.contentDocument;
 
-        const gunesSvg = document.querySelector('.gunes')
-        gunesSVG = gunesSvg.contentDocument;
-
-        const ogleSvg = document.querySelector('.ogle')
-        ogleSVG = ogleSvg.contentDocument;
-
-        const ikindiSvg = document.querySelector('.ikindi')
-        ikindiSVG = ikindiSvg.contentDocument;
-
-        const aksamSvg = document.querySelector('.aksam')
-        aksamSVG = aksamSvg.contentDocument;
-
-        const yatsiSvg = document.querySelector('.yatsi')
-        yatsiSVG = yatsiSvg.contentDocument;
-
+        // const imsakSVG = svgArray['.imsak']
+        //
+        // const gunesSvg = document.querySelector('.gunes')
+        // gunesSVG = gunesSvg.contentDocument;
+        //
+        // const ogleSvg = document.querySelector('.ogle')
+        // ogleSVG = ogleSvg.contentDocument;
+        //
+        // const ikindiSvg = document.querySelector('.ikindi')
+        // ikindiSVG = ikindiSvg.contentDocument;
+        //
+        // const aksamSvg = document.querySelector('.aksam')
+        // aksamSVG = aksamSvg.contentDocument;
+        //
+        // const yatsiSvg = document.querySelector('.yatsi')
+        // yatsiSVG = yatsiSvg.contentDocument;
+        //
 
         namazTextTr.push(
             imsakSVG.querySelector('#tr'),
@@ -900,7 +928,7 @@ function getSvgElements() {
 
         countdownText.innerHTML = countdownTextArr[nextPrayer]['tr']
 
-    }, 10000)
+    }, 2000)
     // todo: das muss ohne timeout funktionieren
 }
 
