@@ -92,7 +92,7 @@ function getDateString(date) {
     return `${year}-${month}-${day}T00:00:00.000Z`;
 }
 
-Date.prototype.withoutTime = function () {
+Date.prototype.withoutTime = function() {
     const d = new Date(this);
     d.setHours(0, 0, 0, 0);
     return d;
@@ -116,10 +116,10 @@ let todaysKnowledgeSourceArabic;
 
 const languageKeys = ['tr', 'ar', 'de'];
 
-function getVersesOrHadiths() {
+async function getVersesOrHadiths() {
     fetch("versesAndHadiths.json")
-        .then(response => response.json())
-        .then(json => {
+        .then(async (response) => response.json())
+        .then(async (json) => {
             todaysKnowledgeArray = json;
             todaysKnowledge = json[now.getDate() - 1];
 
@@ -139,7 +139,7 @@ function getVersesOrHadiths() {
 
 let announcements = [];
 
-function getAllAnnouncements() {
+async function getAllAnnouncements() {
     fetch(`${serverUrl}/api/getAllAnnouncements?urlPara=${urlPara}`)
         .then(res => {
             if (res.status !== 200) {
@@ -271,13 +271,13 @@ function updateCountdown(startTime, endTime) {
 
 
 // needed to start in exact second
-setTimeout(function () {
+setTimeout(function() {
 
     runEveryMinute();
 
 }, (60000 - now.getMilliseconds() - now.getSeconds() * 1000))
 
-const interval = 60000;
+const interval = 60;
 let adjustedInterval = interval;
 let expectedCycleTime = 0;
 
@@ -307,7 +307,7 @@ function runEveryMinute() {
     }
 
     // function calls itself after delay of adjustedInterval
-    setTimeout(function () {
+    setTimeout(function() {
         runEveryMinute();
     }, adjustedInterval);
 }
@@ -336,35 +336,21 @@ function updateClock() {
 }
 
 
-function runOnNewDay() {
+async function runOnNewDay() {
     fontSizeImportantDates.tr = 'n';
     fontSizeImportantDates.ar = 'n';
     fontSizeImportantDates.de = 'n';
     now = new Date();
     initialRun = false;
     getAllAnnouncements();
-    getNextImportantDate(importantDates)
+    await getNextImportantDate(importantDates)
     updateTimes();
 
-    setTimeout(() => {
+    setTimeout(async () => {
+        await fetchMonthlyData();
+        // todo: hier varianz berechnen, damit nicht alle moscheen gleichzeitig ziehen
+    }, 100)
 
-        fetchMonthlyData();
-
-    }, generateDelay())
-}
-
-/**
- * Generates a random delay between 500 and 10,000 milliseconds (inclusive).
- *
- * @returns {number} The randomly generated delay in milliseconds.
- */
-function generateDelay() {
-
-    let max = 10_000
-    let min = 500
-
-    return Math.floor(Math.random() * (max - min + 1) + min)
-}
 
 
 function convertToArabic(number) {
@@ -376,7 +362,6 @@ function convertToArabic(number) {
     }
     return arabicNum;
 }
-
 
 const moonDirection = ["dolunay", "d1", "d2", "d3", "d4", "d5", "d6", "d65", "d7", "sondordun", "sd1", "sd2", "sd3", "sd4", "sd5", "sd6", "yeniAy", "r1", "r2", "r3", "r4", "r45", "r5", "ilkdordun", "i1", "i2", "i3", "i4", "i5", "i6", "i7"];
 
@@ -484,56 +469,45 @@ function increaseTimeByInterval(minutesToAdd) {
     return formatTime(date.getHours()) + ":" + formatTime(date.getMinutes());
 }
 
-function checkIfFileExistsAndIsSvg(fullUrl) {
+async function checkIfFileExistsAndIsSvg(fullUrl) {
 
-    return fetch(fullUrl)
-        .then(response => {
+    try {
+        const response = await fetch(fullUrl);
+        // first check if it is actually a file
+        if (!response.ok) {
+            //TODO some kind of notification service
+            throw new Error(`URL not found: ${fullUrl}`);
+        }
+        const svgText = await response.text();
+        // then check if it is a valid svg
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(svgText, "image/svg+xml");
 
-            // first check if it is actually a file
-            if (!response.ok) {
-                //TODO some kind of notification service
-                throw new Error(`URL not found: ${fullUrl}`);
-            }
-
-            return response.text();
-
-        })
-        .then(svgText => {
-
-            // then check if it is a valid svg
-            const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(svgText, "image/svg+xml");
-
-            if (!xmlDoc.getElementsByTagName('svg').length) {
-                throw new Error(`URL is not a valid SVG: ${url}`);
-            }
-
-            return true;
-
-        })
-        .catch(error => {
-            console.error(error);
-            return false;
-        });
+        if (!xmlDoc.getElementsByTagName('svg').length) {
+            throw new Error(`URL is not a valid SVG: ${url}`);
+        }
+        return true;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
 }
 
-function checkIfAllMoonImagesExist() {
+async function checkIfAllMoonImagesExist() {
     const baseURL = 'images/moons/';
-    const promise = moonDirection.map(file => {
+    const promise = moonDirection.map(async file => {
 
         const fullUrl = `${baseURL}${file}.svg`;
-        return checkIfFileExistsAndIsSvg(fullUrl)
-            .then(fileIsValid => {
-                if (!fileIsValid) {
-                    //TODO some kind of notification service
-                    console.log(`file ${fullUrl} is not valid`);
-                }
-                return fileIsValid;
-            });
+        const fileIsValid = await checkIfFileExistsAndIsSvg(fullUrl);
+        if (!fileIsValid) {
+            //TODO some kind of notification service
+            console.log(`file ${fullUrl} is not valid`);
+        }
+        return fileIsValid;
     });
 
-    return Promise.all(promise)
-        .then(results => results.every(Boolean));
+    const results = await Promise.all(promise);
+    return results.every(Boolean);
 }
 
 function updateTimeSvg(el, raw) {
@@ -548,31 +522,31 @@ const countdownTextArr = [{
     de: 'VERBLEIBENDE ZEIT BIS ZUM MORGENSG.:',
     ar: 'الوقت المتبقي لصلاة الفجر',
 },
-    {
-        tr: 'GÜNEŞE KALAN SÜRE:',
-        de: 'VERBLEIBENDE ZEIT BIS ZUM SONNENA.:',
-        ar: 'الوقت المتبقي لشروق الشمس',
-    },
-    {
-        tr: 'ÖĞLEYE KALAN SÜRE:',
-        de: 'VERBLEIBENDE ZEIT BIS ZUM MITTAGSG.:',
-        ar: 'الوقت المتبقي لصلاة الظهر',
-    },
-    {
-        tr: 'İKİNDİYE KALAN SÜRE:',
-        de: 'VERBLEIBENDE ZEIT BIS ZUM NACHM.:',
-        ar: 'الوقت المتبقي لصلاة العصر',
-    },
-    {
-        tr: 'AKŞAMA KALAN SÜRE:',
-        de: 'VERBLEIBENDE ZEIT BIS ZUM ABENDSG.:',
-        ar: 'الوقت المتبقي لصلاة المغرب',
-    },
-    {
-        tr: 'YATSIYE KALAN SÜRE:',
-        de: 'VERBLEIBENDE ZEIT BIS ZUM NACHTSG.:',
-        ar: 'الوقت المتبقي لصلاة العشاء',
-    },
+{
+    tr: 'GÜNEŞE KALAN SÜRE:',
+    de: 'VERBLEIBENDE ZEIT BIS ZUM SONNENA.:',
+    ar: 'الوقت المتبقي لشروق الشمس',
+},
+{
+    tr: 'ÖĞLEYE KALAN SÜRE:',
+    de: 'VERBLEIBENDE ZEIT BIS ZUM MITTAGSG.:',
+    ar: 'الوقت المتبقي لصلاة الظهر',
+},
+{
+    tr: 'İKİNDİYE KALAN SÜRE:',
+    de: 'VERBLEIBENDE ZEIT BIS ZUM NACHM.:',
+    ar: 'الوقت المتبقي لصلاة العصر',
+},
+{
+    tr: 'AKŞAMA KALAN SÜRE:',
+    de: 'VERBLEIBENDE ZEIT BIS ZUM ABENDSG.:',
+    ar: 'الوقت المتبقي لصلاة المغرب',
+},
+{
+    tr: 'YATSIYE KALAN SÜRE:',
+    de: 'VERBLEIBENDE ZEIT BIS ZUM NACHTSG.:',
+    ar: 'الوقت المتبقي لصلاة العشاء',
+},
 ];
 
 const infoTitleLanguages = [
@@ -600,17 +574,17 @@ function checkIfNextPrayer() {
 
 let importantDatesPointer = 0;
 
-function updateImportantDates() {
+async function updateImportantDates() {
     fetch("importantDates.json")
         .then(response => response.json())
         .then(json => {
             importantDates = json
         })
-        .then(() => getNextImportantDate(importantDates))
+        .then(async () => await getNextImportantDate(importantDates))
 
 }
 
-function getNextImportantDate(arr) {
+async function getNextImportantDate(arr) {
 
     importantDate1.style.backgroundColor = '#d5e7ea'
     importantDate1.style.color = '#1f4e5f'
@@ -652,8 +626,8 @@ function getNextImportantDate(arr) {
     }
 }
 
-activateFromTop = true;
-deactiveFromTop = true;
+// let activateFromTop = true;
+// let deactiveFromTop = true;
 
 function animateSvg(idx) {
 
@@ -856,66 +830,79 @@ let namazTextDe = []
 //get the text element inside svg for prayer names
 let imsakSVG, gunesSVG, ogleSVG, ikindiSVG, aksamSVG, yatsiSVG;
 
-function getSvgElements() {
 
-    setTimeout(() => {
-        const imsakSvg = document.querySelector('.imsak')
-        imsakSVG = imsakSvg.contentDocument;
+// look up elements and store them in previous array
+document.addEventListener("DOMContentLoaded", function() {
+    // array for storing information
+    const svgArray = {
+        '.imsak': imsakSVG,
+        '.gunes': gunesSVG,
+        '.ogle': ogleSVG,
+        '.ikindi': ikindiSVG,
+        '.aksam': aksamSVG,
+        '.yatsi': yatsiSVG,
+    }
 
-        const gunesSvg = document.querySelector('.gunes')
-        gunesSVG = gunesSvg.contentDocument;
+    Object.entries(svgArray).forEach(([k, _]) => {
+        const svgElement = document.querySelector(k);
+        switch (k) {
+            case '.imsak':
+                imsakSVG = svgElement
+                break;
+            case '.gunes':
+                gunesSVG = svgElement
+                break;
+            case '.ogle':
+                ogleSVG = svgElement
+                break;
+            case '.ikindi':
+                ikindiSVG = svgElement
+                break;
+            case '.aksam':
+                aksamSVG = svgElement
+                break;
+            case '.yatsi':
+                yatsiSVG = svgElement
+                break;
+        }
+    })
+});
 
-        const ogleSvg = document.querySelector('.ogle')
-        ogleSVG = ogleSvg.contentDocument;
+async function getSvgElements() {
 
-        const ikindiSvg = document.querySelector('.ikindi')
-        ikindiSVG = ikindiSvg.contentDocument;
+    namazTextTr.push(
+        imsakSVG.querySelector('#tr'),
+        gunesSVG.querySelector('#tr'),
+        ogleSVG.querySelector('#tr'),
+        ikindiSVG.querySelector('#tr'),
+        aksamSVG.querySelector('#tr'),
+        yatsiSVG.querySelector('#tr')
+    )
 
-        const aksamSvg = document.querySelector('.aksam')
-        aksamSVG = aksamSvg.contentDocument;
+    namazTextAr.push(
+        imsakSVG.querySelector('#ar'),
+        gunesSVG.querySelector('#ar'),
+        ogleSVG.querySelector('#ar'),
+        ikindiSVG.querySelector('#ar'),
+        aksamSVG.querySelector('#ar'),
+        yatsiSVG.querySelector('#ar')
+    )
 
-        const yatsiSvg = document.querySelector('.yatsi')
-        yatsiSVG = yatsiSvg.contentDocument;
+    namazTextDe.push(
+        imsakSVG.querySelector('#de'),
+        gunesSVG.querySelector('#de'),
+        ogleSVG.querySelector('#de'),
+        ikindiSVG.querySelector('#de'),
+        aksamSVG.querySelector('#de'),
+        yatsiSVG.querySelector('#de')
+    )
 
+    updateTimes();
+    getCurrentPrayer();
+    updateClock();
+    updateCountdown(timeNow, todaysPrayerTimes[nextPrayer])
 
-        namazTextTr.push(
-            imsakSVG.querySelector('#tr'),
-            gunesSVG.querySelector('#tr'),
-            ogleSVG.querySelector('#tr'),
-            ikindiSVG.querySelector('#tr'),
-            aksamSVG.querySelector('#tr'),
-            yatsiSVG.querySelector('#tr')
-        )
-
-        namazTextAr.push(
-            imsakSVG.querySelector('#ar'),
-            gunesSVG.querySelector('#ar'),
-            ogleSVG.querySelector('#ar'),
-            ikindiSVG.querySelector('#ar'),
-            aksamSVG.querySelector('#ar'),
-            yatsiSVG.querySelector('#ar')
-        )
-
-        namazTextDe.push(
-            imsakSVG.querySelector('#de'),
-            gunesSVG.querySelector('#de'),
-            ogleSVG.querySelector('#de'),
-            ikindiSVG.querySelector('#de'),
-            aksamSVG.querySelector('#de'),
-            yatsiSVG.querySelector('#de')
-        )
-
-
-        updateTimes();
-        getCurrentPrayer();
-        updateClock();
-        updateCountdown(timeNow, todaysPrayerTimes[nextPrayer])
-
-
-        countdownText.innerHTML = countdownTextArr[nextPrayer]['tr']
-
-    }, 4000)
-    // todo: das muss ohne timeout funktionieren
+    countdownText.innerHTML = countdownTextArr[nextPrayer]['tr']
 }
 
 const changeLanguages = [importantDate1Text, importantDate2Text, countdownContainer]
@@ -923,7 +910,7 @@ const ramadanLanguages = [dateHicri, monthHicri]
 
 let prayerLng = 0
 
-const changeLanguage = (language) => {
+const changeLanguage = async (language) => {
     if (language === "ar") {
         d3.selectAll(namazTextTr)
             .transition()
@@ -1013,88 +1000,91 @@ const changeLanguage = (language) => {
 
     }
 
-    setTimeout(() => {
-        // namazText.forEach((text, index) => {
-        //     text.innerHTML = prayerNames[index][language];
-        // });
+    // skip knowledge text loading up until it is loaded (other turns only)
+    if (todaysKnowledge == undefined || importantDates == undefined ) {
+        return;
+    }
 
-        countdownText.innerHTML = countdownTextArr[nextPrayer][language]
+    await loadAnnouncmentAndKnowledge();
+
+    async function loadAnnouncmentAndKnowledge() {
+        countdownText.innerHTML = countdownTextArr[nextPrayer][language];
 
         if (todayIsAnAnnouncement) {
             // todo: refactor mit const title
             infoTitle.innerHTML = language === "ar" ? "رسالة" : language === "tr" ? "DUYURU" : "MITTEILUNG";
             infoText.innerHTML = todaysAnnouncement[language];
         } else {
-            infoTitle.innerHTML = infoTitleLanguages[todaysKnowledge['type']][language]
-            infoText.innerHTML = todaysKnowledge[language]
+            infoTitle.innerHTML = infoTitleLanguages[todaysKnowledge['type']][language];
+            infoText.innerHTML = todaysKnowledge[language];
         }
 
-        importantDate1Text.innerHTML = language === "ar" ? importantDates[importantDatesPointer]['ar'] : language === "tr" ? importantDates[importantDatesPointer]['tr'] : importantDates[importantDatesPointer]['de']
-        importantDate2Text.innerHTML = language === "ar" ? importantDates[importantDatesPointer + 1]['ar'] : language === "tr" ? importantDates[importantDatesPointer + 1]['tr'] : importantDates[importantDatesPointer + 1]['de']
+        importantDate1Text.innerHTML = language === "ar" ? importantDates[importantDatesPointer]['ar'] : language === "tr" ? importantDates[importantDatesPointer]['tr'] : importantDates[importantDatesPointer]['de'];
+        importantDate2Text.innerHTML = language === "ar" ? importantDates[importantDatesPointer + 1]['ar'] : language === "tr" ? importantDates[importantDatesPointer + 1]['tr'] : importantDates[importantDatesPointer + 1]['de'];
 
         if (language === "ar") {
-            importantDate1Text.style.fontFamily = "Hafs"
-            importantDate2Text.style.fontFamily = "Hafs"
+            importantDate1Text.style.fontFamily = "Hafs";
+            importantDate2Text.style.fontFamily = "Hafs";
 
-            infoText.style.fontFamily = 'Hafs'
-            infoText.setAttribute("dir", "rtl")
+            infoText.style.fontFamily = 'Hafs';
+            infoText.setAttribute("dir", "rtl");
             if (!todayIsAnAnnouncement) {
-                infoSource.style.textAlign = "left"
-                infoSource.setAttribute("dir", "rtl")
-                infoSource.innerHTML = todaysKnowledgeSourceArabic
+                infoSource.style.textAlign = "left";
+                infoSource.setAttribute("dir", "rtl");
+                infoSource.innerHTML = todaysKnowledgeSourceArabic;
             }
 
-            infoTitle.style.fontFamily = 'Hafs'
+            infoTitle.style.fontFamily = 'Hafs';
 
-            importantDate1Text.style.fontStyle = 'normal'
-            importantDate2Text.style.fontStyle = 'normal'
+            importantDate1Text.style.fontStyle = 'normal';
+            importantDate2Text.style.fontStyle = 'normal';
 
             timeLeft.removeChild(timeLeftAfter);
             timeLeft.insertBefore(timeLeftAfter, countdownText);
-            countdownText.style.fontFamily = "Hafs"
+            countdownText.style.fontFamily = "Hafs";
 
         } else if (language === "de") {
-            importantDate1Text.style.fontFamily = "'Montserrat', sans-serif"
-            importantDate2Text.style.fontFamily = "'Montserrat', sans-serif"
+            importantDate1Text.style.fontFamily = "'Montserrat', sans-serif";
+            importantDate2Text.style.fontFamily = "'Montserrat', sans-serif";
 
-            infoText.style.fontFamily = "'Montserrat', sans-serif"
-            infoText.setAttribute("dir", "ltr")
+            infoText.style.fontFamily = "'Montserrat', sans-serif";
+            infoText.setAttribute("dir", "ltr");
 
             if (!todayIsAnAnnouncement) {
-                infoSource.style.textAlign = "right"
-                infoSource.setAttribute("dir", "ltr")
-                infoSource.innerHTML = todaysKnowledge['source']
+                infoSource.style.textAlign = "right";
+                infoSource.setAttribute("dir", "ltr");
+                infoSource.innerHTML = todaysKnowledge['source'];
             }
 
-            infoTitle.style.fontFamily = "'Montserrat', sans-serif"
-            importantDate1Text.style.fontStyle = 'italic'
-            importantDate2Text.style.fontStyle = 'italic'
+            infoTitle.style.fontFamily = "'Montserrat', sans-serif";
+            importantDate1Text.style.fontStyle = 'italic';
+            importantDate2Text.style.fontStyle = 'italic';
 
 
             timeLeft.removeChild(countdownText);
             timeLeft.insertBefore(countdownText, timeLeftAfter);
-            countdownText.style.fontFamily = "'Montserrat', sans-serif"
+            countdownText.style.fontFamily = "'Montserrat', sans-serif";
 
         }
 
         if (isRamadan) {
             if (language === "ar") {
-                monthHicri.innerHTML = "رمضان"
-                monthHicri.style.fontFamily = 'Hafs'
+                monthHicri.innerHTML = "رمضان";
+                monthHicri.style.fontFamily = 'Hafs';
                 // dateHicri.style.fontFamily = 'Hafs'
-                dateHicri.innerHTML = hijriRaw[3]
+                dateHicri.innerHTML = hijriRaw[3];
 
-                point1.style.display = 'none'
-                point2.style.display = 'none'
+                point1.style.display = 'none';
+                point2.style.display = 'none';
             } else if (language === "de") {
-                monthHicri.innerHTML = hijriRaw[0]
-                dateHicri.innerHTML = 'RAMADAN'
-                monthHicri.style.fontFamily = "'Montserrat', sans-serif"
+                monthHicri.innerHTML = hijriRaw[0];
+                dateHicri.innerHTML = 'RAMADAN';
+                monthHicri.style.fontFamily = "'Montserrat', sans-serif";
                 // dateHicri.style.fontFamily = "'Montserrat', sans-serif"
-                point2.style.display = 'block'
+                point2.style.display = 'block';
 
             } else {
-                dateHicri.innerHTML = 'RAMAZAN'
+                dateHicri.innerHTML = 'RAMAZAN';
             }
         }
 
@@ -1110,8 +1100,7 @@ const changeLanguage = (language) => {
             importantDate1Text.style.fontSize = fontSizeImportantDates[language];
             importantDate2Text.style.fontSize = fontSizeImportantDates[language];
         }
-
-    }, 1000);
+    }
 };
 
 setInterval(() => {
@@ -1190,26 +1179,32 @@ addEventListener("resize", () => {
 let monthlyData;
 let monthlyDataPointer = 0;
 
-function fetchMonthlyData() {
+async function fetchMonthlyData() {
     fetch(`${serverUrl}/api/getDailyData?urlPara=${urlPara}`, {
         method: 'GET', headers: {
             'Content-Type': 'application/json'
         }
     })
-        .then(response => {
+        .then(async response => {
             return response.json()
         })
-        .then(data => {
+        .then(async data => {
+
             if (data.status !== 200) {
+
                 return Promise.reject(); // Return a rejected Promise to stop executing the rest of the code in this function
             }
+
             monthlyData = data.data;
+
             if (initialRun) {
-                getSvgElements()
+
+                await getSvgElements()
             }
             if (urlPara) {
-                getAllAnnouncements();
-                updateImportantDates();
+
+                await getAllAnnouncements();
+                await updateImportantDates();
             }
 
         })
