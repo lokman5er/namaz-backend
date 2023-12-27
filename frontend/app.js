@@ -350,7 +350,7 @@ async function runOnNewDay() {
         await fetchMonthlyData();
         // todo: hier varianz berechnen, damit nicht alle moscheen gleichzeitig ziehen
     }, 100)
-}
+
 
 
 function convertToArabic(number) {
