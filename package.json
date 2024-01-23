@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
     "start": "node server.js"
   },
   "author": "",
@@ -30,5 +31,9 @@
     "path": "^0.12.7",
     "request": "^2.88.2",
     "util": "^0.12.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "typescript": "^5.3.3"
   }
 }

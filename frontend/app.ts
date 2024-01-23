@@ -1,4 +1,4 @@
-const serverUrl = "https://namaz-backend.herokuapp.com"
+// const serverUrl = "https://namaz-backend.herokuapp.com"
 
 // edit these for local testing
 /**
@@ -7,7 +7,7 @@ const serverUrl = "https://namaz-backend.herokuapp.com"
  * @type {number}
  * @default 60
  */
-const intervalMinutes = 60;
+const intervalMinutes: number = 60;
 
 /**
  * Specifies the interval (in minutes) to adjust the prayer times for testing purposes.
@@ -18,7 +18,7 @@ const intervalMinutes = 60;
  * @type {?number}
  * @default null
  */
-let testInterval = null;
+let testInterval:number|null = null;
 
 /**
  * Specifies the interval (in milliseconds) after which the language should change.
@@ -31,8 +31,8 @@ const secondsToChangeLanguage = 30;
 
 let now = new Date();
 
-let todaysAnnouncement;
-let todayIsAnAnnouncement;
+let todaysAnnouncement: { [x: string]: string; };
+let todayIsAnAnnouncement: boolean;
 
 //HTML-Elements
 const hoursHTML = document.querySelector('.l-3-1');
@@ -85,7 +85,7 @@ const importantDate2Year = document.querySelector('#importantDate2Year')
 
 const countdownContainer = document.querySelector('.timeLeft')
 
-function getDateString(date) {
+function getDateString(date: Date) {
     let year = date.getFullYear();
     let month = (date.getMonth() + 1).toString().padStart(2, '0');
     let day = date.getDate().toString().padStart(2, '0');
@@ -106,13 +106,16 @@ urlPara = urlPara === '11023' ? 'muenster' : urlPara
 
 let initialRun = true;
 
-infoText.innerHTML = ""
+if (infoText != null){
+
+    infoText.innerHTML = ""
+}
 
 const infobox = [infoTitle, infoText, infoSource]
 
-let todaysKnowledge;
+let todaysKnowledge: { [x: string]: string; } | undefined;
 let todaysKnowledgeArray;
-let todaysKnowledgeSourceArabic;
+let todaysKnowledgeSourceArabic: string;
 
 const languageKeys = ['tr', 'ar', 'de'];
 
@@ -137,7 +140,7 @@ async function getVersesOrHadiths() {
         });
 }
 
-let announcements = [];
+let announcements: string | any[] = [];
 
 async function getAllAnnouncements() {
     fetch(`${serverUrl}/api/getAllAnnouncements?urlPara=${urlPara}`)
