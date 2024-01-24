@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from "mongoose"
 
 const MoonSchema = new mongoose.Schema({
     date: {
@@ -15,3 +15,5 @@ const MoonSchema = new mongoose.Schema({
 const model = mongoose.model('MoonSchema', MoonSchema)
 
 module.exports = model
+
+export default model

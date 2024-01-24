@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from "mongoose"
 
 const AnnouncementSchema = new mongoose.Schema({
     urlPara: {
@@ -24,3 +24,5 @@ const AnnouncementSchema = new mongoose.Schema({
 const model = mongoose.model('AnnouncementSchema', AnnouncementSchema)
 
 module.exports = model
+
+export default model

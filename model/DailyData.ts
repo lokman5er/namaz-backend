@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from "mongoose"
 
 const DailyDataSchema = new mongoose.Schema({
     urlPara: {
@@ -50,3 +50,5 @@ const DailyDataSchema = new mongoose.Schema({
 const model = mongoose.model('DailyDataSchema', DailyDataSchema)
 
 module.exports = model
+
+export default model
