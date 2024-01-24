@@ -21,22 +21,18 @@ const PORT: string = process.env.PORT || '';
 
 const app = express();
 
-mongoose.connect(
-    `mongodb+srv://${MONGODB_CREDENTIALS}@namazapp.ccw7t1d.mongodb.net/?retryWrites=true&w=majority`,
-    // {
-    //     // useNewUrlParser: true,
-    //     useUnifiedTopology: true,
-    // },
-    (err) => {
-        if (err) {
-            console.error('FAILED TO CONNECT TO MONGODB');
-            console.error(err);
-        } else {
-            console.log('CONNECTED TO MONGODB');
-            app.listen(PORT);
-        }
-    }
-);
+mongoose
+    .connect(
+        `mongodb+srv://${MONGODB_CREDENTIALS}@namazapp.ccw7t1d.mongodb.net/?retryWrites=true&w=majority`
+    )
+    .then(() => {
+        console.log('CONNECTED TO MONGODB');
+        app.listen(PORT);
+    })
+    .catch((err: Error) => {
+        console.error('FAILED TO CONNECT TO MONGODB');
+        console.error(err);
+    });
 
 interface DatabaseError extends Error {
     code: number;
@@ -272,7 +268,7 @@ app.post('/api/new-an', async (req, res) => {
                 const os = a.startDate.getTime() / 1000;
 
                 let oe: number;
-                if (a.endDate !== undefined) {
+                if (a.endDate !== null && a.endDate !== undefined) {
                     oe = a.endDate.getTime() / 1000;
                 } else {
                     throw new Error('a.endDate is undefined');
@@ -354,14 +350,25 @@ app.post('/api/deleteAnnouncement', async (req, res) => {
     const { token, startDate } = req.body;
 
     if (!token || !startDate) {
-        return res.json({ status: 'error', error: 'Token or startDate missing' });
+        return res.json({
+            status: 'error',
+            error: 'Token or startDate missing',
+        });
     }
 
     // Check if token is expired
     const decodedToken = jwt.decode(token, { complete: true });
-    if (decodedToken && typeof decodedToken === 'object' && 'payload' in decodedToken) {
+    if (
+        decodedToken &&
+        typeof decodedToken === 'object' &&
+        'payload' in decodedToken
+    ) {
         const payload = decodedToken.payload as JwtPayload;
-        if ('exp' in payload && typeof payload.exp === 'number' && payload.exp < Date.now() / 1000) {
+        if (
+            'exp' in payload &&
+            typeof payload.exp === 'number' &&
+            payload.exp < Date.now() / 1000
+        ) {
             return res.json({ status: 'expired' });
         }
     } else {
@@ -379,9 +386,15 @@ app.post('/api/deleteAnnouncement', async (req, res) => {
             });
 
             if (result) {
-                return res.json({ status: 'ok', message: 'Announcement deleted' });
+                return res.json({
+                    status: 'ok',
+                    message: 'Announcement deleted',
+                });
             } else {
-                return res.json({ status: 'error', error: 'No announcement found' });
+                return res.json({
+                    status: 'error',
+                    error: 'No announcement found',
+                });
             }
         } else {
             return res.json({ status: 'error', error: 'Invalid user data' });

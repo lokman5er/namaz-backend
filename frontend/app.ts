@@ -1,5 +1,3 @@
-// const serverUrl = "https://namaz-backend.herokuapp.com"
-
 // edit these for local testing
 /**
  * Specifies the number of minutes in which a new day is simulated.
@@ -27,7 +25,7 @@ let testInterval:number|null = null;
  * @type {number}
  * @default 30
  */
-const secondsToChangeLanguage = 30;
+const secondsToChangeLanguage:number = 30;
 
 let now = new Date();
 
@@ -35,28 +33,28 @@ let todaysAnnouncement: { [x: string]: string; };
 let todayIsAnAnnouncement: boolean;
 
 //HTML-Elements
-const hoursHTML = document.querySelector('.l-3-1');
-const minutesHTML = document.querySelector('.l-3-3');
+const hoursHTML: Element | null = document.querySelector('.l-3-1');
+const minutesHTML: Element | null = document.querySelector('.l-3-3');
 
-const countdownHour = document.querySelector('.countdown-hour');
-const countdownMinute = document.querySelector('.countdown-minute');
+const countdownHour: Element | null = document.querySelector('.countdown-hour');
+const countdownMinute: Element | null = document.querySelector('.countdown-minute');
 
-const infoTitle = document.querySelector('.l-4-1 ');
-const infoText = document.querySelector('.l-4-2');
-const infoSource = document.querySelector('.l-4-3');
+const infoTitle: Element | null = document.querySelector('.l-4-1 ');
+const infoText: Element | null = document.querySelector('.l-4-2');
+const infoSource: Element | null = document.querySelector('.l-4-3');
 
-const dateNormal = document.querySelector('.dateNormal');
-const monthNormal = document.querySelector('.monthNormal');
-const yearNormal = document.querySelector('.yearNormal');
+const dateNormal: Element | null = document.querySelector('.dateNormal');
+const monthNormal: Element | null = document.querySelector('.monthNormal');
+const yearNormal: Element | null = document.querySelector('.yearNormal');
 
-const dateHicri = document.querySelector('.dateHicri');
-const monthHicri = document.querySelector('.monthHicri');
-const yearHicri = document.querySelector('.yearHicri');
+const dateHicri: Element | null = document.querySelector('.dateHicri');
+const monthHicri: Element | null = document.querySelector('.monthHicri');
+const yearHicri: Element | null = document.querySelector('.yearHicri');
 
-const point1 = document.querySelector('#p1');
-const point2 = document.querySelector('#p2');
+const point1: Element | null = document.querySelector('#p1');
+const point2: Element | null = document.querySelector('#p2');
 
-const moonElements = [
+const moonElements: (Element | null)[] = [
     document.querySelector('.moon1'),
     document.querySelector('.moon2'),
     document.querySelector('.moon3'),
@@ -64,32 +62,36 @@ const moonElements = [
     document.querySelector('.moon5')
 ]
 
-const timeLeft = document.querySelector(".timeLeft");
-const countdownText = document.querySelector('.timeLeft-before')
-const timeLeftAfter = document.querySelector(".timeLeft-after");
+const timeLeft: Element | null = document.querySelector(".timeLeft");
+const countdownText: Element | null = document.querySelector('.timeLeft-before')
+const timeLeftAfter: Element | null = document.querySelector(".timeLeft-after");
 
 
-const importantDate1 = document.querySelector('#box1')
+const importantDate1: Element | null = document.querySelector('#box1')
 
-const importantDate1Text = document.querySelector('.l-6-2-2')
-const importantDate2Text = document.querySelector('.l-6-4-2')
+const importantDate1Text: Element | null = document.querySelector('.l-6-2-2')
+const importantDate2Text: Element | null = document.querySelector('.l-6-4-2')
 
-const importantDate1Day = document.querySelector('#importantDate1Day')
-const importantDate2Day = document.querySelector('#importantDate2Day')
+const importantDate1Day: Element | null = document.querySelector('#importantDate1Day')
+const importantDate2Day: Element | null = document.querySelector('#importantDate2Day')
 
-const importantDate1Month = document.querySelector('#importantDate1Month')
-const importantDate2Month = document.querySelector('#importantDate2Month')
+const importantDate1Month: Element | null = document.querySelector('#importantDate1Month')
+const importantDate2Month: Element | null = document.querySelector('#importantDate2Month')
 
-const importantDate1Year = document.querySelector('#importantDate1Year')
-const importantDate2Year = document.querySelector('#importantDate2Year')
+const importantDate1Year: Element | null = document.querySelector('#importantDate1Year')
+const importantDate2Year: Element | null = document.querySelector('#importantDate2Year')
 
-const countdownContainer = document.querySelector('.timeLeft')
+const countdownContainer: Element | null = document.querySelector('.timeLeft')
 
 function getDateString(date: Date) {
-    let year = date.getFullYear();
-    let month = (date.getMonth() + 1).toString().padStart(2, '0');
-    let day = date.getDate().toString().padStart(2, '0');
+    let year:string = date.getFullYear().toString();
+    let month:string = (date.getMonth() + 1).toString().padStart(2, '0');
+    let day:string = date.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}T00:00:00.000Z`;
+}
+
+interface Date {
+    withoutTime: () => Date;
 }
 
 Date.prototype.withoutTime = function() {
@@ -128,7 +130,10 @@ async function getVersesOrHadiths() {
 
             const currentLangKey = languageKeys[prayerLng];
 
-            infoTitle.innerHTML = infoTitleLanguages[todaysKnowledge['type']][currentLangKey];
+            if (infoText !== null) {
+                
+                infoTitle.innerHTML = infoTitleLanguages[todaysKnowledge['type']][currentLangKey];
+            }
             infoText.innerHTML = todaysKnowledge[currentLangKey];
 
             const sourceNumbers = todaysKnowledge['source'].match(/\d+/g).map(Number);
@@ -257,7 +262,7 @@ function determineNextPrayer(currentTime, index) {
 }
 
 
-function updateCountdown(startTime, endTime) {
+function updateCountdown(startTime:string, endTime:string) {
     const start = new Date("1970-01-01 " + startTime + " UTC").getTime() / 1000;
     const end = new Date("1970-01-01 " + endTime + " UTC").getTime() / 1000;
     let difference = end - start;
@@ -268,7 +273,10 @@ function updateCountdown(startTime, endTime) {
     let minutes = Math.floor((difference % 3600) / 60);
     hours = formatTime(hours);
     minutes = formatTime(minutes);
-    countdownHour.innerText = hours;
+    if(countdownHour !== null){
+        
+        countdownHour.innerText = hours;
+    }
     countdownMinute.innerText = minutes;
 }
 
@@ -905,15 +913,18 @@ async function getSvgElements() {
     updateClock();
     updateCountdown(timeNow, todaysPrayerTimes[nextPrayer])
 
-    countdownText.innerHTML = countdownTextArr[nextPrayer]['tr']
+    if (countdownText !== null) {
+        
+        countdownText.innerHTML = countdownTextArr[nextPrayer]['tr']
+    }
 }
 
 const changeLanguages = [importantDate1Text, importantDate2Text, countdownContainer]
 const ramadanLanguages = [dateHicri, monthHicri]
 
-let prayerLng = 0
+let prayerLng:number = 0
 
-const changeLanguage = async (language) => {
+const changeLanguage = async (language:string) => {
     if (language === "ar") {
         d3.selectAll(namazTextTr)
             .transition()
@@ -1133,7 +1144,7 @@ const fontSizeImportantDates = {
     de: 'n'
 };
 
-function autoSizeText() {
+function autoSizeText():void {
     const elements = document.querySelectorAll('.resize');
 
     let fontSizeImportantDateLeft, fontSizeImportantDateRight;
@@ -1160,8 +1171,14 @@ function autoSizeText() {
             parseInt(fontSizeImportantDateRight, 10)
         ) + 'px';
 
-        importantDate1Text.style.fontSize = minFontSize;
-        importantDate2Text.style.fontSize = minFontSize;
+        if (importantDate1Text !== null) {
+            
+            importantDate1Text.style.fontSize = minFontSize;
+        }
+        if(importantDate2Text !== null){
+
+            importantDate2Text.style.fontSize = minFontSize;
+        }
 
         fontSizeImportantDates[languageKeys[prayerLng]] = minFontSize;
     }
