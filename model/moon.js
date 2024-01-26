@@ -1,10 +1,5 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = __importDefault(require("mongoose"));
-const MoonSchema = new mongoose_1.default.Schema({
+import mongoose from 'mongoose';
+const MoonSchema = new mongoose.Schema({
     date: {
         type: Date,
         unique: true,
@@ -12,9 +7,8 @@ const MoonSchema = new mongoose_1.default.Schema({
     },
     value: {
         type: Number,
-        required: true
-    }
+        required: true,
+    },
 }, { collection: 'moonFractions' });
-const model = mongoose_1.default.model('MoonSchema', MoonSchema);
-module.exports = model;
-exports.default = model;
+const MoonModel = mongoose.model('MoonSchema', MoonSchema);
+export default MoonModel;

@@ -1,19 +1,20 @@
-import mongoose from "mongoose"
+import mongoose from 'mongoose';
 
-const MoonSchema = new mongoose.Schema({
-    date: {
-        type: Date,
-        unique: true,
-        required: true,
+const MoonSchema = new mongoose.Schema(
+    {
+        date: {
+            type: Date,
+            unique: true,
+            required: true,
+        },
+        value: {
+            type: Number,
+            required: true,
+        },
     },
-    value: {
-        type: Number,
-        required: true
-    }
-}, { collection: 'moonFractions' })
+    { collection: 'moonFractions' }
+);
 
-const model = mongoose.model('MoonSchema', MoonSchema)
+const MoonModel = mongoose.model('MoonSchema', MoonSchema);
 
-module.exports = model
-
-export default model
+export default MoonModel;

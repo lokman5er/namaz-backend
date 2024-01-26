@@ -1,29 +1,30 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const path_1 = __importDefault(require("path"));
-const body_parser_1 = __importDefault(require("body-parser"));
-const mongoose_1 = __importDefault(require("mongoose"));
-const user_1 = __importDefault(require("./model/user"));
-const announcement_1 = __importDefault(require("./model/announcement"));
-const DailyData_1 = __importDefault(require("./model/DailyData"));
-const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const request_1 = __importDefault(require("request"));
-const util_1 = __importDefault(require("util"));
-require('dotenv').config();
+import express from 'express';
+import path from 'path';
+import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
+import User from './model/user.js';
+import Announcement from './model/announcement.js';
+import DailyData from './model/DailyData.js';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import request from 'request';
+import util from 'util';
+import cors from 'cors';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+dotenv.config();
 const API_KEY = process.env.API_KEY || '';
 const JWT_SECRET = process.env.JWT_SECRET || '';
-const MONGODB_CREDENTIALS = process.env.MONGODB || '';
+// const MONGODB_CREDENTIALS: string = process.env.MONGODB || '';
 const DIYANET_MAIL = process.env.DIYANET_MAIL || '';
 const DIYANET_PW = process.env.DIYANET_PW || '';
 const PORT = process.env.PORT || '';
-const app = (0, express_1.default)();
-mongoose_1.default
-    .connect(`mongodb+srv://${MONGODB_CREDENTIALS}@namazapp.ccw7t1d.mongodb.net/?retryWrites=true&w=majority`)
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const app = express();
+mongoose
+    .connect(`mongodb://127.0.0.1:27017/test-mongo`
+// `mongodb+srv://${MONGODB_CREDENTIALS}@namazapp.ccw7t1d.mongodb.net/?retryWrites=true&w=majority`
+)
     .then(() => {
     console.log('CONNECTED TO MONGODB');
     app.listen(PORT);
@@ -32,16 +33,15 @@ mongoose_1.default
     console.error('FAILED TO CONNECT TO MONGODB');
     console.error(err);
 });
-var cors = require('cors');
 app.use(cors());
-app.use('/', express_1.default.static(path_1.default.join(__dirname, 'static')));
-app.use(body_parser_1.default.json());
-app.use(express_1.default.static(path_1.default.join(__dirname, 'frontend')));
+app.use('/', express.static(path.join(__dirname, 'static')));
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'frontend')));
 app.get('/', function (req, res) {
-    res.sendFile(path_1.default.join(__dirname, 'frontend', 'index.html'));
+    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
 app.get('/duyuru', function (req, res) {
-    res.sendFile(path_1.default.join(__dirname, 'frontend', 'admin.html'));
+    res.sendFile(path.join(__dirname, 'frontend', 'admin.html'));
 });
 app.post('/api/register', async (req, res) => {
     const { username, password: plainTextPassword, urlPara, apiKey } = req.body;
@@ -63,9 +63,9 @@ app.post('/api/register', async (req, res) => {
     if (!urlPara) {
         return res.json({ status: 'error', error: 'urlPara missing' });
     }
-    const password = await bcryptjs_1.default.hash(plainTextPassword, 12);
+    const password = await bcrypt.hash(plainTextPassword, 12);
     try {
-        const response = await user_1.default.create({
+        const response = await User.create({
             username,
             password,
             urlPara,
@@ -101,10 +101,10 @@ app.post('/api/change-password', async (req, res) => {
         return res.json({ status: 'error', error: 'Password too long.' });
     }
     try {
-        const user = await user_1.default.findOne({ urlPara });
+        const user = await User.findOne({ urlPara });
         const _id = user?.id;
-        const password = await bcryptjs_1.default.hash(newpassword, 12);
-        await user_1.default.updateOne({ _id }, {
+        const password = await bcrypt.hash(newpassword, 12);
+        await User.updateOne({ _id }, {
             $set: { password },
         });
         res.json({ status: 'ok' });
@@ -118,7 +118,7 @@ app.post('/api/login/', async (req, res) => {
     if (!username || !password) {
         return res.json({ status: 'error', error: 'try harder' });
     }
-    const user = await user_1.default.findOne({ username }).lean();
+    const user = await User.findOne({ username }).lean();
     if (!user) {
         return res.json({
             status: 'error',
@@ -127,14 +127,14 @@ app.post('/api/login/', async (req, res) => {
             'Geçersiz kullanıcı adı/parola',
         });
     }
-    if (await bcryptjs_1.default.compare(password, user.password)) {
+    if (await bcrypt.compare(password, user.password)) {
         //username + password combination is successful
-        const token = jsonwebtoken_1.default.sign({
+        const token = jwt.sign({
             id: user._id,
             username: user.username,
             urlPara: user.urlPara,
         }, JWT_SECRET, { expiresIn: '60m' });
-        await user_1.default.updateOne({ username: user.username }, { $set: { token } });
+        await User.updateOne({ username: user.username }, { $set: { token } });
         return res.json({ status: 'ok', data: token });
     }
     res.json({ status: 'error', error: 'Invalid username/password' });
@@ -145,7 +145,7 @@ app.post('/api/logout', async (req, res) => {
         return res.json({ status: 'error', message: 'No token provided' });
     }
     // Check if token is expired
-    const decodedToken = jsonwebtoken_1.default.decode(token, { complete: true });
+    const decodedToken = jwt.decode(token, { complete: true });
     if (typeof decodedToken === 'object' && decodedToken !== null) {
         const payload = decodedToken.payload;
         if (typeof payload === 'object' &&
@@ -158,11 +158,11 @@ app.post('/api/logout', async (req, res) => {
         }
     }
     // Verify the token and get the user ID
-    const decoded = jsonwebtoken_1.default.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
     if (typeof decoded === 'object' && decoded !== null) {
         const { id } = decoded;
         // Find the user in the database and delete the token field
-        await user_1.default.findByIdAndUpdate(id, { $unset: { token: 1 } });
+        await User.findByIdAndUpdate(id, { $unset: { token: 1 } });
     }
 });
 app.post('/api/new-an', async (req, res) => {
@@ -171,7 +171,7 @@ app.post('/api/new-an', async (req, res) => {
         return res.json({ status: 'error' });
     }
     // Check if token is expired
-    const decodedToken = jsonwebtoken_1.default.decode(token, { complete: true });
+    const decodedToken = jwt.decode(token, { complete: true });
     if (typeof decodedToken === 'object' &&
         decodedToken !== null &&
         'payload' in decodedToken) {
@@ -186,11 +186,11 @@ app.post('/api/new-an', async (req, res) => {
         }
     }
     try {
-        const user = jsonwebtoken_1.default.verify(token, JWT_SECRET);
+        const user = jwt.verify(token, JWT_SECRET);
         if (typeof user === 'object' && user !== null) {
             const urlPara = user.urlPara;
             // Retrieve all announcements with the same 'urlPara'
-            const announcements = await announcement_1.default.find({ urlPara });
+            const announcements = await Announcement.find({ urlPara });
             // Check if the time period of the new announcement overlaps with any of the existing announcements
             let overlaps = false;
             const ns = Date.parse(startDate) / 1000;
@@ -224,7 +224,7 @@ app.post('/api/new-an', async (req, res) => {
             }
             else {
                 // The time period of the new announcement does not overlap with any of the existing announcements
-                const result = await announcement_1.default.create({
+                const result = await Announcement.create({
                     urlPara,
                     text,
                     startDate,
@@ -242,7 +242,7 @@ app.post('/api/new-an', async (req, res) => {
 app.get('/api/get-All-an', async (req, res) => {
     const token = req.query.token;
     if (typeof token === 'string') {
-        const decodedToken = jsonwebtoken_1.default.decode(token, { complete: true });
+        const decodedToken = jwt.decode(token, { complete: true });
         if (decodedToken !== null) {
             const payload = decodedToken.payload;
             if (payload.exp !== undefined && payload.exp < Date.now() / 1000) {
@@ -256,14 +256,14 @@ app.get('/api/get-All-an', async (req, res) => {
     }
     // Check if token is expired
     try {
-        const tokenResult = jsonwebtoken_1.default.verify(token, JWT_SECRET);
+        const tokenResult = jwt.verify(token, JWT_SECRET);
         if (typeof tokenResult === 'object' && tokenResult !== null) {
             const user = tokenResult;
             const urlPara = user.urlPara;
             // Find all announcements whose endDate is greater than or equal to today at midnight
             const today = new Date();
             today.setHours(0, 0, 0, 0); // Set the time to midnight
-            const result = await announcement_1.default.find({
+            const result = await Announcement.find({
                 urlPara,
                 endDate: { $gte: today },
             }).sort({ startDate: 1 });
@@ -283,7 +283,7 @@ app.post('/api/deleteAnnouncement', async (req, res) => {
         });
     }
     // Check if token is expired
-    const decodedToken = jsonwebtoken_1.default.decode(token, { complete: true });
+    const decodedToken = jwt.decode(token, { complete: true });
     if (decodedToken &&
         typeof decodedToken === 'object' &&
         'payload' in decodedToken) {
@@ -298,10 +298,10 @@ app.post('/api/deleteAnnouncement', async (req, res) => {
         return res.json({ status: 'error', error: 'Invalid token' });
     }
     try {
-        const user = jsonwebtoken_1.default.verify(token, JWT_SECRET);
+        const user = jwt.verify(token, JWT_SECRET);
         if (typeof user === 'object' && user !== null && 'urlPara' in user) {
             const urlPara = user.urlPara;
-            const result = await announcement_1.default.deleteOne({
+            const result = await Announcement.deleteOne({
                 urlPara,
                 startDate,
             });
@@ -337,7 +337,7 @@ app.get('/api/check-token', async (req, res) => {
         return res.json({ status: 'error', error: 'try harder' });
     }
     // Check if token is expired
-    const decodedToken = jsonwebtoken_1.default.decode(token, { complete: true });
+    const decodedToken = jwt.decode(token, { complete: true });
     if (decodedToken !== null &&
         'exp' in decodedToken &&
         typeof decodedToken.exp === 'number' &&
@@ -345,12 +345,12 @@ app.get('/api/check-token', async (req, res) => {
         return res.json({ status: 'expired' });
     }
     try {
-        const result = jsonwebtoken_1.default.verify(token, JWT_SECRET);
+        const result = jwt.verify(token, JWT_SECRET);
         if (typeof result === 'object' && result !== null) {
             // Angenommen, Ihre Payload hat eine 'id'-Eigenschaft vom Typ string
             const id = result.id;
             // Find the user in the database and check if the token field is set
-            const user = await user_1.default.findById(id);
+            const user = await User.findById(id);
             if (user !== null && !user.token) {
                 // If the token field is not set, the token has expired
                 return res.json({ status: 'error', error: 'Token expired' });
@@ -374,7 +374,7 @@ app.get('/api/check-token', async (req, res) => {
 });
 app.get('/api/getAllAnnouncements', async (req, res) => {
     const username = req.query.urlPara;
-    const user = await user_1.default.findOne({
+    const user = await User.findOne({
         username,
     });
     if (!user)
@@ -384,7 +384,7 @@ app.get('/api/getAllAnnouncements', async (req, res) => {
         // Find all announcements whose endDate is greater than or equal to today at midnight
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Set the time to midnight
-        const result = await announcement_1.default.find({
+        const result = await Announcement.find({
             urlPara,
             endDate: { $gte: today },
         }).sort({ startDate: 1 });
@@ -396,7 +396,7 @@ app.get('/api/getAllAnnouncements', async (req, res) => {
 });
 app.get('/api/getDailyData', async (req, res) => {
     const username = req.query.urlPara;
-    const user = await user_1.default.findOne({
+    const user = await User.findOne({
         username,
     });
     if (!user)
@@ -405,7 +405,7 @@ app.get('/api/getDailyData', async (req, res) => {
     const today = new Date().toISOString().slice(0, 10); // get today's date in ISO format
     try {
         // Find all prayer times in the database that have a date greater than or equal to today's date
-        const result = await DailyData_1.default.find({
+        const result = await DailyData.find({
             urlPara,
             date: { $gte: today },
         });
@@ -419,7 +419,7 @@ app.get('/api/getDailyData', async (req, res) => {
             await fetchMonthlyData(urlPara, highestDate);
         }
         // Find all prayer times in the database that have a date greater than or equal to today's date
-        const times = await DailyData_1.default.find({
+        const times = await DailyData.find({
             urlPara,
             date: { $gte: today },
         }).sort({ date: 1 });
@@ -429,7 +429,7 @@ app.get('/api/getDailyData', async (req, res) => {
         console.log(error);
     }
 });
-const requestPromise = util_1.default.promisify(request_1.default);
+const requestPromise = util.promisify(request);
 var myAccessToken = '';
 async function fetchMonthlyData(urlPara, highestDate) {
     const optionsLogin = {
@@ -517,7 +517,7 @@ function createMongooseDate(input) {
 }
 async function saveData(data) {
     try {
-        await DailyData_1.default.create(data);
+        await DailyData.create(data);
         return true;
     }
     catch (error) {

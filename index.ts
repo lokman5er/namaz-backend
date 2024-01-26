@@ -2,28 +2,35 @@ import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
-import User from './model/user';
-import Announcement from './model/announcement';
-import DailyData from './model/DailyData';
+import User from './model/user.js';
+import Announcement from './model/announcement.js';
+import DailyData from './model/DailyData.js';
 import bcrypt from 'bcryptjs';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import request from 'request';
 import util from 'util';
+import cors from 'cors';
 
-require('dotenv').config();
+import { fileURLToPath } from 'url';
+
+import dotenv from 'dotenv';
+dotenv.config();
 
 const API_KEY: string = process.env.API_KEY || '';
 const JWT_SECRET: string = process.env.JWT_SECRET || '';
-const MONGODB_CREDENTIALS: string = process.env.MONGODB || '';
+// const MONGODB_CREDENTIALS: string = process.env.MONGODB || '';
 const DIYANET_MAIL: string = process.env.DIYANET_MAIL || '';
 const DIYANET_PW: string = process.env.DIYANET_PW || '';
 const PORT: string = process.env.PORT || '';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 
 mongoose
     .connect(
-        `mongodb+srv://${MONGODB_CREDENTIALS}@namazapp.ccw7t1d.mongodb.net/?retryWrites=true&w=majority`
+        `mongodb://127.0.0.1:27017/test-mongo`
+        // `mongodb+srv://${MONGODB_CREDENTIALS}@namazapp.ccw7t1d.mongodb.net/?retryWrites=true&w=majority`
     )
     .then(() => {
         console.log('CONNECTED TO MONGODB');
@@ -37,7 +44,6 @@ mongoose
 interface DatabaseError extends Error {
     code: number;
 }
-var cors = require('cors');
 
 app.use(cors());
 

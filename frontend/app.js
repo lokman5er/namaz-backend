@@ -1,5 +1,6 @@
-"use strict";
-const serverUrl = "https://namaz-backend.herokuapp.com";
+// import { empty } from 'cheerio/lib/api/manipulation';
+import * as d3 from 'd3';
+const serverUrl = 'https://namaz-backend.herokuapp.com';
 // edit these for local testing
 // import { stringify } from 'querystring';
 /**
@@ -72,14 +73,16 @@ function getDateString(date) {
     let day = date.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}T00:00:00.000Z`;
 }
-// interface Date {
-//     withoutTime: () => Date;
-// }
-Date.prototype.withoutTime = function () {
-    const d = new Date(this);
+// Date.prototype.withoutTime = function () {
+//     const d = new Date(this);
+//     d.setHours(0, 0, 0, 0);
+//     return d;
+// };
+function withoutTime(date) {
+    const d = new Date(date);
     d.setHours(0, 0, 0, 0);
     return d;
-};
+}
 const url = window.location.search;
 const urlParams = new URLSearchParams(url);
 let urlPara = urlParams.get('urlPara');
@@ -90,28 +93,30 @@ if (infoText != null) {
 }
 const infobox = [infoTitle, infoText, infoSource];
 let todaysKnowledge;
-// let todaysKnowledgeArray:string;
+// this variable is updated but not used
+// let todaysKnowledgeArray:VerseInterface[];
 let todaysKnowledgeSourceArabic;
 const languageKeys = ['tr', 'ar', 'de'];
 async function getVersesOrHadiths() {
     fetch('versesAndHadiths.json')
         .then(async (response) => response.json())
         .then(async (json) => {
+        // see variable init
         // todaysKnowledgeArray = json;
         todaysKnowledge = json[now.getDate() - 1];
         const currentLangKey = languageKeys[prayerLng];
         const abc = todaysKnowledge['type'];
-        if (infoTitle !== null) {
-            infoTitle.innerHTML =
-                infoTitleLanguages[abc][currentLangKey];
+        infoTitle.innerHTML = infoTitleLanguages[abc][currentLangKey];
+        infoText.innerHTML = todaysKnowledge[currentLangKey];
+        if (todaysKnowledge.source) {
+            const abc = todaysKnowledge['source'];
+            if (abc !== null) {
+                const sourceNumbers = abc
+                    .match(/\d+/g)
+                    ?.map(Number);
+                todaysKnowledgeSourceArabic = `[${convertToArabic(sourceNumbers[0])}:${convertToArabic(sourceNumbers[1])}]`;
+            }
         }
-        if (infoText !== null) {
-            infoText.innerHTML = todaysKnowledge[currentLangKey];
-        }
-        const sourceNumbers = todaysKnowledge['source']
-            .match(/\d+/g)
-            .map(Number);
-        todaysKnowledgeSourceArabic = `[${convertToArabic(sourceNumbers[0])}:${convertToArabic(sourceNumbers[1])}]`;
         if (infoSource !== null) {
             infoSource.innerHTML =
                 currentLangKey === 'ar'
@@ -140,6 +145,11 @@ async function getAllAnnouncements() {
         updateInfobox();
     });
 }
+/**
+ * converts number into 2 char string
+ * @param number number to format
+ * @returns number as string with 2 chars
+ */
 function formatTime(number) {
     return number < 10 ? '0' + number : number.toString();
 }
@@ -178,12 +188,10 @@ function updateCountdown(startTime, endTime) {
     }
     let hours = Math.floor(difference / 3600);
     let minutes = Math.floor((difference % 3600) / 60);
-    hours = formatTime(hours);
-    minutes = formatTime(minutes);
-    if (countdownHour !== null) {
-        countdownHour.innerText = hours;
-    }
-    countdownMinute.innerText = minutes;
+    let hours_string = formatTime(hours);
+    let minutes_string = formatTime(minutes);
+    countdownHour.innerText = hours_string;
+    countdownMinute.innerText = minutes_string;
 }
 // needed to start in exact second
 setTimeout(function () {
@@ -197,10 +205,11 @@ let hours;
 let minutes;
 function runEveryMinute() {
     const now2 = Date.now();
+    const hours_number = Number(hours);
     updateClock();
     checkIfNextPrayer();
     if (nextPrayer === 0 &&
-        hours > parseInt(todaysPrayerTimes[nextPrayer].substring(0, 2))) {
+        hours_number > parseInt(todaysPrayerTimes[nextPrayer].substring(0, 2))) {
         let endTime2 = monthlyData[monthlyDataPointer + 1]['fajr'];
         updateCountdown(timeNow, endTime2);
     }
@@ -225,13 +234,18 @@ function updateClock() {
     now = new Date();
     hours = formatTime(now.getHours());
     minutes = formatTime(now.getMinutes());
-    hoursHTML.innerHTML = hours;
-    minutesHTML.innerHTML = minutes;
+    let minutes_number = Number(minutes);
+    if (hoursHTML !== null) {
+        hoursHTML.innerHTML = hours;
+    }
+    if (minutesHTML !== null) {
+        minutesHTML.innerHTML = minutes;
+    }
     timeNow = `${hours}:${minutes}`;
     if (intervalMinutes === 60 && hours === '00' && minutes === '00') {
         runOnNewDay();
     }
-    else if (minutes % intervalMinutes === 0) {
+    else if (minutes_number % intervalMinutes === 0) {
         runOnNewDay();
     }
 }
@@ -250,11 +264,22 @@ async function runOnNewDay() {
     }, 100);
 }
 function convertToArabic(number) {
-    const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+    const arabicNumbers = [
+        '٠',
+        '١',
+        '٢',
+        '٣',
+        '٤',
+        '٥',
+        '٦',
+        '٧',
+        '٨',
+        '٩',
+    ];
     let arabicNum = '';
-    number = number.toString();
-    for (let i = 0; i < number.length; i++) {
-        arabicNum += arabicNumbers[parseInt(number[i])];
+    const number_string = number.toString();
+    for (let i = 0; i < number_string.length; i++) {
+        arabicNum += arabicNumbers[parseInt(number_string[i])];
     }
     return arabicNum;
 }
@@ -351,7 +376,8 @@ function updateTimes() {
     monthNormal.innerHTML = month;
     yearNormal.innerHTML = year;
     hijriRaw = monthlyData[monthlyDataPointer]['hijriDate'].split('.');
-    hijriRaw.push(convertToArabic(hijriRaw[0]));
+    const date = parseInt(hijriRaw[0]);
+    hijriRaw.push(convertToArabic(date));
     if (hijriRaw[1] === '9') {
         isRamadan = true;
         point1.style.display = 'none';
@@ -482,11 +508,12 @@ async function getNextImportantDate(arr) {
         let jsonMonth = arr[i]['date'].slice(3, 5);
         let jsonDay = arr[i]['date'].slice(0, 2);
         let jsonDate = new Date(`${jsonYear}-${jsonMonth}-${jsonDay}`);
-        if (now.withoutTime() - jsonDate.withoutTime() === 0) {
+        if (withoutTime(now).getTime() - withoutTime(jsonDate).getTime() ===
+            0) {
             importantDate1.style.backgroundColor = '#3db6c4';
             importantDate1.style.color = 'white';
         }
-        if (now.withoutTime() <= jsonDate.withoutTime()) {
+        if (withoutTime(now).getTime() <= withoutTime(jsonDate).getTime()) {
             importantDatesPointer = i;
             importantDate1Text.innerText = arr[i]['tr'];
             importantDate2Text.innerText = arr[i + 1]['tr'];
@@ -576,6 +603,8 @@ function animateSvg(idx) {
             deactivateFromTop = false;
             dVal = '20%';
             break;
+        default:
+            return;
     }
     const s1 = el.querySelectorAll('#s1');
     const s2 = el.querySelector('#s2');
@@ -600,12 +629,13 @@ function animateSvg(idx) {
         .transition()
         .duration(1000)
         .attr('font-weight', '600');
-    document.querySelector(elClass).style.width = '42.5vw';
+    const elClassElement = document.querySelector(elClass);
+    elClassElement.style.width = '42.5vw';
     if (activateFromTop) {
-        document.querySelector(elClass).style.top = aVal;
+        elClassElement.style.top = aVal;
     }
     else {
-        document.querySelector(elClass).style.bottom = aVal;
+        elClassElement.style.bottom = aVal;
     }
     //deactive animation
     const dS1 = dEl.querySelectorAll('#s1');
@@ -631,12 +661,13 @@ function animateSvg(idx) {
         .transition()
         .duration(1000)
         .attr('font-weight', 'normal');
-    document.querySelector(dElClass).style.width = '37vw';
+    let dElClassElement = document.querySelector(dElClass);
+    dElClassElement.style.width = '37vw';
     if (deactivateFromTop) {
-        document.querySelector(dElClass).style.top = dVal;
+        dElClassElement.style.top = dVal;
     }
     else {
-        document.querySelector(dElClass).style.bottom = dVal;
+        dElClassElement.style.bottom = dVal;
     }
 }
 let namazTextTr = [];
@@ -655,29 +686,27 @@ document.addEventListener('DOMContentLoaded', function () {
         '.aksam': aksamSVG,
         '.yatsi': yatsiSVG,
     };
-    Object.entries(svgArray).forEach(([k, _]) => {
+    Object.entries(svgArray).forEach(([k /* _ */]) => {
         const svgElement = document.querySelector(k);
-        if (svgElement instanceof Element) {
-            switch (k) {
-                case '.imsak':
-                    imsakSVG = svgElement;
-                    break;
-                case '.gunes':
-                    gunesSVG = svgElement;
-                    break;
-                case '.ogle':
-                    ogleSVG = svgElement;
-                    break;
-                case '.ikindi':
-                    ikindiSVG = svgElement;
-                    break;
-                case '.aksam':
-                    aksamSVG = svgElement;
-                    break;
-                case '.yatsi':
-                    yatsiSVG = svgElement;
-                    break;
-            }
+        switch (k) {
+            case '.imsak':
+                imsakSVG = svgElement;
+                break;
+            case '.gunes':
+                gunesSVG = svgElement;
+                break;
+            case '.ogle':
+                ogleSVG = svgElement;
+                break;
+            case '.ikindi':
+                ikindiSVG = svgElement;
+                break;
+            case '.aksam':
+                aksamSVG = svgElement;
+                break;
+            case '.yatsi':
+                yatsiSVG = svgElement;
+                break;
         }
     });
 });
@@ -838,7 +867,8 @@ const changeLanguage = async (language) => {
     }
     await loadAnnouncmentAndKnowledge();
     async function loadAnnouncmentAndKnowledge() {
-        countdownText.innerHTML = countdownTextArr[nextPrayer][language];
+        const countdownObject = countdownTextArr[nextPrayer];
+        countdownText.innerHTML = countdownObject[language];
         if (todayIsAnAnnouncement) {
             // todo: refactor mit const title
             infoTitle.innerHTML =
@@ -962,7 +992,7 @@ const fontSizeImportantDates = {
     de: 'n',
 };
 function autoSizeText() {
-    const elements = document.querySelectorAll('.resize');
+    const elements = Array.from(document.querySelectorAll('.resize')).map((el) => el);
     let fontSizeImportantDateLeft, fontSizeImportantDateRight;
     elements.forEach((el) => {
         let computedFontSize = window.getComputedStyle(el).fontSize;
