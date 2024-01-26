@@ -1,23 +1,19 @@
 {
     "root": true,
-    "extends": [
-        "eslint:recommended",
-        "prettier"
-    ],
+    "extends": ["eslint:recommended", "prettier"],
     "parser": "@typescript-eslint/parser",
-    "plugins": [
-        "@typescript-eslint"
-    ],
-    "rules": {
-    },
+    "plugins": ["@typescript-eslint"],
+    "rules": {},
     "ignorePatterns": ["src/**/*.test.ts", "src/frontend/generated/*"],
     "env": {
-      "browser": true,
-      "es2021": true
+        "browser": true,
+        "es2021": true
     },
     "parserOptions": {
-      "ecmaVersion": 14,
-      "sourceType": "commonjs"
+        "ecmaVersion": 14,
+        "sourceType": "commonjs"
+    },
+    "globals": {
+        "d3": "readonly"
     }
-  }
-  
+}

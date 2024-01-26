@@ -9,7 +9,6 @@ import bcrypt from 'bcryptjs';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import request from 'request';
 import util from 'util';
-import cors from 'cors';
 
 import { fileURLToPath } from 'url';
 
@@ -45,19 +44,22 @@ interface DatabaseError extends Error {
     code: number;
 }
 
-app.use(cors());
-
-app.use('/', express.static(path.join(__dirname, 'static')));
 app.use(bodyParser.json());
-
 app.use(express.static(path.join(__dirname, 'frontend')));
+app.use(express.static(path.join(__dirname, 'frontend', 'public')));
+app.use(express.static(path.join(__dirname, 'frontend', 'images')));
+
 
 app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+    res.sendFile(
+        path.join(__dirname, 'frontend', 'public', 'index.html')
+    );
 });
 
 app.get('/duyuru', function (req, res) {
-    res.sendFile(path.join(__dirname, 'frontend', 'admin.html'));
+    res.sendFile(
+        path.join(__dirname, 'frontend', 'public', 'admin.html')
+    );
 });
 
 app.post('/api/register', async (req, res) => {
