@@ -1,7 +1,8 @@
 // import { empty } from 'cheerio/lib/api/manipulation';
 // import * as d3 from 'd3';
 
-const serverUrl: string = 'https://namaz-backend.herokuapp.com';
+//@ts-ignore
+const serverUrl: string = "https://namaz-backend.herokuapp.com";
 // edit these for local testing
 
 // import { stringify } from 'querystring';
@@ -40,103 +41,103 @@ let todaysAnnouncement: { [x: string]: string };
 let todayIsAnAnnouncement: boolean;
 
 //HTML-Elements
-const hoursHTML: HTMLElement = document.querySelector('.l-3-1') as HTMLElement;
+const hoursHTML: HTMLElement = document.querySelector(".l-3-1") as HTMLElement;
 const minutesHTML: HTMLElement = document.querySelector(
-    '.l-3-3'
+    ".l-3-3"
 ) as HTMLElement;
 
 const countdownHour: HTMLElement = document.querySelector(
-    '.countdown-hour'
+    ".countdown-hour"
 ) as HTMLElement;
 const countdownMinute: HTMLElement = document.querySelector(
-    '.countdown-minute'
+    ".countdown-minute"
 ) as HTMLElement;
 
-const infoTitle: HTMLElement = document.querySelector('.l-4-1 ') as HTMLElement;
-const infoText: HTMLElement = document.querySelector('.l-4-2') as HTMLElement;
-const infoSource: HTMLElement = document.querySelector('.l-4-3') as HTMLElement;
+const infoTitle: HTMLElement = document.querySelector(".l-4-1 ") as HTMLElement;
+const infoText: HTMLElement = document.querySelector(".l-4-2") as HTMLElement;
+const infoSource: HTMLElement = document.querySelector(".l-4-3") as HTMLElement;
 
 const dateNormal: HTMLElement = document.querySelector(
-    '.dateNormal'
+    ".dateNormal"
 ) as HTMLElement;
 const monthNormal: HTMLElement = document.querySelector(
-    '.monthNormal'
+    ".monthNormal"
 ) as HTMLElement;
 const yearNormal: HTMLElement = document.querySelector(
-    '.yearNormal'
+    ".yearNormal"
 ) as HTMLElement;
 
 const dateHicri: HTMLElement = document.querySelector(
-    '.dateHicri'
+    ".dateHicri"
 ) as HTMLElement;
 const monthHicri: HTMLElement = document.querySelector(
-    '.monthHicri'
+    ".monthHicri"
 ) as HTMLElement;
 const yearHicri: HTMLElement = document.querySelector(
-    '.yearHicri'
+    ".yearHicri"
 ) as HTMLElement;
 
-const point1: HTMLElement = document.querySelector('#p1') as HTMLElement;
-const point2: HTMLElement = document.querySelector('#p2') as HTMLElement;
+const point1: HTMLElement = document.querySelector("#p1") as HTMLElement;
+const point2: HTMLElement = document.querySelector("#p2") as HTMLElement;
 
 const moonElements: HTMLElement[] = [
-    document.querySelector('.moon1') as HTMLElement,
-    document.querySelector('.moon2') as HTMLElement,
-    document.querySelector('.moon3') as HTMLElement,
-    document.querySelector('.moon4') as HTMLElement,
-    document.querySelector('.moon5') as HTMLElement,
+    document.querySelector(".moon1") as HTMLElement,
+    document.querySelector(".moon2") as HTMLElement,
+    document.querySelector(".moon3") as HTMLElement,
+    document.querySelector(".moon4") as HTMLElement,
+    document.querySelector(".moon5") as HTMLElement,
 ];
 
 const timeLeft: HTMLElement = document.querySelector(
-    '.timeLeft'
+    ".timeLeft"
 ) as HTMLElement;
 const countdownText: HTMLElement = document.querySelector(
-    '.timeLeft-before'
+    ".timeLeft-before"
 ) as HTMLElement;
 const timeLeftAfter: HTMLElement = document.querySelector(
-    '.timeLeft-after'
+    ".timeLeft-after"
 ) as HTMLElement;
 
 const importantDate1: HTMLElement = document.querySelector(
-    '#box1'
+    "#box1"
 ) as HTMLElement;
 
 const importantDate1Text: HTMLElement = document.querySelector(
-    '.l-6-2-2'
+    ".l-6-2-2"
 ) as HTMLElement;
 const importantDate2Text: HTMLElement = document.querySelector(
-    '.l-6-4-2'
+    ".l-6-4-2"
 ) as HTMLElement;
 
 const importantDate1Day: HTMLElement = document.querySelector(
-    '#importantDate1Day'
+    "#importantDate1Day"
 ) as HTMLElement;
 const importantDate2Day: HTMLElement = document.querySelector(
-    '#importantDate2Day'
+    "#importantDate2Day"
 ) as HTMLElement;
 
 const importantDate1Month: HTMLElement = document.querySelector(
-    '#importantDate1Month'
+    "#importantDate1Month"
 ) as HTMLElement;
 const importantDate2Month: HTMLElement = document.querySelector(
-    '#importantDate2Month'
+    "#importantDate2Month"
 ) as HTMLElement;
 
 const importantDate1Year: HTMLElement = document.querySelector(
-    '#importantDate1Year'
+    "#importantDate1Year"
 ) as HTMLElement;
 const importantDate2Year: HTMLElement = document.querySelector(
-    '#importantDate2Year'
+    "#importantDate2Year"
 ) as HTMLElement;
 
 const countdownContainer: HTMLElement = document.querySelector(
-    '.timeLeft'
+    ".timeLeft"
 ) as HTMLElement;
 
 function getDateString(date: Date) {
     let year: string = date.getFullYear().toString();
-    let month: string = (date.getMonth() + 1).toString().padStart(2, '0');
-    let day: string = date.getDate().toString().padStart(2, '0');
+    let month: string = (date.getMonth() + 1).toString().padStart(2, "0");
+    let day: string = date.getDate().toString().padStart(2, "0");
     return `${year}-${month}-${day}T00:00:00.000Z`;
 }
 
@@ -153,13 +154,13 @@ function withoutTime(date: Date): Date {
 
 const url = window.location.search;
 const urlParams = new URLSearchParams(url);
-let urlPara = urlParams.get('urlPara');
-urlPara = urlPara === '11023' ? 'muenster' : urlPara;
+let urlPara = urlParams.get("urlPara");
+urlPara = urlPara === "11023" ? "muenster" : urlPara;
 
 let initialRun = true;
 
 if (infoText != null) {
-    infoText.innerHTML = '';
+    infoText.innerHTML = "";
 }
 
 const infobox = [infoTitle, infoText, infoSource];
@@ -178,11 +179,11 @@ let todaysKnowledge: VerseInterface;
 // let todaysKnowledgeArray:VerseInterface[];
 let todaysKnowledgeSourceArabic: string;
 
-type LangKey = 'tr' | 'ar' | 'de';
-const languageKeys: LangKey[] = ['tr', 'ar', 'de'];
+type LangKey = "tr" | "ar" | "de";
+const languageKeys: LangKey[] = ["tr", "ar", "de"];
 
 async function getVersesOrHadiths() {
-    fetch('versesAndHadiths.json')
+    fetch("versesAndHadiths.json")
         .then(async (response) => response.json() as Promise<VerseInterface[]>)
         .then(async (json) => {
             // see variable init
@@ -190,13 +191,13 @@ async function getVersesOrHadiths() {
             todaysKnowledge = json[now.getDate() - 1];
 
             const currentLangKey: LangKey = languageKeys[prayerLng];
-            const abc: number = todaysKnowledge['type'];
+            const abc: number = todaysKnowledge["type"];
 
             infoTitle.innerHTML = infoTitleLanguages[abc][currentLangKey];
             infoText.innerHTML = todaysKnowledge[currentLangKey];
 
             if (todaysKnowledge.source) {
-                const abc = todaysKnowledge['source'];
+                const abc = todaysKnowledge["source"];
                 if (abc !== null) {
                     const sourceNumbers: number[] = abc
                         .match(/\d+/g)
@@ -207,9 +208,9 @@ async function getVersesOrHadiths() {
 
             if (infoSource !== null) {
                 infoSource.innerHTML =
-                    currentLangKey === 'ar'
+                    currentLangKey === "ar"
                         ? todaysKnowledgeSourceArabic
-                        : todaysKnowledge['source'];
+                        : todaysKnowledge["source"];
                 autoSizeText();
             }
         });
@@ -221,15 +222,15 @@ async function getAllAnnouncements() {
     fetch(`${serverUrl}/api/getAllAnnouncements?urlPara=${urlPara}`)
         .then((res) => {
             if (res.status !== 200) {
-                throw new Error('Failed to fetch announcements');
+                throw new Error("Failed to fetch announcements");
             }
             return res.json();
         })
         .then((json) => {
-            announcements = json['result'];
+            announcements = json["result"];
         })
         .catch((error) => {
-            console.log('Error fetching announcements:', error);
+            console.log("Error fetching announcements:", error);
         })
         .finally(() => {
             updateInfobox();
@@ -241,12 +242,12 @@ async function getAllAnnouncements() {
  * @returns number as string with 2 chars
  */
 function formatTime(number: number): string {
-    return number < 10 ? '0' + number : number.toString();
+    return number < 10 ? "0" + number : number.toString();
 }
 
 function getCurrentPrayer() {
     const currentTime: string =
-        formatTime(now.getHours()) + ':' + formatTime(now.getMinutes());
+        formatTime(now.getHours()) + ":" + formatTime(now.getMinutes());
 
     for (let i = 0; i < todaysPrayerTimes.length; i++) {
         if (
@@ -275,8 +276,8 @@ function determineNextPrayer(currentTime: string | number, index: number) {
 }
 
 function updateCountdown(startTime: string, endTime: string) {
-    const start = new Date('1970-01-01 ' + startTime + ' UTC').getTime() / 1000;
-    const end = new Date('1970-01-01 ' + endTime + ' UTC').getTime() / 1000;
+    const start = new Date("1970-01-01 " + startTime + " UTC").getTime() / 1000;
+    const end = new Date("1970-01-01 " + endTime + " UTC").getTime() / 1000;
     let difference = end - start;
     if (difference < 0) {
         difference += 24 * 3600;
@@ -320,7 +321,7 @@ function runEveryMinute() {
         nextPrayer === 0 &&
         hours_number > parseInt(todaysPrayerTimes[nextPrayer].substring(0, 2))
     ) {
-        let endTime2 = monthlyData[monthlyDataPointer + 1]['fajr'];
+        let endTime2 = monthlyData[monthlyDataPointer + 1]["fajr"];
         updateCountdown(timeNow, endTime2);
     } else {
         updateCountdown(timeNow, todaysPrayerTimes[nextPrayer]);
@@ -359,7 +360,7 @@ function updateClock() {
 
     timeNow = `${hours}:${minutes}`;
 
-    if (intervalMinutes === 60 && hours === '00' && minutes === '00') {
+    if (intervalMinutes === 60 && hours === "00" && minutes === "00") {
         runOnNewDay();
     } else if (minutes_number % intervalMinutes === 0) {
         runOnNewDay();
@@ -367,9 +368,9 @@ function updateClock() {
 }
 
 async function runOnNewDay() {
-    fontSizeImportantDates.tr = 'n';
-    fontSizeImportantDates.ar = 'n';
-    fontSizeImportantDates.de = 'n';
+    fontSizeImportantDates.tr = "n";
+    fontSizeImportantDates.ar = "n";
+    fontSizeImportantDates.de = "n";
     now = new Date();
     initialRun = false;
     getAllAnnouncements();
@@ -384,18 +385,18 @@ async function runOnNewDay() {
 
 function convertToArabic(number: number) {
     const arabicNumbers: string[] = [
-        '٠',
-        '١',
-        '٢',
-        '٣',
-        '٤',
-        '٥',
-        '٦',
-        '٧',
-        '٨',
-        '٩',
+        "٠",
+        "١",
+        "٢",
+        "٣",
+        "٤",
+        "٥",
+        "٦",
+        "٧",
+        "٨",
+        "٩",
     ];
-    let arabicNum: string = '';
+    let arabicNum: string = "";
     const number_string: string = number.toString();
     for (let i = 0; i < number_string.length; i++) {
         arabicNum += arabicNumbers[parseInt(number_string[i])];
@@ -404,75 +405,75 @@ function convertToArabic(number: number) {
 }
 
 const moonDirection = [
-    'dolunay',
-    'd1',
-    'd2',
-    'd3',
-    'd4',
-    'd5',
-    'd6',
-    'd65',
-    'd7',
-    'sondordun',
-    'sd1',
-    'sd2',
-    'sd3',
-    'sd4',
-    'sd5',
-    'sd6',
-    'yeniAy',
-    'r1',
-    'r2',
-    'r3',
-    'r4',
-    'r45',
-    'r5',
-    'ilkdordun',
-    'i1',
-    'i2',
-    'i3',
-    'i4',
-    'i5',
-    'i6',
-    'i7',
+    "dolunay",
+    "d1",
+    "d2",
+    "d3",
+    "d4",
+    "d5",
+    "d6",
+    "d65",
+    "d7",
+    "sondordun",
+    "sd1",
+    "sd2",
+    "sd3",
+    "sd4",
+    "sd5",
+    "sd6",
+    "yeniAy",
+    "r1",
+    "r2",
+    "r3",
+    "r4",
+    "r45",
+    "r5",
+    "ilkdordun",
+    "i1",
+    "i2",
+    "i3",
+    "i4",
+    "i5",
+    "i6",
+    "i7",
 ];
 
 // ictima und ruyet beide mit yeniAy ersetzen
 
 function updateMoonSvgs() {
-    let moonUrlToday = monthlyData[monthlyDataPointer]['shapeMoon'];
+    let moonUrlToday = monthlyData[monthlyDataPointer]["shapeMoon"];
 
     const moonIndex3 = moonDirection.indexOf(moonUrlToday);
 
-    if (moonUrlToday === 'ictima' || moonUrlToday === 'ruyet') {
-        moonUrlToday = 'yeniAy';
+    if (moonUrlToday === "ictima" || moonUrlToday === "ruyet") {
+        moonUrlToday = "yeniAy";
     }
 
-    moonElements[2].setAttribute('src', `images/moons/${moonUrlToday}.svg`);
+    moonElements[2].setAttribute("src", `images/moons/${moonUrlToday}.svg`);
 
     const moonIndex2 =
         (moonIndex3 - 1 + moonDirection.length) % moonDirection.length;
     moonElements[1].setAttribute(
-        'src',
+        "src",
         `images/moons/${moonDirection[moonIndex2]}.svg`
     );
 
     const moonIndex1 =
         (moonIndex3 - 2 + moonDirection.length) % moonDirection.length;
     moonElements[0].setAttribute(
-        'src',
+        "src",
         `images/moons/${moonDirection[moonIndex1]}.svg`
     );
 
     const moonIndex4 = (moonIndex3 + 1) % moonDirection.length;
     moonElements[3].setAttribute(
-        'src',
+        "src",
         `images/moons/${moonDirection[moonIndex4]}.svg`
     );
 
     const moonIndex5 = (moonIndex3 + 2) % moonDirection.length;
     moonElements[4].setAttribute(
-        'src',
+        "src",
         `images/moons/${moonDirection[moonIndex5]}.svg`
     );
 }
@@ -484,23 +485,23 @@ let hijriRaw: string[];
 function updateTimes() {
     //this is for fetching the prayer times
     isRamadan = false;
-    yearHicri.style.display = 'visible';
+    yearHicri.style.display = "visible";
 
     let day = formatTime(now.getDate());
     let month = formatTime(now.getMonth() + 1);
-    let year = now.getFullYear() + '';
+    let year = now.getFullYear() + "";
     let targetDate = `${day}.${month}.${year}`;
     monthlyDataPointer = monthlyData.findIndex(
         (element: { gregorianDateShort: string }) =>
             element.gregorianDateShort === targetDate
     );
 
-    let imsakRaw = monthlyData[monthlyDataPointer]['fajr'];
-    let gunesRaw = monthlyData[monthlyDataPointer]['sunrise'];
-    let ogleRaw = monthlyData[monthlyDataPointer]['dhuhr'];
-    let ikindiRaw = monthlyData[monthlyDataPointer]['asr'];
-    let aksamRaw = monthlyData[monthlyDataPointer]['maghrib'];
-    let yatsiRaw = monthlyData[monthlyDataPointer]['isha'];
+    let imsakRaw = monthlyData[monthlyDataPointer]["fajr"];
+    let gunesRaw = monthlyData[monthlyDataPointer]["sunrise"];
+    let ogleRaw = monthlyData[monthlyDataPointer]["dhuhr"];
+    let ikindiRaw = monthlyData[monthlyDataPointer]["asr"];
+    let aksamRaw = monthlyData[monthlyDataPointer]["maghrib"];
+    let yatsiRaw = monthlyData[monthlyDataPointer]["isha"];
 
     if (testInterval !== null) {
         imsakRaw = increaseTimeByInterval(1);
@@ -538,19 +539,19 @@ function updateTimes() {
     monthNormal.innerHTML = month;
     yearNormal.innerHTML = year;
 
-    hijriRaw = monthlyData[monthlyDataPointer]['hijriDate'].split('.');
+    hijriRaw = monthlyData[monthlyDataPointer]["hijriDate"].split(".");
     const date: number = parseInt(hijriRaw[0]);
     hijriRaw.push(convertToArabic(date));
 
-    if (hijriRaw[1] === '9') {
+    if (hijriRaw[1] === "9") {
         isRamadan = true;
-        point1.style.display = 'none';
+        point1.style.display = "none";
 
-        yearHicri.style.display = 'none';
-        dateHicri.innerHTML = 'Ramazan';
+        yearHicri.style.display = "none";
+        dateHicri.innerHTML = "Ramazan";
         monthHicri.innerHTML = hijriRaw[0];
     } else {
-        point1.style.display = 'block';
+        point1.style.display = "block";
         dateHicri.innerHTML = formatTime(parseInt(hijriRaw[0]));
         monthHicri.innerHTML = formatTime(parseInt(hijriRaw[1]));
         yearHicri.innerHTML = hijriRaw[2];
@@ -561,7 +562,7 @@ function updateTimes() {
 function increaseTimeByInterval(minutesToAdd: number) {
     let date = new Date();
     date.setTime(date.getTime() + minutesToAdd * 60 * 1000);
-    return formatTime(date.getHours()) + ':' + formatTime(date.getMinutes());
+    return formatTime(date.getHours()) + ":" + formatTime(date.getMinutes());
 }
 
 async function checkIfFileExistsAndIsSvg(fullUrl: string) {
@@ -575,9 +576,9 @@ async function checkIfFileExistsAndIsSvg(fullUrl: string) {
         const svgText = await response.text();
         // then check if it is a valid svg
         const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(svgText, 'image/svg+xml');
+        const xmlDoc = parser.parseFromString(svgText, "image/svg+xml");
 
-        if (!xmlDoc.getElementsByTagName('svg').length) {
+        if (!xmlDoc.getElementsByTagName("svg").length) {
             throw new Error(`URL is not a valid SVG: ${url}`);
         }
         return true;
@@ -588,7 +589,7 @@ async function checkIfFileExistsAndIsSvg(fullUrl: string) {
 }
 
 async function checkIfAllMoonImagesExist() {
-    const baseURL = 'images/moons/';
+    const baseURL = "images/moons/";
     const promise = moonDirection.map(async (file) => {
         const fullUrl = `${baseURL}${file}.svg`;
         const fileIsValid = await checkIfFileExistsAndIsSvg(fullUrl);
@@ -604,10 +605,10 @@ async function checkIfAllMoonImagesExist() {
 }
 
 function updateTimeSvg(el: HTMLElement, raw: string) {
-    el.querySelector('.hour1')!.innerHTML = raw.substring(0, 1);
-    el.querySelector('.hour2')!.innerHTML = raw.substring(1, 2);
-    el.querySelector('.minute1')!.innerHTML = raw.substring(3, 4);
-    el.querySelector('.minute2')!.innerHTML = raw.substring(4, 5);
+    el.querySelector(".hour1")!.innerHTML = raw.substring(0, 1);
+    el.querySelector(".hour2")!.innerHTML = raw.substring(1, 2);
+    el.querySelector(".minute1")!.innerHTML = raw.substring(3, 4);
+    el.querySelector(".minute2")!.innerHTML = raw.substring(4, 5);
 }
 interface CountdownTextInterface {
     [key: string]: string;
@@ -618,47 +619,47 @@ interface CountdownTextInterface {
 
 const countdownTextArr: CountdownTextInterface[] = [
     {
-        tr: 'İMSAKA KALAN SÜRE:',
-        de: 'VERBLEIBENDE ZEIT BIS ZUM MORGENSG.:',
-        ar: 'الوقت المتبقي لصلاة الفجر',
+        tr: "İMSAKA KALAN SÜRE:",
+        de: "VERBLEIBENDE ZEIT BIS ZUM MORGENSG.:",
+        ar: "الوقت المتبقي لصلاة الفجر",
     },
     {
-        tr: 'GÜNEŞE KALAN SÜRE:',
-        de: 'VERBLEIBENDE ZEIT BIS ZUM SONNENA.:',
-        ar: 'الوقت المتبقي لشروق الشمس',
+        tr: "GÜNEŞE KALAN SÜRE:",
+        de: "VERBLEIBENDE ZEIT BIS ZUM SONNENA.:",
+        ar: "الوقت المتبقي لشروق الشمس",
     },
     {
-        tr: 'ÖĞLEYE KALAN SÜRE:',
-        de: 'VERBLEIBENDE ZEIT BIS ZUM MITTAGSG.:',
-        ar: 'الوقت المتبقي لصلاة الظهر',
+        tr: "ÖĞLEYE KALAN SÜRE:",
+        de: "VERBLEIBENDE ZEIT BIS ZUM MITTAGSG.:",
+        ar: "الوقت المتبقي لصلاة الظهر",
     },
     {
-        tr: 'İKİNDİYE KALAN SÜRE:',
-        de: 'VERBLEIBENDE ZEIT BIS ZUM NACHM.:',
-        ar: 'الوقت المتبقي لصلاة العصر',
+        tr: "İKİNDİYE KALAN SÜRE:",
+        de: "VERBLEIBENDE ZEIT BIS ZUM NACHM.:",
+        ar: "الوقت المتبقي لصلاة العصر",
     },
     {
-        tr: 'AKŞAMA KALAN SÜRE:',
-        de: 'VERBLEIBENDE ZEIT BIS ZUM ABENDSG.:',
-        ar: 'الوقت المتبقي لصلاة المغرب',
+        tr: "AKŞAMA KALAN SÜRE:",
+        de: "VERBLEIBENDE ZEIT BIS ZUM ABENDSG.:",
+        ar: "الوقت المتبقي لصلاة المغرب",
     },
     {
-        tr: 'YATSIYE KALAN SÜRE:',
-        de: 'VERBLEIBENDE ZEIT BIS ZUM NACHTSG.:',
-        ar: 'الوقت المتبقي لصلاة العشاء',
+        tr: "YATSIYE KALAN SÜRE:",
+        de: "VERBLEIBENDE ZEIT BIS ZUM NACHTSG.:",
+        ar: "الوقت المتبقي لصلاة العشاء",
     },
 ];
 
 const infoTitleLanguages: CountdownTextInterface[] = [
     {
-        tr: 'AYET',
-        ar: 'آية قرآنية',
-        de: 'VERS',
+        tr: "AYET",
+        ar: "آية قرآنية",
+        de: "VERS",
     },
     {
-        tr: 'HADIS',
-        ar: 'حديث',
-        de: 'HADITH',
+        tr: "HADIS",
+        ar: "حديث",
+        de: "HADITH",
     },
 ];
 
@@ -679,7 +680,7 @@ interface EventData {
     ar: string;
 }
 async function updateImportantDates() {
-    fetch('importantDates.json')
+    fetch("importantDates.json")
         .then((response) => response.json())
         .then((json: EventData[]) => {
             importantDates = json;
@@ -688,13 +689,13 @@ async function updateImportantDates() {
 }
 
 async function getNextImportantDate(arr: EventData[]) {
-    importantDate1.style.backgroundColor = '#d5e7ea';
-    importantDate1.style.color = '#1f4e5f';
+    importantDate1.style.backgroundColor = "#d5e7ea";
+    importantDate1.style.color = "#1f4e5f";
 
     for (let i = 0; i < arr.length; i++) {
-        let jsonYear = arr[i]['date'].slice(6, 10);
-        let jsonMonth = arr[i]['date'].slice(3, 5);
-        let jsonDay = arr[i]['date'].slice(0, 2);
+        let jsonYear = arr[i]["date"].slice(6, 10);
+        let jsonMonth = arr[i]["date"].slice(3, 5);
+        let jsonDay = arr[i]["date"].slice(0, 2);
 
         let jsonDate = new Date(`${jsonYear}-${jsonMonth}-${jsonDay}`);
 
@@ -702,17 +703,17 @@ async function getNextImportantDate(arr: EventData[]) {
             withoutTime(now).getTime() - withoutTime(jsonDate).getTime() ===
             0
         ) {
-            importantDate1.style.backgroundColor = '#3db6c4';
-            importantDate1.style.color = 'white';
+            importantDate1.style.backgroundColor = "#3db6c4";
+            importantDate1.style.color = "white";
         }
 
         if (withoutTime(now).getTime() <= withoutTime(jsonDate).getTime()) {
             importantDatesPointer = i;
-            importantDate1Text.innerText = arr[i]['tr'];
-            importantDate2Text.innerText = arr[i + 1]['tr'];
+            importantDate1Text.innerText = arr[i]["tr"];
+            importantDate2Text.innerText = arr[i + 1]["tr"];
 
-            let importantDate1Date = arr[i]['date'];
-            let importantDate2Date = arr[i + 1]['date'];
+            let importantDate1Date = arr[i]["date"];
+            let importantDate2Date = arr[i + 1]["date"];
 
             importantDate1Day.innerText = importantDate1Date.slice(0, 2);
             importantDate1Month.innerText = importantDate1Date.slice(3, 5);
@@ -746,115 +747,115 @@ function animateSvg(idx: number) {
     switch (idx) {
         case 0:
             el = imsakSVG;
-            elClass = '.imsak';
+            elClass = ".imsak";
             activateFromTop = true;
-            aVal = '1%';
+            aVal = "1%";
 
             //following are for deactivating the active status
             dEl = yatsiSVG;
-            dElClass = '.yatsi';
+            dElClass = ".yatsi";
             deactivateFromTop = false;
-            dVal = '2%';
+            dVal = "2%";
             break;
         case 1:
             el = gunesSVG;
-            elClass = '.gunes';
+            elClass = ".gunes";
             activateFromTop = true;
-            aVal = '18.5%';
+            aVal = "18.5%";
 
             dEl = imsakSVG;
-            dElClass = '.imsak';
+            dElClass = ".imsak";
             deactivateFromTop = true;
-            dVal = '2%';
+            dVal = "2%";
             break;
         case 2:
             el = ogleSVG;
-            elClass = '.ogle';
+            elClass = ".ogle";
             activateFromTop = true;
-            aVal = '34%';
+            aVal = "34%";
 
             dEl = gunesSVG;
-            dElClass = '.gunes';
+            dElClass = ".gunes";
             deactivateFromTop = true;
-            dVal = '19.5%';
+            dVal = "19.5%";
             break;
         case 3:
             el = ikindiSVG;
-            elClass = '.ikindi';
+            elClass = ".ikindi";
             activateFromTop = false;
-            aVal = '33.5%';
+            aVal = "33.5%";
 
             dEl = ogleSVG;
-            dElClass = '.ogle';
+            dElClass = ".ogle";
             deactivateFromTop = true;
-            dVal = '35%';
+            dVal = "35%";
             break;
         case 4:
             el = aksamSVG;
-            elClass = '.aksam';
+            elClass = ".aksam";
             activateFromTop = false;
-            aVal = '18.5%';
+            aVal = "18.5%";
 
             dEl = ikindiSVG;
-            dElClass = '.ikindi';
+            dElClass = ".ikindi";
             deactivateFromTop = false;
-            dVal = '35%';
+            dVal = "35%";
 
             break;
         case 5:
             el = yatsiSVG;
-            elClass = '.yatsi';
+            elClass = ".yatsi";
             activateFromTop = false;
-            aVal = '1%';
+            aVal = "1%";
 
             dEl = aksamSVG;
-            dElClass = '.aksam';
+            dElClass = ".aksam";
             deactivateFromTop = false;
-            dVal = '20%';
+            dVal = "20%";
 
             break;
         default:
             return;
     }
 
-    const s1 = el.querySelectorAll('#s1');
-    const s2 = el.querySelector('#s2');
-    const s3 = el.querySelector('#s3');
-    const s4 = el.querySelector('#s4');
+    const s1 = el.querySelectorAll("#s1");
+    const s2 = el.querySelector("#s2");
+    const s3 = el.querySelector("#s3");
+    const s4 = el.querySelector("#s4");
 
-    const stop1 = el.querySelector('#stop1');
-    const stop2 = el.querySelector('#stop2');
+    const stop1 = el.querySelector("#stop1");
+    const stop2 = el.querySelector("#stop2");
 
-    const timeBold = el.querySelectorAll('.time');
+    const timeBold = el.querySelectorAll(".time");
 
-    d3.selectAll(s1).transition().duration(1000).attr('fill', '#11b6c4');
+    d3.selectAll(s1).transition().duration(1000).attr("fill", "#11b6c4");
 
     d3.select(s2)
         .transition()
         .duration(1000)
-        .attr('fill', 'url(#linear-gradient)');
+        .attr("fill", "url(#linear-gradient)");
 
     d3.select(s3)
         .transition()
         .duration(1000)
-        .attr('fill', 'url(#linear-gradient-2)');
+        .attr("fill", "url(#linear-gradient-2)");
 
-    d3.select(s4).transition().duration(1000).attr('fill', '#0c7f82');
+    d3.select(s4).transition().duration(1000).attr("fill", "#0c7f82");
 
-    d3.select(stop1).transition().duration(1000).attr('stop-color', '#11b6c4');
+    d3.select(stop1).transition().duration(1000).attr("stop-color", "#11b6c4");
 
-    d3.select(stop2).transition().duration(1000).attr('stop-color', '#0c7f82');
+    d3.select(stop2).transition().duration(1000).attr("stop-color", "#0c7f82");
 
     d3.selectAll(timeBold)
         .transition()
         .duration(1000)
-        .attr('font-weight', '600');
+        .attr("font-weight", "600");
 
     const elClassElement: HTMLElement = document.querySelector(
         elClass
     ) as HTMLElement;
 
-    elClassElement.style.width = '42.5vw';
+    elClassElement.style.width = "42.5vw";
 
     if (activateFromTop) {
         elClassElement.style.top = aVal;
@@ -863,43 +864,43 @@ function animateSvg(idx: number) {
     }
 
     //deactive animation
-    const dS1 = dEl.querySelectorAll('#s1');
-    const dS2 = dEl.querySelector('#s2');
-    const dS3 = dEl.querySelector('#s3');
-    const dS4 = dEl.querySelector('#s4');
+    const dS1 = dEl.querySelectorAll("#s1");
+    const dS2 = dEl.querySelector("#s2");
+    const dS3 = dEl.querySelector("#s3");
+    const dS4 = dEl.querySelector("#s4");
 
-    const dStop1 = dEl.querySelector('#stop1');
-    const dStop2 = dEl.querySelector('#stop2');
+    const dStop1 = dEl.querySelector("#stop1");
+    const dStop2 = dEl.querySelector("#stop2");
 
-    const timeNormal = dEl.querySelectorAll('.time');
+    const timeNormal = dEl.querySelectorAll(".time");
 
-    d3.selectAll(dS1).transition().duration(1000).attr('fill', '#2c7291');
+    d3.selectAll(dS1).transition().duration(1000).attr("fill", "#2c7291");
 
     d3.select(dS2)
         .transition()
         .duration(1000)
-        .attr('fill', 'url(#linear-gradient)');
+        .attr("fill", "url(#linear-gradient)");
 
     d3.select(dS3)
         .transition()
         .duration(1000)
-        .attr('fill', 'url(#linear-gradient-2)');
+        .attr("fill", "url(#linear-gradient-2)");
 
-    d3.select(dS4).transition().duration(1000).attr('fill', '#1f5260');
+    d3.select(dS4).transition().duration(1000).attr("fill", "#1f5260");
 
-    d3.select(dStop1).transition().duration(1000).attr('stop-color', '#2c7291');
+    d3.select(dStop1).transition().duration(1000).attr("stop-color", "#2c7291");
 
-    d3.select(dStop2).transition().duration(1000).attr('stop-color', '#1f5260');
+    d3.select(dStop2).transition().duration(1000).attr("stop-color", "#1f5260");
 
     d3.selectAll(timeNormal)
         .transition()
         .duration(1000)
-        .attr('font-weight', 'normal');
+        .attr("font-weight", "normal");
 
     let dElClassElement: HTMLElement = document.querySelector(
         dElClass
     ) as HTMLElement;
-    dElClassElement.style.width = '37vw';
+    dElClassElement.style.width = "37vw";
 
     if (deactivateFromTop) {
         dElClassElement.style.top = dVal;
@@ -921,37 +922,37 @@ let imsakSVG: HTMLElement,
     yatsiSVG: HTMLElement;
 
 // look up elements and store them in previous array
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
     // array for storing information
     const svgArray = {
-        '.imsak': imsakSVG,
-        '.gunes': gunesSVG,
-        '.ogle': ogleSVG,
-        '.ikindi': ikindiSVG,
-        '.aksam': aksamSVG,
-        '.yatsi': yatsiSVG,
+        ".imsak": imsakSVG,
+        ".gunes": gunesSVG,
+        ".ogle": ogleSVG,
+        ".ikindi": ikindiSVG,
+        ".aksam": aksamSVG,
+        ".yatsi": yatsiSVG,
     };
 
     Object.entries(svgArray).forEach(([k /* _ */]) => {
         const svgElement = document.querySelector(k);
 
         switch (k) {
-            case '.imsak':
+            case ".imsak":
                 imsakSVG = svgElement as HTMLElement;
                 break;
-            case '.gunes':
+            case ".gunes":
                 gunesSVG = svgElement as HTMLElement;
                 break;
-            case '.ogle':
+            case ".ogle":
                 ogleSVG = svgElement as HTMLElement;
                 break;
-            case '.ikindi':
+            case ".ikindi":
                 ikindiSVG = svgElement as HTMLElement;
                 break;
-            case '.aksam':
+            case ".aksam":
                 aksamSVG = svgElement as HTMLElement;
                 break;
-            case '.yatsi':
+            case ".yatsi":
                 yatsiSVG = svgElement as HTMLElement;
                 break;
         }
@@ -972,28 +973,28 @@ async function safePush(array: Element[], element: Element | null) {
 
 async function getSvgElements() {
     // push turkish elements into turkish array
-    await safePush(namazTextTr, imsakSVG.querySelector('#tr'));
-    await safePush(namazTextTr, gunesSVG.querySelector('#tr'));
-    await safePush(namazTextTr, ogleSVG.querySelector('#tr'));
-    await safePush(namazTextTr, ikindiSVG.querySelector('#tr'));
-    await safePush(namazTextTr, aksamSVG.querySelector('#tr'));
-    await safePush(namazTextTr, yatsiSVG.querySelector('#tr'));
+    await safePush(namazTextTr, imsakSVG.querySelector("#tr"));
+    await safePush(namazTextTr, gunesSVG.querySelector("#tr"));
+    await safePush(namazTextTr, ogleSVG.querySelector("#tr"));
+    await safePush(namazTextTr, ikindiSVG.querySelector("#tr"));
+    await safePush(namazTextTr, aksamSVG.querySelector("#tr"));
+    await safePush(namazTextTr, yatsiSVG.querySelector("#tr"));
 
     // push arabic elements into arabic array
-    await safePush(namazTextAr, imsakSVG.querySelector('#ar'));
-    await safePush(namazTextAr, gunesSVG.querySelector('#ar'));
-    await safePush(namazTextAr, ogleSVG.querySelector('#ar'));
-    await safePush(namazTextAr, ikindiSVG.querySelector('#ar'));
-    await safePush(namazTextAr, aksamSVG.querySelector('#ar'));
-    await safePush(namazTextAr, yatsiSVG.querySelector('#ar'));
+    await safePush(namazTextAr, imsakSVG.querySelector("#ar"));
+    await safePush(namazTextAr, gunesSVG.querySelector("#ar"));
+    await safePush(namazTextAr, ogleSVG.querySelector("#ar"));
+    await safePush(namazTextAr, ikindiSVG.querySelector("#ar"));
+    await safePush(namazTextAr, aksamSVG.querySelector("#ar"));
+    await safePush(namazTextAr, yatsiSVG.querySelector("#ar"));
 
     // push german elements into german array
-    await safePush(namazTextDe, imsakSVG.querySelector('#de'));
-    await safePush(namazTextDe, gunesSVG.querySelector('#de'));
-    await safePush(namazTextDe, ogleSVG.querySelector('#de'));
-    await safePush(namazTextDe, ikindiSVG.querySelector('#de'));
-    await safePush(namazTextDe, aksamSVG.querySelector('#de'));
-    await safePush(namazTextDe, yatsiSVG.querySelector('#de'));
+    await safePush(namazTextDe, imsakSVG.querySelector("#de"));
+    await safePush(namazTextDe, gunesSVG.querySelector("#de"));
+    await safePush(namazTextDe, ogleSVG.querySelector("#de"));
+    await safePush(namazTextDe, ikindiSVG.querySelector("#de"));
+    await safePush(namazTextDe, aksamSVG.querySelector("#de"));
+    await safePush(namazTextDe, yatsiSVG.querySelector("#de"));
 
     updateTimes();
     getCurrentPrayer();
@@ -1001,33 +1002,33 @@ async function getSvgElements() {
     updateCountdown(timeNow, todaysPrayerTimes[nextPrayer]);
 
     if (countdownText !== null) {
-        countdownText.innerHTML = countdownTextArr[nextPrayer]['tr'];
+        countdownText.innerHTML = countdownTextArr[nextPrayer]["tr"];
     }
 }
 
 function updateInfobox() {
     const currentLangKey = languageKeys[prayerLng];
     const titles = {
-        tr: 'DUYURU',
-        ar: 'رسالة',
-        de: 'MITTEILUNG',
+        tr: "DUYURU",
+        ar: "رسالة",
+        de: "MITTEILUNG",
     };
 
     todayIsAnAnnouncement = false;
-    infoSource.style.display = 'block';
+    infoSource.style.display = "block";
 
     if (announcements.length > 0) {
         const todayWithoutTime = getDateString(now);
 
         if (
-            announcements[0]['startDate'] <= todayWithoutTime &&
-            announcements[0]['endDate'] >= todayWithoutTime
+            announcements[0]["startDate"] <= todayWithoutTime &&
+            announcements[0]["endDate"] >= todayWithoutTime
         ) {
             todayIsAnAnnouncement = true;
-            todaysAnnouncement = announcements[0]['text'];
+            todaysAnnouncement = announcements[0]["text"];
             infoTitle.innerText = titles[currentLangKey];
             infoText.innerText = todaysAnnouncement[currentLangKey];
-            infoSource.style.display = 'none';
+            infoSource.style.display = "none";
         } else {
             //no announcement for today
             getVersesOrHadiths();
@@ -1050,80 +1051,80 @@ const ramadanLanguages: HTMLElement[] = [dateHicri, monthHicri];
 let prayerLng: number = 0;
 
 const changeLanguage = async (language: string) => {
-    if (language === 'ar') {
+    if (language === "ar") {
         d3.selectAll(namazTextTr)
             .transition()
             .duration(1000)
-            .attr('opacity', '0');
+            .attr("opacity", "0");
 
         d3.selectAll(namazTextAr)
             .transition()
             .duration(1000)
             .delay(1000)
-            .attr('opacity', '1');
-    } else if (language === 'de') {
+            .attr("opacity", "1");
+    } else if (language === "de") {
         d3.selectAll(namazTextAr)
             .transition()
             .duration(1000)
-            .attr('opacity', '0');
+            .attr("opacity", "0");
 
         d3.selectAll(namazTextDe)
             .transition()
             .duration(1000)
             .delay(1000)
-            .attr('opacity', '1');
+            .attr("opacity", "1");
     } else {
         d3.selectAll(namazTextDe)
             .transition()
             .duration(1000)
-            .attr('opacity', '0');
+            .attr("opacity", "0");
 
         d3.selectAll(namazTextTr)
             .transition()
             .duration(1000)
             .delay(1000)
-            .attr('opacity', '1');
+            .attr("opacity", "1");
     }
 
     d3.selectAll(infobox)
         .transition()
         .duration(1000)
-        .style('opacity', '0')
+        .style("opacity", "0")
         .transition()
         .duration(1000)
         .delay(50)
-        .style('opacity', '1');
+        .style("opacity", "1");
 
     d3.selectAll(changeLanguages)
         .transition()
         .duration(1000)
-        .style('opacity', '0')
+        .style("opacity", "0")
         .transition()
         .duration(1000)
         .delay(50)
-        .style('opacity', '1');
+        .style("opacity", "1");
 
     if (isRamadan) {
         d3.selectAll(ramadanLanguages)
             .transition()
             .duration(1000)
-            .style('opacity', '0')
+            .style("opacity", "0")
             .transition()
             .duration(1000)
             .delay(50)
-            .style('opacity', '1');
+            .style("opacity", "1");
 
-        if (language === 'ar') {
-            d3.select(point2).transition().duration(1000).style('opacity', '0');
+        if (language === "ar") {
+            d3.select(point2).transition().duration(1000).style("opacity", "0");
         } else {
             d3.select(point2)
                 .transition()
                 .duration(1000)
-                .style('opacity', '0')
+                .style("opacity", "0")
                 .transition()
                 .duration(1000)
                 .delay(50)
-                .style('opacity', '1');
+                .style("opacity", "1");
         }
     }
 
@@ -1135,73 +1136,74 @@ const changeLanguage = async (language: string) => {
     await loadAnnouncmentAndKnowledge();
 
     async function loadAnnouncmentAndKnowledge() {
-        const countdownObject:CountdownTextInterface = countdownTextArr[nextPrayer]
+        const countdownObject: CountdownTextInterface =
+            countdownTextArr[nextPrayer];
         countdownText.innerHTML = countdownObject[language];
 
         if (todayIsAnAnnouncement) {
             // todo: refactor mit const title
             infoTitle.innerHTML =
-                language === 'ar'
-                    ? 'رسالة'
-                    : language === 'tr'
-                      ? 'DUYURU'
-                      : 'MITTEILUNG';
+                language === "ar"
+                    ? "رسالة"
+                    : language === "tr"
+                      ? "DUYURU"
+                      : "MITTEILUNG";
             infoText.innerHTML = todaysAnnouncement[language];
         } else {
             infoTitle.innerHTML =
-                infoTitleLanguages[todaysKnowledge['type']][language];
+                infoTitleLanguages[todaysKnowledge["type"]][language];
             infoText.innerHTML = todaysKnowledge[language] as string;
         }
 
         importantDate1Text.innerHTML =
-            language === 'ar'
-                ? importantDates[importantDatesPointer]['ar']
-                : language === 'tr'
-                  ? importantDates[importantDatesPointer]['tr']
-                  : importantDates[importantDatesPointer]['de'];
+            language === "ar"
+                ? importantDates[importantDatesPointer]["ar"]
+                : language === "tr"
+                  ? importantDates[importantDatesPointer]["tr"]
+                  : importantDates[importantDatesPointer]["de"];
         importantDate2Text.innerHTML =
-            language === 'ar'
-                ? importantDates[importantDatesPointer + 1]['ar']
-                : language === 'tr'
-                  ? importantDates[importantDatesPointer + 1]['tr']
-                  : importantDates[importantDatesPointer + 1]['de'];
+            language === "ar"
+                ? importantDates[importantDatesPointer + 1]["ar"]
+                : language === "tr"
+                  ? importantDates[importantDatesPointer + 1]["tr"]
+                  : importantDates[importantDatesPointer + 1]["de"];
 
-        if (language === 'ar') {
-            importantDate1Text.style.fontFamily = 'Hafs';
-            importantDate2Text.style.fontFamily = 'Hafs';
+        if (language === "ar") {
+            importantDate1Text.style.fontFamily = "Hafs";
+            importantDate2Text.style.fontFamily = "Hafs";
 
-            infoText.style.fontFamily = 'Hafs';
-            infoText.setAttribute('dir', 'rtl');
+            infoText.style.fontFamily = "Hafs";
+            infoText.setAttribute("dir", "rtl");
             if (!todayIsAnAnnouncement) {
-                infoSource.style.textAlign = 'left';
-                infoSource.setAttribute('dir', 'rtl');
+                infoSource.style.textAlign = "left";
+                infoSource.setAttribute("dir", "rtl");
                 infoSource.innerHTML = todaysKnowledgeSourceArabic;
             }
 
-            infoTitle.style.fontFamily = 'Hafs';
+            infoTitle.style.fontFamily = "Hafs";
 
-            importantDate1Text.style.fontStyle = 'normal';
-            importantDate2Text.style.fontStyle = 'normal';
+            importantDate1Text.style.fontStyle = "normal";
+            importantDate2Text.style.fontStyle = "normal";
 
             timeLeft.removeChild(timeLeftAfter);
             timeLeft.insertBefore(timeLeftAfter, countdownText);
-            countdownText.style.fontFamily = 'Hafs';
-        } else if (language === 'de') {
+            countdownText.style.fontFamily = "Hafs";
+        } else if (language === "de") {
             importantDate1Text.style.fontFamily = "'Montserrat', sans-serif";
             importantDate2Text.style.fontFamily = "'Montserrat', sans-serif";
 
             infoText.style.fontFamily = "'Montserrat', sans-serif";
-            infoText.setAttribute('dir', 'ltr');
+            infoText.setAttribute("dir", "ltr");
 
             if (!todayIsAnAnnouncement) {
-                infoSource.style.textAlign = 'right';
-                infoSource.setAttribute('dir', 'ltr');
-                infoSource.innerHTML = todaysKnowledge['source'];
+                infoSource.style.textAlign = "right";
+                infoSource.setAttribute("dir", "ltr");
+                infoSource.innerHTML = todaysKnowledge["source"];
             }
 
             infoTitle.style.fontFamily = "'Montserrat', sans-serif";
-            importantDate1Text.style.fontStyle = 'italic';
-            importantDate2Text.style.fontStyle = 'italic';
+            importantDate1Text.style.fontStyle = "italic";
+            importantDate2Text.style.fontStyle = "italic";
 
             timeLeft.removeChild(countdownText);
             timeLeft.insertBefore(countdownText, timeLeftAfter);
@@ -1209,30 +1211,30 @@ const changeLanguage = async (language: string) => {
         }
 
         if (isRamadan) {
-            if (language === 'ar') {
-                monthHicri.innerHTML = 'رمضان';
-                monthHicri.style.fontFamily = 'Hafs';
+            if (language === "ar") {
+                monthHicri.innerHTML = "رمضان";
+                monthHicri.style.fontFamily = "Hafs";
                 // dateHicri.style.fontFamily = 'Hafs'
                 dateHicri.innerHTML = hijriRaw[3];
 
-                point1.style.display = 'none';
-                point2.style.display = 'none';
-            } else if (language === 'de') {
+                point1.style.display = "none";
+                point2.style.display = "none";
+            } else if (language === "de") {
                 monthHicri.innerHTML = hijriRaw[0];
-                dateHicri.innerHTML = 'RAMADAN';
+                dateHicri.innerHTML = "RAMADAN";
                 monthHicri.style.fontFamily = "'Montserrat', sans-serif";
                 // dateHicri.style.fontFamily = "'Montserrat', sans-serif"
-                point2.style.display = 'block';
+                point2.style.display = "block";
             } else {
-                dateHicri.innerHTML = 'RAMAZAN';
+                dateHicri.innerHTML = "RAMAZAN";
             }
         }
 
         // for resize
-        if (fontSizeImportantDates[language] === 'n') {
-            infoText.style.fontSize = '2.5vw';
-            importantDate1Text.style.fontSize = '1.5vw';
-            importantDate2Text.style.fontSize = '1.5vw';
+        if (fontSizeImportantDates[language] === "n") {
+            infoText.style.fontSize = "2.5vw";
+            importantDate1Text.style.fontSize = "1.5vw";
+            importantDate2Text.style.fontSize = "1.5vw";
             autoSizeText();
         } else {
             infoText.style.fontSize = fontSizeInfo[language];
@@ -1246,23 +1248,23 @@ const changeLanguage = async (language: string) => {
 
 setInterval(() => {
     if (prayerLng === 0) {
-        changeLanguage('ar');
+        changeLanguage("ar");
         prayerLng++;
     } else if (prayerLng === 1) {
-        changeLanguage('de');
+        changeLanguage("de");
         prayerLng++;
     } else {
-        changeLanguage('tr');
+        changeLanguage("tr");
         prayerLng = 0;
     }
 }, secondsToChangeLanguage * 1000);
 
 // prayerLng -> 0 : tr, 1 : ar, 2 : de
 
-const fontSizeInfo:FontSizeMap = {
-    tr: 'n',
-    ar: 'n',
-    de: 'n',
+const fontSizeInfo: FontSizeMap = {
+    tr: "n",
+    ar: "n",
+    de: "n",
 };
 interface FontSizeMap {
     [key: string]: string;
@@ -1270,15 +1272,15 @@ interface FontSizeMap {
     ar: string;
     de: string;
 }
-const fontSizeImportantDates:FontSizeMap = {
-    tr: 'n',
-    ar: 'n',
-    de: 'n',
+const fontSizeImportantDates: FontSizeMap = {
+    tr: "n",
+    ar: "n",
+    de: "n",
 };
 
 function autoSizeText(): void {
     const elements: HTMLElement[] = Array.from(
-        document.querySelectorAll('.resize')
+        document.querySelectorAll(".resize")
     ).map((el) => el as HTMLElement);
 
     let fontSizeImportantDateLeft, fontSizeImportantDateRight;
@@ -1287,15 +1289,15 @@ function autoSizeText(): void {
         let computedFontSize = window.getComputedStyle(el).fontSize;
         while (el.scrollHeight > el.offsetHeight) {
             computedFontSize =
-                parseInt(computedFontSize.slice(0, -2)) - 1 + 'px';
+                parseInt(computedFontSize.slice(0, -2)) - 1 + "px";
             el.style.fontSize = computedFontSize;
         }
 
-        if (el.id === 'importantDateTextLeft') {
+        if (el.id === "importantDateTextLeft") {
             fontSizeImportantDateLeft = computedFontSize;
-        } else if (el.id === 'importantDateTextRight') {
+        } else if (el.id === "importantDateTextRight") {
             fontSizeImportantDateRight = computedFontSize;
-        } else if (el.id === 'infoText') {
+        } else if (el.id === "infoText") {
             fontSizeInfo[languageKeys[prayerLng]] = computedFontSize;
         }
     });
@@ -1305,7 +1307,7 @@ function autoSizeText(): void {
             Math.min(
                 parseInt(fontSizeImportantDateLeft, 10),
                 parseInt(fontSizeImportantDateRight, 10)
-            ) + 'px';
+            ) + "px";
 
         if (importantDate1Text !== null) {
             importantDate1Text.style.fontSize = minFontSize;
@@ -1318,10 +1320,10 @@ function autoSizeText(): void {
     }
 }
 
-addEventListener('resize', () => {
-    fontSizeImportantDates.tr = 'n';
-    fontSizeImportantDates.ar = 'n';
-    fontSizeImportantDates.de = 'n';
+addEventListener("resize", () => {
+    fontSizeImportantDates.tr = "n";
+    fontSizeImportantDates.ar = "n";
+    fontSizeImportantDates.de = "n";
 
     //todo: hier fehlt doch noch infoText???
 
@@ -1333,9 +1335,9 @@ let monthlyDataPointer = 0;
 
 async function fetchMonthlyData() {
     fetch(`${serverUrl}/api/getDailyData?urlPara=${urlPara}`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
         },
     })
         .then(async (response) => {
