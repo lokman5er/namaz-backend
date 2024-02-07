@@ -1,5 +1,7 @@
-// import { empty } from 'cheerio/lib/api/manipulation';
-// import * as d3 from 'd3';
+
+//eslint-disable-next-line
+import d3 from "d3";
+import { ensureHTMLElement } from "./helper";
 
 //@ts-ignore
 const serverUrl: string = "https://namaz-backend.herokuapp.com";
@@ -34,106 +36,135 @@ let testInterval: number | null = null;
  * @default 30
  */
 const secondsToChangeLanguage: number = 30;
-
+/**
+ * checks if element is an instanceof HTMLElement
+ *
+ * @param element takes any kind of object and checks the type
+ * @returns the very same object as a HTMLElement
+ */
+// function ensureHTMLElement(element: Element | null): HTMLElement {
+//     if (element instanceof HTMLElement) {
+//         return element;
+//     } else {
+//         throw new Error();
+//     }
+// }
 let now = new Date();
 
 let todaysAnnouncement: { [x: string]: string };
 let todayIsAnAnnouncement: boolean;
 
 //HTML-Elements
-const hoursHTML: HTMLElement = document.querySelector(".l-3-1") as HTMLElement;
-const minutesHTML: HTMLElement = document.querySelector(
-    ".l-3-3"
-) as HTMLElement;
+const hoursHTML: HTMLElement = ensureHTMLElement(
+    document.querySelector(".l-3-1")
+);
+const minutesHTML: HTMLElement = ensureHTMLElement(
+    document.querySelector(".l-3-3")
+);
 
-const countdownHour: HTMLElement = document.querySelector(
-    ".countdown-hour"
-) as HTMLElement;
-const countdownMinute: HTMLElement = document.querySelector(
-    ".countdown-minute"
-) as HTMLElement;
+const countdownHour: HTMLElement = ensureHTMLElement(
+    document.querySelector(".countdown-hour")
+);
+const countdownMinute: HTMLElement = ensureHTMLElement(
+    document.querySelector(".countdown-minute")
+);
 
-const infoTitle: HTMLElement = document.querySelector(".l-4-1 ") as HTMLElement;
-const infoText: HTMLElement = document.querySelector(".l-4-2") as HTMLElement;
-const infoSource: HTMLElement = document.querySelector(".l-4-3") as HTMLElement;
+const infoTitle: HTMLElement = ensureHTMLElement(
+    document.querySelector(".l-4-1 ")
+);
+const infoText: HTMLElement = ensureHTMLElement(
+    document.querySelector(".l-4-2")
+);
+const infoSource: HTMLElement = ensureHTMLElement(
+    document.querySelector(".l-4-3")
+);
 
-const dateNormal: HTMLElement = document.querySelector(
-    ".dateNormal"
-) as HTMLElement;
-const monthNormal: HTMLElement = document.querySelector(
-    ".monthNormal"
-) as HTMLElement;
-const yearNormal: HTMLElement = document.querySelector(
-    ".yearNormal"
-) as HTMLElement;
+const dateNormal: HTMLElement = ensureHTMLElement(
+    document.querySelector(".dateNormal")
+);
+const monthNormal: HTMLElement = ensureHTMLElement(
+    document.querySelector(".monthNormal")
+);
+const yearNormal: HTMLElement = ensureHTMLElement(
+    document.querySelector(".yearNormal")
+);
 
-const dateHicri: HTMLElement = document.querySelector(
-    ".dateHicri"
-) as HTMLElement;
-const monthHicri: HTMLElement = document.querySelector(
-    ".monthHicri"
-) as HTMLElement;
-const yearHicri: HTMLElement = document.querySelector(
-    ".yearHicri"
-) as HTMLElement;
+const dateHicri: HTMLElement = ensureHTMLElement(
+    document.querySelector(".dateHicri")
+);
+const monthHicri: HTMLElement = ensureHTMLElement(
+    document.querySelector(".monthHicri")
+);
+const yearHicri: HTMLElement = ensureHTMLElement(
+    document.querySelector(".yearHicri")
+);
 
-const point1: HTMLElement = document.querySelector("#p1") as HTMLElement;
-const point2: HTMLElement = document.querySelector("#p2") as HTMLElement;
+const point1: HTMLElement = ensureHTMLElement(document.querySelector("#p1"));
+const point2: HTMLElement = ensureHTMLElement(document.querySelector("#p2"));
 
+/**
+ * Represents an array of moon elements.
+ * @type {HTMLElement[]}
+ */
 const moonElements: HTMLElement[] = [
-    document.querySelector(".moon1") as HTMLElement,
-    document.querySelector(".moon2") as HTMLElement,
-    document.querySelector(".moon3") as HTMLElement,
-    document.querySelector(".moon4") as HTMLElement,
-    document.querySelector(".moon5") as HTMLElement,
+    ensureHTMLElement(document.querySelector(".moon1")),
+    ensureHTMLElement(document.querySelector(".moon2")),
+    ensureHTMLElement(document.querySelector(".moon3")),
+    ensureHTMLElement(document.querySelector(".moon4")),
+    ensureHTMLElement(document.querySelector(".moon5")),
 ];
 
-const timeLeft: HTMLElement = document.querySelector(
-    ".timeLeft"
-) as HTMLElement;
-const countdownText: HTMLElement = document.querySelector(
-    ".timeLeft-before"
-) as HTMLElement;
-const timeLeftAfter: HTMLElement = document.querySelector(
-    ".timeLeft-after"
-) as HTMLElement;
+const timeLeft: HTMLElement = ensureHTMLElement(
+    document.querySelector(".timeLeft")
+);
+const countdownText: HTMLElement = ensureHTMLElement(
+    document.querySelector(".timeLeft-before")
+);
+const timeLeftAfter: HTMLElement = ensureHTMLElement(
+    document.querySelector(".timeLeft-after")
+);
 
-const importantDate1: HTMLElement = document.querySelector(
-    "#box1"
-) as HTMLElement;
+const importantDate1: HTMLElement = ensureHTMLElement(
+    document.querySelector("#box1")
+);
 
-const importantDate1Text: HTMLElement = document.querySelector(
-    ".l-6-2-2"
-) as HTMLElement;
-const importantDate2Text: HTMLElement = document.querySelector(
-    ".l-6-4-2"
-) as HTMLElement;
+const importantDate1Text: HTMLElement = ensureHTMLElement(
+    document.querySelector(".l-6-2-2")
+);
+const importantDate2Text: HTMLElement = ensureHTMLElement(
+    document.querySelector(".l-6-4-2")
+);
 
-const importantDate1Day: HTMLElement = document.querySelector(
-    "#importantDate1Day"
-) as HTMLElement;
-const importantDate2Day: HTMLElement = document.querySelector(
-    "#importantDate2Day"
-) as HTMLElement;
+const importantDate1Day: HTMLElement = ensureHTMLElement(
+    document.querySelector("#importantDate1Day")
+);
+const importantDate2Day: HTMLElement = ensureHTMLElement(
+    document.querySelector("#importantDate2Day")
+);
 
-const importantDate1Month: HTMLElement = document.querySelector(
-    "#importantDate1Month"
-) as HTMLElement;
-const importantDate2Month: HTMLElement = document.querySelector(
-    "#importantDate2Month"
-) as HTMLElement;
+const importantDate1Month: HTMLElement = ensureHTMLElement(
+    document.querySelector("#importantDate1Month")
+);
+const importantDate2Month: HTMLElement = ensureHTMLElement(
+    document.querySelector("#importantDate2Month")
+);
 
-const importantDate1Year: HTMLElement = document.querySelector(
-    "#importantDate1Year"
-) as HTMLElement;
-const importantDate2Year: HTMLElement = document.querySelector(
-    "#importantDate2Year"
-) as HTMLElement;
+const importantDate1Year: HTMLElement = ensureHTMLElement(
+    document.querySelector("#importantDate1Year")
+);
+const importantDate2Year: HTMLElement = ensureHTMLElement(
+    document.querySelector("#importantDate2Year")
+);
 
-const countdownContainer: HTMLElement = document.querySelector(
-    ".timeLeft"
-) as HTMLElement;
+const countdownContainer: HTMLElement = ensureHTMLElement(
+    document.querySelector(".timeLeft")
+);
 
+/**
+ * Returns a formatted date string in the format "YYYY-MM-DDT00:00:00.000Z".
+ * @param date - The date object to be formatted.
+ * @returns The formatted date string.
+ */
 function getDateString(date: Date) {
     let year: string = date.getFullYear().toString();
     let month: string = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -141,11 +172,11 @@ function getDateString(date: Date) {
     return `${year}-${month}-${day}T00:00:00.000Z`;
 }
 
-// Date.prototype.withoutTime = function () {
-//     const d = new Date(this);
-//     d.setHours(0, 0, 0, 0);
-//     return d;
-// };
+/**
+ * Removes the time component from a given date.
+ * @param date - The date to remove the time from.
+ * @returns A new Date object with the time set to 00:00:00.
+ */
 function withoutTime(date: Date): Date {
     const d = new Date(date);
     d.setHours(0, 0, 0, 0);
@@ -165,14 +196,32 @@ if (infoText != null) {
 
 const infobox = [infoTitle, infoText, infoSource];
 
-interface VerseInterface {
+/**
+ * Represents a verse interface.
+ */
+type VerseInterface = {
     [key: string]: string | number;
+    /**
+     * The type of the verse.
+     */
     type: number;
+    /**
+     * The Turkish translation of the verse.
+     */
     tr: string;
+    /**
+     * The Arabic text of the verse.
+     */
     ar: string;
+    /**
+     * The German translation of the verse.
+     */
     de: string;
+    /**
+     * The source of the verse.
+     */
     source: string;
-}
+};
 
 let todaysKnowledge: VerseInterface;
 // this variable is updated but not used
@@ -180,8 +229,15 @@ let todaysKnowledge: VerseInterface;
 let todaysKnowledgeSourceArabic: string;
 
 type LangKey = "tr" | "ar" | "de";
+/**
+ * Array of language keys.
+ * @type {LangKey[]}
+ */
 const languageKeys: LangKey[] = ["tr", "ar", "de"];
 
+/**
+ * Fetches verses or hadiths from "versesAndHadiths.json" and updates the UI with the retrieved data.
+ */
 async function getVersesOrHadiths() {
     fetch("versesAndHadiths.json")
         .then(async (response) => response.json() as Promise<VerseInterface[]>)
@@ -218,6 +274,10 @@ async function getVersesOrHadiths() {
 
 let announcements: string | any[] = [];
 
+/**
+ * Retrieves all announcements from the server.
+ * @returns {Promise<void>} A promise that resolves when the announcements are fetched and updated.
+ */
 async function getAllAnnouncements() {
     fetch(`${serverUrl}/api/getAllAnnouncements?urlPara=${urlPara}`)
         .then((res) => {
@@ -245,6 +305,9 @@ function formatTime(number: number): string {
     return number < 10 ? "0" + number : number.toString();
 }
 
+/**
+ * Retrieves the current prayer based on the current time and the prayer times for the day.
+ */
 function getCurrentPrayer() {
     const currentTime: string =
         formatTime(now.getHours()) + ":" + formatTime(now.getMinutes());
@@ -260,6 +323,11 @@ function getCurrentPrayer() {
     }
 }
 
+/**
+ * Determines the next prayer based on the current time and index.
+ * @param {string | number} currentTime - The current time.
+ * @param {number} index - The index of the current prayer time.
+ */
 function determineNextPrayer(currentTime: string | number, index: number) {
     if (index === todaysPrayerTimes.length - 1) {
         if (currentTime > todaysPrayerTimes[index]) {
@@ -275,6 +343,11 @@ function determineNextPrayer(currentTime: string | number, index: number) {
     }
 }
 
+/**
+ * Updates the countdown display with the time difference between the given start and end times.
+ * @param startTime - The start time in the format "HH:MM".
+ * @param endTime - The end time in the format "HH:MM".
+ */
 function updateCountdown(startTime: string, endTime: string) {
     const start = new Date("1970-01-01 " + startTime + " UTC").getTime() / 1000;
     const end = new Date("1970-01-01 " + endTime + " UTC").getTime() / 1000;
@@ -308,6 +381,9 @@ let timeNow: string;
 let hours: string;
 let minutes: string;
 
+/**
+ * Runs a few functions every minute to update the UI.
+ */
 function runEveryMinute() {
     const now2 = Date.now();
 
@@ -343,6 +419,11 @@ function runEveryMinute() {
 //function to show important dates
 let importantDates: EventData[];
 
+/**
+ * Updates the clock by retrieving the current time and updating the HTML elements displaying the hours and minutes.
+ * If the intervalMinutes is set to 60 and the time is midnight (00:00), the runOnNewDay function is called.
+ * If the minutes are divisible by the intervalMinutes, the runOnNewDay function is called.
+ */
 function updateClock() {
     now = new Date();
 
@@ -367,6 +448,16 @@ function updateClock() {
     }
 }
 
+/**
+ * Runs the necessary tasks when a new day starts.
+ * - Resets the font size for important dates in different languages.
+ * - Updates the current date and time.
+ * - Retrieves all announcements.
+ * - Retrieves the next important date.
+ * - Updates the prayer times.
+ * - Fetches monthly data after a delay.
+ * @returns {Promise<void>} A promise that resolves when all tasks are completed.
+ */
 async function runOnNewDay() {
     fontSizeImportantDates.tr = "n";
     fontSizeImportantDates.ar = "n";
@@ -383,6 +474,11 @@ async function runOnNewDay() {
     }, 100);
 }
 
+/**
+ * Converts a number to its Arabic representation.
+ * @param number - The number to be converted.
+ * @returns The Arabic representation of the number.
+ */
 function convertToArabic(number: number) {
     const arabicNumbers: string[] = [
         "٠",
@@ -404,6 +500,10 @@ function convertToArabic(number: number) {
     return arabicNum;
 }
 
+/**
+ * Represents the directions of the moon svgs.
+ * @type {string[]}
+ */
 const moonDirection = [
     "dolunay",
     "d1",
@@ -440,6 +540,9 @@ const moonDirection = [
 
 // ictima und ruyet beide mit yeniAy ersetzen
 
+/**
+ * Updates the SVG images of the moon elements based on the current moon shape.
+ */
 function updateMoonSvgs() {
     let moonUrlToday = monthlyData[monthlyDataPointer]["shapeMoon"];
 
@@ -482,6 +585,9 @@ let todaysPrayerTimes: string[] = [];
 let isRamadan = false;
 let hijriRaw: string[];
 
+/**
+ * Updates the prayer times and displays them on the frontend.
+ */
 function updateTimes() {
     //this is for fetching the prayer times
     isRamadan = false;
@@ -559,12 +665,23 @@ function updateTimes() {
 }
 
 // only needed for local testing
+/**
+ * Increases the current time by the specified number of minutes.
+ *
+ * @param minutesToAdd - The number of minutes to add to the current time.
+ * @returns The formatted time after adding the specified minutes.
+ */
 function increaseTimeByInterval(minutesToAdd: number) {
     let date = new Date();
     date.setTime(date.getTime() + minutesToAdd * 60 * 1000);
     return formatTime(date.getHours()) + ":" + formatTime(date.getMinutes());
 }
 
+/**
+ * Checks if a file exists and is an SVG.
+ * @param fullUrl - The full URL of the file to check.
+ * @returns A boolean indicating whether the file exists and is an SVG.
+ */
 async function checkIfFileExistsAndIsSvg(fullUrl: string) {
     try {
         const response = await fetch(fullUrl);
@@ -588,6 +705,10 @@ async function checkIfFileExistsAndIsSvg(fullUrl: string) {
     }
 }
 
+/**
+ * Checks if all moon images exist.
+ * @returns A promise that resolves to a boolean indicating whether all moon images exist.
+ */
 async function checkIfAllMoonImagesExist() {
     const baseURL = "images/moons/";
     const promise = moonDirection.map(async (file) => {
@@ -604,19 +725,33 @@ async function checkIfAllMoonImagesExist() {
     return results.every(Boolean);
 }
 
+/**
+ * Updates the SVG element with the given time string.
+ *
+ * @param el - The SVG element to update.
+ * @param raw - The raw time string.
+ */
 function updateTimeSvg(el: HTMLElement, raw: string) {
     el.querySelector(".hour1")!.innerHTML = raw.substring(0, 1);
     el.querySelector(".hour2")!.innerHTML = raw.substring(1, 2);
     el.querySelector(".minute1")!.innerHTML = raw.substring(3, 4);
     el.querySelector(".minute2")!.innerHTML = raw.substring(4, 5);
 }
-interface CountdownTextInterface {
+
+/**
+ * Represents a mapping of language codes to countdown text.
+ */
+type CountdownTextInterface = {
     [key: string]: string;
     tr: string;
     de: string;
     ar: string;
-}
+};
 
+/**
+ * An array of countdown text objects.
+ * Each object contains translations for different languages.
+ */
 const countdownTextArr: CountdownTextInterface[] = [
     {
         tr: "İMSAKA KALAN SÜRE:",
@@ -650,6 +785,9 @@ const countdownTextArr: CountdownTextInterface[] = [
     },
 ];
 
+/**
+ * Represents an array of countdown text interfaces for different languages.
+ */
 const infoTitleLanguages: CountdownTextInterface[] = [
     {
         tr: "AYET",
@@ -663,6 +801,10 @@ const infoTitleLanguages: CountdownTextInterface[] = [
     },
 ];
 
+/**
+ * Checks if the current time matches any of the prayer times for today.
+ * If a match is found, it triggers an animation and updates the next prayer index.
+ */
 function checkIfNextPrayer(): void {
     if (todaysPrayerTimes.indexOf(timeNow) !== -1) {
         let idx: number = todaysPrayerTimes.indexOf(timeNow);
@@ -673,12 +815,19 @@ function checkIfNextPrayer(): void {
 }
 
 let importantDatesPointer = 0;
-interface EventData {
+/**
+ * Represents the data for an event.
+ */
+type EventData= {
     date: string;
     tr: string;
     de: string;
     ar: string;
 }
+/**
+ * Updates the important dates by fetching data from "importantDates.json" file.
+ * @returns {Promise<void>} A promise that resolves when the important dates are updated.
+ */
 async function updateImportantDates() {
     fetch("importantDates.json")
         .then((response) => response.json())
@@ -688,6 +837,12 @@ async function updateImportantDates() {
         .then(async () => await getNextImportantDate(importantDates));
 }
 
+/**
+ * Retrieves the next important date from the given array of EventData.
+ * Updates the styles and content of the importantDate1 and importantDate2 elements accordingly.
+ * 
+ * @param arr - The array of EventData.
+ */
 async function getNextImportantDate(arr: EventData[]) {
     importantDate1.style.backgroundColor = "#d5e7ea";
     importantDate1.style.color = "#1f4e5f";
@@ -733,6 +888,10 @@ async function getNextImportantDate(arr: EventData[]) {
 // let activateFromTop = true;
 // let deactiveFromTop = true;
 
+/**
+ * Animates the SVG based on the provided index.
+ * @param idx - The index to determine which SVG to animate.
+ */
 function animateSvg(idx: number) {
     let el: HTMLElement;
     let elClass: string;
@@ -851,9 +1010,9 @@ function animateSvg(idx: number) {
         .duration(1000)
         .attr("font-weight", "600");
 
-    const elClassElement: HTMLElement = document.querySelector(
-        elClass
-    ) as HTMLElement;
+    const elClassElement: HTMLElement = ensureHTMLElement(
+        document.querySelector(elClass)
+    );
 
     elClassElement.style.width = "42.5vw";
 
@@ -897,9 +1056,9 @@ function animateSvg(idx: number) {
         .duration(1000)
         .attr("font-weight", "normal");
 
-    let dElClassElement: HTMLElement = document.querySelector(
-        dElClass
-    ) as HTMLElement;
+    let dElClassElement: HTMLElement = ensureHTMLElement(
+        document.querySelector(dElClass)
+    );
     dElClassElement.style.width = "37vw";
 
     if (deactivateFromTop) {
@@ -938,22 +1097,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
         switch (k) {
             case ".imsak":
-                imsakSVG = svgElement as HTMLElement;
+                imsakSVG = ensureHTMLElement(svgElement);
                 break;
             case ".gunes":
-                gunesSVG = svgElement as HTMLElement;
+                gunesSVG = ensureHTMLElement(svgElement);
                 break;
             case ".ogle":
-                ogleSVG = svgElement as HTMLElement;
+                ogleSVG = ensureHTMLElement(svgElement);
                 break;
             case ".ikindi":
-                ikindiSVG = svgElement as HTMLElement;
+                ikindiSVG = ensureHTMLElement(svgElement);
                 break;
             case ".aksam":
-                aksamSVG = svgElement as HTMLElement;
+                aksamSVG = ensureHTMLElement(svgElement);
                 break;
             case ".yatsi":
-                yatsiSVG = svgElement as HTMLElement;
+                yatsiSVG = ensureHTMLElement(svgElement);
                 break;
         }
     });
@@ -971,6 +1130,11 @@ async function safePush(array: Element[], element: Element | null) {
     }
 }
 
+/**
+ * Retrieves SVG elements and updates various components.
+ * 
+ * @returns {Promise<void>} A promise that resolves when the update is complete.
+ */
 async function getSvgElements() {
     // push turkish elements into turkish array
     await safePush(namazTextTr, imsakSVG.querySelector("#tr"));
@@ -1006,6 +1170,9 @@ async function getSvgElements() {
     }
 }
 
+/**
+ * Updates the infobox based on the current announcements and language settings.
+ */
 function updateInfobox() {
     const currentLangKey = languageKeys[prayerLng];
     const titles = {
@@ -1041,6 +1208,9 @@ function updateInfobox() {
 }
 
 let nextPrayer: number;
+/**
+ * Array of HTMLElements representing the elements that need to change languages.
+ */
 const changeLanguages: HTMLElement[] = [
     importantDate1Text,
     importantDate2Text,
@@ -1050,7 +1220,12 @@ const ramadanLanguages: HTMLElement[] = [dateHicri, monthHicri];
 
 let prayerLng: number = 0;
 
-const changeLanguage = async (language: string) => {
+/**
+ * Changes the language of the application.
+ * @param language - The language code to switch to (e.g., "ar" for Arabic, "de" for German).
+ * @returns A promise that resolves once the language change is complete.
+ */
+async function changeLanguage(language: string) {
     if (language === "ar") {
         d3.selectAll(namazTextTr)
             .transition()
@@ -1135,9 +1310,12 @@ const changeLanguage = async (language: string) => {
 
     await loadAnnouncmentAndKnowledge();
 
-    async function loadAnnouncmentAndKnowledge() {
-        const countdownObject: CountdownTextInterface =
-            countdownTextArr[nextPrayer];
+    /**
+     * Loads the announcement and knowledge content.
+     * @returns {Promise<void>} A promise that resolves when the content is loaded.
+     */
+    async function loadAnnouncmentAndKnowledge(): Promise<void> {
+        const countdownObject: CountdownTextInterface = countdownTextArr[nextPrayer];
         countdownText.innerHTML = countdownObject[language];
 
         if (todayIsAnAnnouncement) {
@@ -1146,8 +1324,8 @@ const changeLanguage = async (language: string) => {
                 language === "ar"
                     ? "رسالة"
                     : language === "tr"
-                      ? "DUYURU"
-                      : "MITTEILUNG";
+                        ? "DUYURU"
+                        : "MITTEILUNG";
             infoText.innerHTML = todaysAnnouncement[language];
         } else {
             infoTitle.innerHTML =
@@ -1159,14 +1337,14 @@ const changeLanguage = async (language: string) => {
             language === "ar"
                 ? importantDates[importantDatesPointer]["ar"]
                 : language === "tr"
-                  ? importantDates[importantDatesPointer]["tr"]
-                  : importantDates[importantDatesPointer]["de"];
+                    ? importantDates[importantDatesPointer]["tr"]
+                    : importantDates[importantDatesPointer]["de"];
         importantDate2Text.innerHTML =
             language === "ar"
                 ? importantDates[importantDatesPointer + 1]["ar"]
                 : language === "tr"
-                  ? importantDates[importantDatesPointer + 1]["tr"]
-                  : importantDates[importantDatesPointer + 1]["de"];
+                    ? importantDates[importantDatesPointer + 1]["tr"]
+                    : importantDates[importantDatesPointer + 1]["de"];
 
         if (language === "ar") {
             importantDate1Text.style.fontFamily = "Hafs";
@@ -1244,7 +1422,7 @@ const changeLanguage = async (language: string) => {
                 fontSizeImportantDates[language];
         }
     }
-};
+}
 
 setInterval(() => {
     if (prayerLng === 0) {
@@ -1261,27 +1439,40 @@ setInterval(() => {
 
 // prayerLng -> 0 : tr, 1 : ar, 2 : de
 
+/**
+ * Map of font sizes for different languages.
+ */
 const fontSizeInfo: FontSizeMap = {
     tr: "n",
     ar: "n",
     de: "n",
 };
-interface FontSizeMap {
+/**
+ * Represents a map of font sizes for different languages.
+ */
+type FontSizeMap = {
     [key: string]: string;
     tr: string;
     ar: string;
     de: string;
 }
+/**
+ * Map of font sizes for important dates.
+ */
 const fontSizeImportantDates: FontSizeMap = {
     tr: "n",
     ar: "n",
     de: "n",
 };
 
+/**
+ * Automatically adjusts the font size of elements with the "resize" class
+ * to fit their content within their container.
+ */
 function autoSizeText(): void {
     const elements: HTMLElement[] = Array.from(
         document.querySelectorAll(".resize")
-    ).map((el) => el as HTMLElement);
+    ).map((el) => ensureHTMLElement(el));
 
     let fontSizeImportantDateLeft, fontSizeImportantDateRight;
 
@@ -1333,6 +1524,9 @@ addEventListener("resize", () => {
 let monthlyData: any[];
 let monthlyDataPointer = 0;
 
+/**
+ * Fetches monthly data from the server and performs additional operations based on the response.
+ */
 async function fetchMonthlyData() {
     fetch(`${serverUrl}/api/getDailyData?urlPara=${urlPara}`, {
         method: "GET",
@@ -1365,6 +1559,6 @@ async function fetchMonthlyData() {
 
 fetchMonthlyData();
 
-//todo: werden font size von importantDates UND infoText überhaupt um Mitternacht angepasst, oder nur bei einem reload der Seite?
+//TODO werden font size von importantDates UND infoText überhaupt um Mitternacht angepasst, oder nur bei einem reload der Seite?
 
-//todo: im arabischen wird Punkt als Vers-Trenner interpretiert, problematisch bei importantDates
+//TODO im arabischen wird Punkt als Vers-Trenner interpretiert, problematisch bei importantDates

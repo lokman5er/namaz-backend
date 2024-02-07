@@ -10,8 +10,6 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import request from "request";
 import util from "util";
 
-import { fileURLToPath } from "url";
-
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -22,7 +20,8 @@ const DIYANET_MAIL: string = process.env.DIYANET_MAIL || "";
 const DIYANET_PW: string = process.env.DIYANET_PW || "";
 const PORT: string = process.env.PORT || "";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// const __dirname = path.dirname(__filename);
 
 const app = express();
 

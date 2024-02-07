@@ -1,16 +1,5 @@
-/**
- * checks if element is an instanceof HTMLElement
- *
- * @param element takes any kind of object and checks the type
- * @returns the very same object as a HTMLElement
- */
-function ensureHTMLElement(element: Element | null): HTMLElement {
-    if (element instanceof HTMLElement) {
-        return element;
-    } else {
-        throw new Error();
-    }
-}
+import { ensureHTMLElement } from "./helper";
+
 // Helper function to send a request to the server
 async function sendRequest(url: string, options: any) {
     // Send the request to the given URL with the given options
