@@ -1,3 +1,48 @@
+/**
+ * checks if element is an instanceof HTMLElement
+ *
+ * @param element takes any kind of object and checks the type
+ * @returns the very same object as a HTMLElement
+ */
+function ensureHTMLElement(element: Element | null): HTMLElement {
+    if (element instanceof HTMLElement) {
+        return element;
+    } else {
+        throw new Error();
+    }
+}
+// Helper function to send a request to the server
+async function sendRequest(url: string, options: any) {
+    // Send the request to the given URL with the given options
+    // and return the response as JSON
+    return fetch(url, options).then((res) => res.json());
+}
+/**
+ * clears content of input field and sets it to ""
+ * @param field input field which needs its contend cleared
+ */
+function resetInputField(field: HTMLElement): void {
+    if (field instanceof HTMLInputElement) {
+        field.value = "";
+    }
+}
+
+/**
+ * extracts the string within an html-input-element
+ * @param element potential html-input-element which needs it value extracted
+ * @returns value in html-input-element
+ */
+function retrieveTextFromHtmlInputElement(
+    element: HTMLElement | null
+): string {
+    const htmlElement = ensureHTMLElement(element);
+    if (htmlElement instanceof HTMLInputElement) {
+        return htmlElement.value;
+    } else {
+        throw new Error("element is not a html__input__element");
+    }
+}
+
 //@ts-ignore
 const serverUrl = "https://namaz-backend.herokuapp.com";
 
@@ -48,17 +93,12 @@ const popupButton: HTMLElement = ensureHTMLElement(
     document.querySelector(".popup-button")
 );
 
-function ensureHTMLElement(element: Element | null): HTMLElement {
-    if (element instanceof HTMLElement) {
-        return element;
-    } else {
-        throw new Error();
-    }
-}
-
 if (localStorage.getItem("token")) {
     checkToken();
 }
+
+let delteGotPressed: boolean;
+let deleteStartDate: string;
 
 async function checkToken() {
     const token = localStorage.getItem("token");
@@ -80,13 +120,6 @@ async function checkToken() {
         loginView.style.display = "block";
         announcementsView.style.display = "none";
     }
-}
-
-// Helper function to send a request to the server
-async function sendRequest(url: string, options: any) {
-    // Send the request to the given URL with the given options
-    // and return the response as JSON
-    return fetch(url, options).then((res) => res.json());
 }
 
 const showPassword: HTMLElement = ensureHTMLElement(
@@ -114,10 +147,10 @@ hidePassword.addEventListener("click", () => {
 
 // Event listener for the login form's submit event
 // TODO will this even work?
-loginForm.addEventListener("submit", () => login);
+loginForm.addEventListener("submit", login);
 
 // Function to handle the submission of the login form
-async function login(event: FormDataEvent) {
+async function login(event:any) {
     // Prevent the default form submission behavior
     event.preventDefault();
     if (document == null) {
@@ -294,16 +327,6 @@ async function newAnnouncement(event: SubmitEvent) {
     updateTable();
 }
 
-/**
- * clears content of input field and sets it to ""
- * @param field input field which needs its contend cleared
- */
-function resetInputField(field: HTMLElement): void {
-    if (field instanceof HTMLInputElement) {
-        field.value = "";
-    }
-}
-
 // Event listener for the window's resize event
 window.addEventListener("resize", () => {
     // If the window width is greater than 830 pixels
@@ -359,20 +382,6 @@ const passwordInput: HTMLElement = ensureHTMLElement(
 
 usernameInput.addEventListener("input", updateSubmitButtonLogin);
 passwordInput.addEventListener("input", updateSubmitButtonLogin);
-
-/**
- * extracts the string within an html-input-element
- * @param element potential html-input-element which needs it value extracted
- * @returns value in html-input-element
- */
-function retrieveTextFromHtmlInputElement(element: HTMLElement | null): string {
-    const htmlElement = ensureHTMLElement(element);
-    if (htmlElement instanceof HTMLInputElement) {
-        return htmlElement.value;
-    } else {
-        throw new Error("element is not a html__input__element");
-    }
-}
 
 //for new announcement
 function updateSubmitButton() {
@@ -450,35 +459,6 @@ function allAnsClicked() {
     title.innerText = "DUYURULAR";
 }
 
-let delteGotPressed: boolean;
-let deleteStartDate: string;
-
-async function triggerDeleteAPI(startDate: string) {
-    if (!localStorage.getItem("token")) {
-        loginView.style.display = "block";
-        announcementsView.style.display = "none";
-        return null;
-    }
-
-    const result = await fetch(`${serverUrl}/api/deleteAnnouncement`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            token: localStorage.getItem("token"),
-            startDate: startDate,
-        }),
-    }).then((response) => response.json());
-    if (result.status === "ok") {
-        updateTable();
-    } else if (result.status === "expired") {
-        localStorage.removeItem("token");
-        loginView.style.display = "block";
-        announcementsView.style.display = "none";
-    }
-}
-
 function updateTable() {
     if (!localStorage.getItem("token")) {
         loginView.style.display = "block";
@@ -486,14 +466,14 @@ function updateTable() {
         return null;
     }
     const token = localStorage.getItem("token");
+    let anList: string = "";
+    let idx: number = 0;
     fetch(`${serverUrl}/api/get-All-an?token=${token}`)
         .then((data) => {
             return data.json();
         })
         .then((jsonData) => {
             jsonData = jsonData.result;
-            let anList: string = "";
-            let idx: number = 0;
             let anListElement: HTMLElement = ensureHTMLElement(
                 document.querySelector(".an-list")
             );
@@ -630,6 +610,32 @@ impressumA2.addEventListener("click", () => {
     containerCollapsed2 = !containerCollapsed2;
     impressumContainer2.style.display = containerCollapsed2 ? "none" : "block";
 });
+
+async function triggerDeleteAPI(startDate: string) {
+    if (!localStorage.getItem("token")) {
+        loginView.style.display = "block";
+        announcementsView.style.display = "none";
+        return null;
+    }
+
+    const result = await fetch(`${serverUrl}/api/deleteAnnouncement`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            token: localStorage.getItem("token"),
+            startDate: startDate,
+        }),
+    }).then((response) => response.json());
+    if (result.status === "ok") {
+        updateTable();
+    } else if (result.status === "expired") {
+        localStorage.removeItem("token");
+        loginView.style.display = "block";
+        announcementsView.style.display = "none";
+    }
+}
 
 popupContainer.addEventListener("click", (event) => {
     if (delteGotPressed) {

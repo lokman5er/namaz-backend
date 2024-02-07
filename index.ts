@@ -1,26 +1,26 @@
-import express from 'express';
-import path from 'path';
-import bodyParser from 'body-parser';
-import mongoose from 'mongoose';
-import User from './model/user.js';
-import Announcement from './model/announcement.js';
-import DailyData from './model/DailyData.js';
-import bcrypt from 'bcryptjs';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import request from 'request';
-import util from 'util';
+import express from "express";
+import path from "path";
+import bodyParser from "body-parser";
+import mongoose from "mongoose";
+import User from "./model/user.js";
+import Announcement from "./model/announcement.js";
+import DailyData from "./model/DailyData.js";
+import bcrypt from "bcryptjs";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import request from "request";
+import util from "util";
 
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from "url";
 
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
 
-const API_KEY: string = process.env.API_KEY || '';
-const JWT_SECRET: string = process.env.JWT_SECRET || '';
+const API_KEY: string = process.env.API_KEY || "";
+const JWT_SECRET: string = process.env.JWT_SECRET || "";
 // const MONGODB_CREDENTIALS: string = process.env.MONGODB || '';
-const DIYANET_MAIL: string = process.env.DIYANET_MAIL || '';
-const DIYANET_PW: string = process.env.DIYANET_PW || '';
-const PORT: string = process.env.PORT || '';
+const DIYANET_MAIL: string = process.env.DIYANET_MAIL || "";
+const DIYANET_PW: string = process.env.DIYANET_PW || "";
+const PORT: string = process.env.PORT || "";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -32,11 +32,11 @@ mongoose
         // `mongodb+srv://${MONGODB_CREDENTIALS}@namazapp.ccw7t1d.mongodb.net/?retryWrites=true&w=majority`
     )
     .then(() => {
-        console.log('CONNECTED TO MONGODB');
+        console.log("CONNECTED TO MONGODB");
         app.listen(PORT);
     })
     .catch((err: Error) => {
-        console.error('FAILED TO CONNECT TO MONGODB');
+        console.error("FAILED TO CONNECT TO MONGODB");
         console.error(err);
     });
 
@@ -45,48 +45,43 @@ interface DatabaseError extends Error {
 }
 
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'frontend')));
-app.use(express.static(path.join(__dirname, 'frontend', 'public')));
-app.use(express.static(path.join(__dirname, 'frontend', 'images')));
+app.use(express.static(path.join(__dirname, "frontend")));
+app.use(express.static(path.join(__dirname, "frontend", "public")));
+app.use(express.static(path.join(__dirname, "frontend", "images")));
 
-
-app.get('/', function (req, res) {
-    res.sendFile(
-        path.join(__dirname, 'frontend', 'public', 'index.html')
-    );
+app.get("/", function (req, res) {
+    res.sendFile(path.join(__dirname, "frontend", "public", "index.html"));
 });
 
-app.get('/duyuru', function (req, res) {
-    res.sendFile(
-        path.join(__dirname, 'frontend', 'public', 'admin.html')
-    );
+app.get("/duyuru", function (req, res) {
+    res.sendFile(path.join(__dirname, "frontend", "admin.html"));
 });
 
-app.post('/api/register', async (req, res) => {
+app.post("/api/register", async (req, res) => {
     const { username, password: plainTextPassword, urlPara, apiKey } = req.body;
 
     if (apiKey !== API_KEY) {
-        return res.json({ status: 'error', error: 'Wrong Api Key' });
+        return res.json({ status: "error", error: "Wrong Api Key" });
     }
 
-    if (!username || typeof username !== 'string') {
-        return res.json({ status: 'error', error: 'Invalid username' });
+    if (!username || typeof username !== "string") {
+        return res.json({ status: "error", error: "Invalid username" });
     }
 
-    if (!plainTextPassword || typeof plainTextPassword !== 'string') {
-        return res.json({ status: 'error', error: 'Invalid password' });
+    if (!plainTextPassword || typeof plainTextPassword !== "string") {
+        return res.json({ status: "error", error: "Invalid password" });
     }
 
     if (plainTextPassword.length < 5) {
-        return res.json({ status: 'error', error: 'Password too short.' });
+        return res.json({ status: "error", error: "Password too short." });
     }
 
     if (plainTextPassword.length > 15) {
-        return res.json({ status: 'error', error: 'Password too long.' });
+        return res.json({ status: "error", error: "Password too long." });
     }
 
     if (!urlPara) {
-        return res.json({ status: 'error', error: 'urlPara missing' });
+        return res.json({ status: "error", error: "urlPara missing" });
     }
 
     const password = await bcrypt.hash(plainTextPassword, 12);
@@ -97,40 +92,40 @@ app.post('/api/register', async (req, res) => {
             password,
             urlPara,
         });
-        console.log('User created successfully: ', response);
+        console.log("User created successfully: ", response);
     } catch (error) {
-        if (typeof error === 'object' && error !== null && 'code' in error) {
+        if (typeof error === "object" && error !== null && "code" in error) {
             const dbError = error as DatabaseError;
             if (dbError.code === 11000) {
                 return res.json({
-                    status: 'error',
-                    error: 'Username or urlPara already in use',
+                    status: "error",
+                    error: "Username or urlPara already in use",
                 });
             }
         }
         throw error;
     }
 
-    res.json({ status: 'ok' });
+    res.json({ status: "ok" });
 });
 
-app.post('/api/change-password', async (req, res) => {
+app.post("/api/change-password", async (req, res) => {
     const { urlPara, newpassword, apiKey } = req.body;
 
     if (apiKey !== API_KEY) {
-        return res.json({ status: 'error', error: 'Wrong Api Key' });
+        return res.json({ status: "error", error: "Wrong Api Key" });
     }
 
-    if (!newpassword || typeof newpassword !== 'string') {
-        return res.json({ status: 'error', error: 'Invalid password' });
+    if (!newpassword || typeof newpassword !== "string") {
+        return res.json({ status: "error", error: "Invalid password" });
     }
 
     if (newpassword.length < 5) {
-        return res.json({ status: 'error', error: 'Password too short.' });
+        return res.json({ status: "error", error: "Password too short." });
     }
 
     if (newpassword.length > 15) {
-        return res.json({ status: 'error', error: 'Password too long.' });
+        return res.json({ status: "error", error: "Password too long." });
     }
 
     try {
@@ -145,27 +140,27 @@ app.post('/api/change-password', async (req, res) => {
                 $set: { password },
             }
         );
-        res.json({ status: 'ok' });
+        res.json({ status: "ok" });
     } catch (error) {
-        res.json({ status: 'error', error: 'try harder' });
+        res.json({ status: "error", error: "try harder" });
     }
 });
 
-app.post('/api/login/', async (req, res) => {
+app.post("/api/login/", async (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
-        return res.json({ status: 'error', error: 'try harder' });
+        return res.json({ status: "error", error: "try harder" });
     }
 
     const user = await User.findOne({ username }).lean();
 
     if (!user) {
         return res.json({
-            status: 'error',
+            status: "error",
             error:
                 // 'Invalid username/password'
-                'Geçersiz kullanıcı adı/parola',
+                "Geçersiz kullanıcı adı/parola",
         });
     }
 
@@ -179,45 +174,45 @@ app.post('/api/login/', async (req, res) => {
                 urlPara: user.urlPara,
             },
             JWT_SECRET,
-            { expiresIn: '60m' }
+            { expiresIn: "60m" }
         );
 
         await User.updateOne({ username: user.username }, { $set: { token } });
 
-        return res.json({ status: 'ok', data: token });
+        return res.json({ status: "ok", data: token });
     }
 
-    res.json({ status: 'error', error: 'Invalid username/password' });
+    res.json({ status: "error", error: "Invalid username/password" });
 });
 
-app.post('/api/logout', async (req, res) => {
+app.post("/api/logout", async (req, res) => {
     const { token } = req.body;
 
     if (!token) {
-        return res.json({ status: 'error', message: 'No token provided' });
+        return res.json({ status: "error", message: "No token provided" });
     }
 
     // Check if token is expired
     const decodedToken = jwt.decode(token, { complete: true });
 
-    if (typeof decodedToken === 'object' && decodedToken !== null) {
+    if (typeof decodedToken === "object" && decodedToken !== null) {
         const payload = decodedToken.payload as JwtPayload;
 
         if (
-            typeof payload === 'object' &&
+            typeof payload === "object" &&
             payload !== null &&
-            'exp' in payload &&
+            "exp" in payload &&
             payload.exp !== undefined
         ) {
             if (payload.exp < Date.now() / 1000) {
-                return res.json({ status: 'expired' });
+                return res.json({ status: "expired" });
             }
         }
     }
 
     // Verify the token and get the user ID
     const decoded = jwt.verify(token, JWT_SECRET);
-    if (typeof decoded === 'object' && decoded !== null) {
+    if (typeof decoded === "object" && decoded !== null) {
         const { id } = decoded as JwtPayload;
 
         // Find the user in the database and delete the token field
@@ -225,11 +220,11 @@ app.post('/api/logout', async (req, res) => {
     }
 });
 
-app.post('/api/new-an', async (req, res) => {
+app.post("/api/new-an", async (req, res) => {
     const { token, startDate, endDate, text } = req.body;
 
     if (!token || !startDate || !endDate || !text) {
-        return res.json({ status: 'error' });
+        return res.json({ status: "error" });
     }
 
     // Check if token is expired
@@ -237,20 +232,20 @@ app.post('/api/new-an', async (req, res) => {
     const decodedToken = jwt.decode(token, { complete: true });
 
     if (
-        typeof decodedToken === 'object' &&
+        typeof decodedToken === "object" &&
         decodedToken !== null &&
-        'payload' in decodedToken
+        "payload" in decodedToken
     ) {
         const payload = decodedToken.payload as JwtPayload;
 
         if (
-            typeof payload === 'object' &&
+            typeof payload === "object" &&
             payload !== null &&
-            'exp' in payload &&
+            "exp" in payload &&
             payload.exp !== undefined
         ) {
             if (payload.exp < Date.now() / 1000) {
-                return res.json({ status: 'expired' });
+                return res.json({ status: "expired" });
             }
         }
     }
@@ -258,7 +253,7 @@ app.post('/api/new-an', async (req, res) => {
     try {
         const user = jwt.verify(token, JWT_SECRET);
 
-        if (typeof user === 'object' && user !== null) {
+        if (typeof user === "object" && user !== null) {
             const urlPara = (user as JwtPayload & { urlPara: string }).urlPara;
             // Retrieve all announcements with the same 'urlPara'
             const announcements = await Announcement.find({ urlPara });
@@ -279,7 +274,7 @@ app.post('/api/new-an', async (req, res) => {
                 if (a.endDate !== null && a.endDate !== undefined) {
                     oe = a.endDate.getTime() / 1000;
                 } else {
-                    throw new Error('a.endDate is undefined');
+                    throw new Error("a.endDate is undefined");
                 }
 
                 if (
@@ -294,10 +289,10 @@ app.post('/api/new-an', async (req, res) => {
 
             if (overlaps) {
                 res.json({
-                    status: 'error',
+                    status: "error",
                     error:
                         // 'There is already an announcement within this time period'
-                        'Bu zaman aralığı içinde zaten bir duyuru mevcut.',
+                        "Bu zaman aralığı içinde zaten bir duyuru mevcut.",
                 });
             } else {
                 // The time period of the new announcement does not overlap with any of the existing announcements
@@ -308,7 +303,7 @@ app.post('/api/new-an', async (req, res) => {
                     endDate,
                 });
                 console.log(result);
-                res.json({ status: 'ok' });
+                res.json({ status: "ok" });
             }
         }
     } catch (error) {
@@ -316,28 +311,28 @@ app.post('/api/new-an', async (req, res) => {
     }
 });
 
-app.get('/api/get-All-an', async (req, res) => {
+app.get("/api/get-All-an", async (req, res) => {
     const token = req.query.token;
 
-    if (typeof token === 'string') {
+    if (typeof token === "string") {
         const decodedToken = jwt.decode(token, { complete: true });
 
         if (decodedToken !== null) {
             const payload = decodedToken.payload as JwtPayload;
             if (payload.exp !== undefined && payload.exp < Date.now() / 1000) {
-                return res.json({ status: 'expired' });
+                return res.json({ status: "expired" });
             }
         }
     } else {
         // Handhabung für den Fall, dass token nicht vom Typ string ist
-        return res.status(400).json({ error: 'Token must be a string' });
+        return res.status(400).json({ error: "Token must be a string" });
     }
 
     // Check if token is expired
 
     try {
         const tokenResult = jwt.verify(token, JWT_SECRET);
-        if (typeof tokenResult === 'object' && tokenResult !== null) {
+        if (typeof tokenResult === "object" && tokenResult !== null) {
             const user = tokenResult as JwtPayload;
             const urlPara = user.urlPara;
             // Find all announcements whose endDate is greater than or equal to today at midnight
@@ -354,13 +349,13 @@ app.get('/api/get-All-an', async (req, res) => {
     }
 });
 
-app.post('/api/deleteAnnouncement', async (req, res) => {
+app.post("/api/deleteAnnouncement", async (req, res) => {
     const { token, startDate } = req.body;
 
     if (!token || !startDate) {
         return res.json({
-            status: 'error',
-            error: 'Token or startDate missing',
+            status: "error",
+            error: "Token or startDate missing",
         });
     }
 
@@ -368,24 +363,24 @@ app.post('/api/deleteAnnouncement', async (req, res) => {
     const decodedToken = jwt.decode(token, { complete: true });
     if (
         decodedToken &&
-        typeof decodedToken === 'object' &&
-        'payload' in decodedToken
+        typeof decodedToken === "object" &&
+        "payload" in decodedToken
     ) {
         const payload = decodedToken.payload as JwtPayload;
         if (
-            'exp' in payload &&
-            typeof payload.exp === 'number' &&
+            "exp" in payload &&
+            typeof payload.exp === "number" &&
             payload.exp < Date.now() / 1000
         ) {
-            return res.json({ status: 'expired' });
+            return res.json({ status: "expired" });
         }
     } else {
-        return res.json({ status: 'error', error: 'Invalid token' });
+        return res.json({ status: "error", error: "Invalid token" });
     }
 
     try {
         const user = jwt.verify(token, JWT_SECRET);
-        if (typeof user === 'object' && user !== null && 'urlPara' in user) {
+        if (typeof user === "object" && user !== null && "urlPara" in user) {
             const urlPara = (user as JwtPayload & { urlPara: string }).urlPara;
 
             const result = await Announcement.deleteOne({
@@ -395,51 +390,51 @@ app.post('/api/deleteAnnouncement', async (req, res) => {
 
             if (result) {
                 return res.json({
-                    status: 'ok',
-                    message: 'Announcement deleted',
+                    status: "ok",
+                    message: "Announcement deleted",
                 });
             } else {
                 return res.json({
-                    status: 'error',
-                    error: 'No announcement found',
+                    status: "error",
+                    error: "No announcement found",
                 });
             }
         } else {
-            return res.json({ status: 'error', error: 'Invalid user data' });
+            return res.json({ status: "error", error: "Invalid user data" });
         }
     } catch (error) {
         console.log(error);
-        return res.json({ status: 'error', error: 'An error occurred' });
+        return res.json({ status: "error", error: "An error occurred" });
     }
 });
 
-app.get('/api/check-token', async (req, res) => {
+app.get("/api/check-token", async (req, res) => {
     // Extract the token from the request query
     const token = req.query.token;
 
-    if (typeof token !== 'string') {
-        return res.json({ status: 'error', error: 'Token must be a string' });
+    if (typeof token !== "string") {
+        return res.json({ status: "error", error: "Token must be a string" });
     }
 
     if (!token) {
-        return res.json({ status: 'error', error: 'try harder' });
+        return res.json({ status: "error", error: "try harder" });
     }
 
     // Check if token is expired
     const decodedToken = jwt.decode(token, { complete: true });
     if (
         decodedToken !== null &&
-        'exp' in decodedToken &&
-        typeof decodedToken.exp === 'number' &&
+        "exp" in decodedToken &&
+        typeof decodedToken.exp === "number" &&
         decodedToken.exp < Date.now() / 1000
     ) {
-        return res.json({ status: 'expired' });
+        return res.json({ status: "expired" });
     }
 
     try {
         const result = jwt.verify(token, JWT_SECRET);
 
-        if (typeof result === 'object' && result !== null) {
+        if (typeof result === "object" && result !== null) {
             // Angenommen, Ihre Payload hat eine 'id'-Eigenschaft vom Typ string
             const id = (result as JwtPayload & { id: string }).id;
 
@@ -448,26 +443,26 @@ app.get('/api/check-token', async (req, res) => {
 
             if (user !== null && !user.token) {
                 // If the token field is not set, the token has expired
-                return res.json({ status: 'error', error: 'Token expired' });
+                return res.json({ status: "error", error: "Token expired" });
             }
 
             // If the token is still valid, return a success response
-            return res.json({ status: 'ok' });
+            return res.json({ status: "ok" });
         }
     } catch (error) {
         if (error instanceof Error) {
             console.log(error);
-            return res.json({ status: 'error', error: error.message });
+            return res.json({ status: "error", error: error.message });
         } else {
             return res.json({
-                status: 'error',
-                error: 'An unknown error occurred',
+                status: "error",
+                error: "An unknown error occurred",
             });
         }
     }
 });
 
-app.get('/api/getAllAnnouncements', async (req, res) => {
+app.get("/api/getAllAnnouncements", async (req, res) => {
     const username = req.query.urlPara;
 
     const user = await User.findOne({
@@ -475,7 +470,7 @@ app.get('/api/getAllAnnouncements', async (req, res) => {
     });
 
     if (!user)
-        return res.json({ status: 'error', error: 'No user found in DB' });
+        return res.json({ status: "error", error: "No user found in DB" });
 
     const urlPara = user.urlPara;
 
@@ -493,7 +488,7 @@ app.get('/api/getAllAnnouncements', async (req, res) => {
     }
 });
 
-app.get('/api/getDailyData', async (req, res) => {
+app.get("/api/getDailyData", async (req, res) => {
     const username = req.query.urlPara;
 
     const user = await User.findOne({
@@ -501,7 +496,7 @@ app.get('/api/getDailyData', async (req, res) => {
     });
 
     if (!user)
-        return res.json({ status: 'error', error: 'No user found in DB' });
+        return res.json({ status: "error", error: "No user found in DB" });
 
     const urlPara = user.urlPara;
 
@@ -538,14 +533,14 @@ app.get('/api/getDailyData', async (req, res) => {
 });
 
 const requestPromise = util.promisify(request);
-var myAccessToken = '';
+var myAccessToken = "";
 
 async function fetchMonthlyData(urlPara: string, highestDate: any) {
     const optionsLogin = {
-        method: 'POST',
-        url: 'https://awqatsalah.diyanet.gov.tr/Auth/Login',
+        method: "POST",
+        url: "https://awqatsalah.diyanet.gov.tr/Auth/Login",
         headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
         },
         body: JSON.stringify({
             email: DIYANET_MAIL,
@@ -557,10 +552,10 @@ async function fetchMonthlyData(urlPara: string, highestDate: any) {
     const loginBody = JSON.parse(responseLogin.body);
     myAccessToken = loginBody.data.accessToken;
     const optionsMonthlyData = {
-        method: 'GET',
+        method: "GET",
         url: `https://awqatsalah.diyanet.gov.tr/api/PrayerTime/Monthly/${urlPara}`,
         headers: {
-            accept: 'text/plain',
+            accept: "text/plain",
             Authorization: `Bearer ${myAccessToken}`,
         },
     };
@@ -588,10 +583,10 @@ async function fetchMonthlyData(urlPara: string, highestDate: any) {
     if (!highestDate) {
         await saveData(monthlyData)
             .then(() => {
-                console.log('Data saved successfully!');
+                console.log("Data saved successfully!");
             })
             .catch((error) => {
-                console.log('Error saving data: ', error);
+                console.log("Error saving data: ", error);
             });
     } else if (highestDate) {
         // If there is a highest date, filter the data to only include data with a date greater than the highest date
@@ -618,7 +613,7 @@ function getMoon(url: string) {
 }
 
 function createMongooseDate(input: string) {
-    const dateComponents = input.split('.');
+    const dateComponents = input.split(".");
     const day = parseInt(dateComponents[0]);
     const month = parseInt(dateComponents[1]) - 1;
     const year = parseInt(dateComponents[2]);
