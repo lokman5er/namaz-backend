@@ -1,127 +1,170 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ayarlar</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <script src="admin.js" defer></script>
-    <link rel="stylesheet" href="admin.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
-    <script src="https://use.fontawesome.com/c0368b74b2.js"></script>
-</head>
-<body>
-
-    <div class="popup-container">
-        <div class="popup-content">
-            <p class="popup-title">ERROR</p>
-            <p class="popup-text">Yeni duyuruyu eklediniz</p>
-            <button class="popup-button">OKAY</button>
-        </div>
-    </div>
-
-    <div class="card">
-        
-        <form id="log-form" >
-            
-            <h1 class="log-form-title">LOG IN</h1>
-            <span class="log-form-username">KULLANICI ADI</span>
-            <input type="username" placeholder="Kullanıcı adı" autocomplete="off" id="l-username" name="username">
-            <span class="log-form-password">PAROLA</span>
-            <div class="div-password">
-                <input type="password" placeholder="Parola" autocomplete="off" id="l-password" name="password">
-                <i class="fa fa-eye fa-2x" aria-hidden="true"></i>
-                <i class="fa fa-2x fa-eye-slash" aria-hidden="true" style="display: none;"></i>
-            </div>
-            <input id="submit-login" type="submit" value="LOG IN" disabled name="login">
-            
-        </form>
-
-        <div class="impressum-2"> 
-            <a class="a-impressum-2">Impressum</a>
-            <div class="impressum-container-2">
-                <p>Lokman Beser</p>
-                <p>Gronowskistr. 2, 48161 Münster</p>
-                <p>lokmanbeser@icloud.com</p>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ayarlar</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+            rel="stylesheet"
+        />
+        <script  src="admin" defer></script>
+        <link rel="stylesheet" href="admin.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+            integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+            crossorigin="anonymous"
+        />
+        <script src="https://use.fontawesome.com/c0368b74b2.js"></script>
+    </head>
+    <body>
+        <div class="popup-container">
+            <div class="popup-content">
+                <p class="popup-title">ERROR</p>
+                <p class="popup-text">Yeni duyuruyu eklediniz</p>
+                <button class="popup-button">OKAY</button>
             </div>
         </div>
 
-    </div>
+        <div class="card">
+            <form id="log-form">
+                <h1 class="log-form-title">LOG IN</h1>
+                <span class="log-form-username">KULLANICI ADI</span>
+                <input
+                    type="username"
+                    placeholder="Kullanıcı adı"
+                    autocomplete="off"
+                    id="l-username"
+                    name="username"
+                />
+                <span class="log-form-password">PAROLA</span>
+                <div class="div-password">
+                    <input
+                        type="password"
+                        placeholder="Parola"
+                        autocomplete="off"
+                        id="l-password"
+                        name="password"
+                    />
+                    <i class="fa fa-eye fa-2x" aria-hidden="true"></i>
+                    <i
+                        class="fa fa-2x fa-eye-slash"
+                        aria-hidden="true"
+                        style="display: none"
+                    ></i>
+                </div>
+                <input
+                    id="submit-login"
+                    type="submit"
+                    value="LOG IN"
+                    disabled
+                    name="login"
+                />
+            </form>
 
-    <div class="announcements">
-        <div class="title">
-            <h1 class="title-tr">
-                DUYURULAR
-            </h1>
-                
-            <button class="logout">
-                <i class="fa fa-sign-out" aria-hidden="true"></i>
-            </button>
+            <div class="impressum-2">
+                <a class="a-impressum-2">Impressum</a>
+                <div class="impressum-container-2">
+                    <p>Lokman Beser</p>
+                    <p>Gronowskistr. 2, 48161 Münster</p>
+                    <p>lokmanbeser@icloud.com</p>
+                </div>
+            </div>
         </div>
-        <div class="an-mid">
-            <div class="an-mid-left">
 
-                <form class="new-announcement" id="new-an">
+        <div class="announcements">
+            <div class="title">
+                <h1 class="title-tr">DUYURULAR</h1>
 
-                    <div class="dates">
-                        <div class="startDate">
-                            <span class="dt-title">BAŞLANGIÇ TARİHİ</span>
-                            <input type="date" id="start-date" class="an-input date-input">
+                <button class="logout">
+                    <i class="fa fa-sign-out" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="an-mid">
+                <div class="an-mid-left">
+                    <form class="new-announcement" id="new-an">
+                        <div class="dates">
+                            <div class="startDate">
+                                <span class="dt-title">BAŞLANGIÇ TARİHİ</span>
+                                <input
+                                    type="date"
+                                    id="start-date"
+                                    class="an-input date-input"
+                                />
+                            </div>
+
+                            <div class="endDate">
+                                <span class="dt-title">BİTİŞ TARİHİ</span>
+                                <input
+                                    type="date"
+                                    id="end-date"
+                                    class="an-input date-input"
+                                />
+                            </div>
                         </div>
 
-                        <div class="endDate">
-                            <span class="dt-title">BİTİŞ TARİHİ</span>
-                            <input type="date" id="end-date" class="an-input date-input">
-                        </div>
-                    </div>
+                        <div class="an-mid-left-title">Türkçe</div>
+                        <textarea
+                            type="text"
+                            id="new-tr"
+                            placeholder="..."
+                            class="an-input"
+                        ></textarea>
 
-                    <div class="an-mid-left-title">Türkçe</div>
-                    <textarea type="text" id="new-tr" placeholder="..." class="an-input" ></textarea>
-                    
-                    <div class="an-mid-left-title" >Arapça</div>
-                    <textarea type="text" id="new-ar" placeholder="..." class="an-input"></textarea>
-                    
-                    <div class="an-mid-left-title">Almanca</div>
-                    <textarea type="text" id="new-de" placeholder="..." class="an-input" ></textarea>
-        
-                    <input type="submit" id="an-submit"  value="DUYURUYU EKLE" disabled>
-                    
-                    <div class="impressum-1"> 
-                        <a class="a-impressum-1">Impressum</a>
-                        <div class="impressum-container-1">
+                        <div class="an-mid-left-title">Arapça</div>
+                        <textarea
+                            type="text"
+                            id="new-ar"
+                            placeholder="..."
+                            class="an-input"
+                        ></textarea>
+
+                        <div class="an-mid-left-title">Almanca</div>
+                        <textarea
+                            type="text"
+                            id="new-de"
+                            placeholder="..."
+                            class="an-input"
+                        ></textarea>
+
+                        <input
+                            type="submit"
+                            id="an-submit"
+                            value="DUYURUYU EKLE"
+                            disabled
+                        />
+
+                        <div class="impressum-1">
+                            <a class="a-impressum-1">Impressum</a>
+                            <div class="impressum-container-1">
+                                <p>Lokman Beser</p>
+                                <p>Gronowskistr. 2, 48161 Münster</p>
+                                <p>lokmanbeser@icloud.com</p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="an-mid-right">
+                    <div class="an-list"></div>
+
+                    <div class="impressum">
+                        <a class="a-impressum">Impressum</a>
+                        <div class="impressum-container">
                             <p>Lokman Beser</p>
                             <p>Gronowskistr. 2, 48161 Münster</p>
                             <p>lokmanbeser@icloud.com</p>
                         </div>
                     </div>
-                </form>
-
+                </div>
             </div>
 
-            <div class="an-mid-right">
-                <div class="an-list">
-                    
-                </div>
-                
-                <div class="impressum"> <a class="a-impressum">Impressum</a>
-                    <div class="impressum-container">
-                        <p>Lokman Beser</p>
-                        <p>Gronowskistr. 2, 48161 Münster</p>
-                        <p>lokmanbeser@icloud.com</p>
-                    </div>
-                </div>
-
+            <div class="nav-bar">
+                <button class="b-1" disabled>DUYURULAR</button>
+                <button class="b-2">EKLE</button>
             </div>
         </div>
-
-        <div class="nav-bar">
-            <button class="b-1" disabled>DUYURULAR</button>
-            <button class="b-2" >EKLE</button>
-        </div>        
-
-    </div>
-
-    
-</body>
+    </body>
 </html>
