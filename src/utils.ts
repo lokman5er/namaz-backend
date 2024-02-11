@@ -1,6 +1,6 @@
 import {Response} from "express";
 import jwt, {JwtPayload} from "jsonwebtoken";
-import {Telegraf} from 'telegraf';
+import {Context, Telegraf} from 'telegraf';
 
 export function handleError(res: Response, error: unknown, serverLogMessage: string): void {
     console.error(serverLogMessage, error);
@@ -37,6 +37,6 @@ export function createMongooseDate(input: string): Date {
 }
 
 export async function sendMessageToTelegramGroup(message: string): Promise<void> {
-    const bot = new Telegraf(process.env.TELEGRAM_CREDENTIALS);
+    const bot: Telegraf<Context> = new Telegraf(process.env.TELEGRAM_CREDENTIALS);
     await bot.telegram.sendMessage(process.env.TELEGRAM_GROUP_ID, message);
 }

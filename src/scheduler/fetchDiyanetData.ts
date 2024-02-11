@@ -14,8 +14,7 @@ const requestPromise = util.promisify(request);
 async function schedulerJob(): Promise<void> {
     const dayOfMonth: number = new Date().getDate();
 
-    // needed since the Heroku Scheduler can be configured to run at least once a day,
-    // this check ensures that the job is executed only on the first day of each month
+    // needed since the Heroku Scheduler can be configured to run at least once a day
     if (!(dayOfMonth === 1 || dayOfMonth === 15)) {
         console.log("No need to fetch new DiyanetData today, as it's not the 1st or 15th day of the month");
         return;
