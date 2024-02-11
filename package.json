@@ -3,13 +3,14 @@
     "version": "1.0.0",
     "description": "",
     "main": "./index.ts",
-  "scripts": {
-    "build:backend": "tsc --project tsconfig.json",
-    "build:frontend": "tsc --project frontend/tsconfig.json",
-    "copy:frontend": "shx cp -R ./frontend/*.html ./dist/frontend",
-    "copy:public": "shx cp -R ./public ./dist/",
-    "build": "concurrently \"npm:build:*\" \"npm:copy:*\""
-  }, 
+    "scripts": {
+        "build:backend": "tsc --project tsconfig.json",
+        "build:frontend": "tsc --project frontend/tsconfig.json",
+        "copy:frontend": "shx cp -R ./frontend/*.html ./dist/frontend",
+        "copy:public": "shx cp -R ./public ./dist/",
+        "build": "concurrently \"npm:build:*\" \"npm:copy:*\"",
+        "run-daily-task": "node fetchDiyanetData.js"
+    },
     "author": "lokman5er",
     "license": "ISC",
     "dependencies": {
@@ -33,6 +34,7 @@
         "mongoose": "^8.1.1",
         "path": "^0.12.7",
         "request": "^2.88.2",
+        "telegraf": "^4.15.3",
         "util": "^0.12.5"
     },
     "devDependencies": {

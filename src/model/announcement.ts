@@ -1,6 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose, {Schema} from 'mongoose';
+import {IAnnouncement} from "../interfaces";
 
-const AnnouncementSchema = new mongoose.Schema(
+const AnnouncementSchema = new Schema<IAnnouncement>(
     {
         urlPara: {
             type: String,
@@ -24,9 +25,7 @@ const AnnouncementSchema = new mongoose.Schema(
     { collection: 'announcements' }
 );
 
-const AnnouncementModel = mongoose.model(
-    'AnnouncementSchema',
-    AnnouncementSchema
-);
+const AnnouncementModel =
+    mongoose.model<IAnnouncement>('Announcement', AnnouncementSchema);
 
 export default AnnouncementModel;

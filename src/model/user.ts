@@ -1,6 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import {IUser} from "../interfaces";
 
-const UserSchema = new mongoose.Schema(
+const UserSchema = new Schema<IUser>(
     {
         username: {
             type: String,
@@ -23,6 +24,6 @@ const UserSchema = new mongoose.Schema(
     { collection: 'users' }
 );
 
-const UserModel = mongoose.model('UserSchema', UserSchema);
+const UserModel = mongoose.model<IUser>('User', UserSchema);
 
 export default UserModel;

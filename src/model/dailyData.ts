@@ -1,6 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose, {Schema} from 'mongoose';
+import {IDailyData} from "../interfaces";
 
-const DailyDataSchema = new mongoose.Schema(
+const DailyDataSchema = new Schema<IDailyData>(
     {
         urlPara: {
             type: Number,
@@ -50,6 +51,6 @@ const DailyDataSchema = new mongoose.Schema(
     { collection: 'DailyData' }
 );
 
-const DailyDataModel = mongoose.model('DailyDataSchema', DailyDataSchema);
+const DailyDataModel = mongoose.model<IDailyData>('DailyData', DailyDataSchema);
 
 export default DailyDataModel;
