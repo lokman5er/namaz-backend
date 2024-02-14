@@ -43,9 +43,9 @@ app.get("/duyuru", function (req, res) {
     res.sendFile(path.join(__dirname, "frontend", "admin.html"));
 });
 
-app.use('api/user', userRoutes);
+app.use('/api/user', userRoutes);
 
-app.use('api/announcement', announcementRoutes)
+app.use('/api/announcement', announcementRoutes)
 
 app.use('/api/tv', tvRoutes);
 

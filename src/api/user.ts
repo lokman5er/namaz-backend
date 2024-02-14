@@ -157,7 +157,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
     res.status(400).json({error: 'Invalid username/password'});
 });
 
-router.post("/api/logout", async (req: Request, res: Response): Promise<void> => {
+router.post("/logout", async (req: Request, res: Response): Promise<void> => {
     const {token} = req.body;
 
     if (!token) {
@@ -191,7 +191,7 @@ router.post("/api/logout", async (req: Request, res: Response): Promise<void> =>
 });
 
 //TODO: rename to camelCase
-router.get("/api/check-token", async (req: Request, res: Response): Promise<void> => {
+router.get("/check-token", async (req: Request, res: Response): Promise<void> => {
     const token = req.query.token;
 
     if (typeof token !== "string") {
@@ -221,5 +221,43 @@ router.get("/api/check-token", async (req: Request, res: Response): Promise<void
         handleError(res, error, serverLogMessage);
     }
 });
+
+router.post('/app/login', async (req: Request, res: Response): Promise<void> => {
+    const {username, password} = req.body;
+
+    if (!username || !password) {
+        res.status(400).send("try harder ;)");
+        return;
+    }
+
+    const user: IUser = await User.findOne({username}).lean();
+
+    if (!user) {
+        res.status(400).send("Invalid username/password");
+        return;
+    }
+
+    if (await bcrypt.compare(password, user.password)) {
+        //username + password combination is successful
+
+        const token = jwt.sign(
+            {
+                id: user._id,
+                username: user.username,
+                urlPara: user.urlPara,
+            },
+            JWT_SECRET,
+            {expiresIn: "30d"}
+        );
+
+        await User.updateOne({username: user.username}, {$set: {token}});
+
+        res.status(200).send("Login was successfully");
+        return;
+    }
+
+    res.status(400).json({error: 'Invalid username/password'});
+});
+
 
 export default router;
