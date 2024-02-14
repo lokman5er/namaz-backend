@@ -12,6 +12,6 @@
         "strictFunctionTypes": true,
         "skipLibCheck": true,
     },
-    "include": ["index.ts", "model/**/*.ts"],
+    "include": ["index.ts", "model/**/*.ts", "/src/**/*"],
     "exclude": ["node_modules", "frontend"],
 }
