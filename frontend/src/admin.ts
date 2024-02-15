@@ -1,5 +1,3 @@
-import { ensureHTMLElement } from "./helper";
-
 // Helper function to send a request to the server
 async function sendRequest(url: string, options: any) {
     // Send the request to the given URL with the given options
@@ -24,7 +22,7 @@ function resetInputField(field: HTMLElement): void {
 function retrieveTextFromHtmlInputElement(
     element: HTMLElement | null
 ): string {
-    const htmlElement = ensureHTMLElement(element);
+    const htmlElement = element as HTMLElement;
     if (htmlElement instanceof HTMLInputElement) {
         return htmlElement.value;
     } else {
@@ -36,51 +34,29 @@ function retrieveTextFromHtmlInputElement(
 const serverUrl = "https://namaz-backend.herokuapp.com";
 
 // Get references to the forms on the page
-const loginForm: HTMLElement = ensureHTMLElement(
-    document.getElementById("log-form")
-);
-const anForm: HTMLElement = ensureHTMLElement(
-    document.getElementById("new-an")
-);
+const loginForm: HTMLElement =  document.getElementById("log-form") as HTMLElement;
+const anForm: HTMLElement =  document.getElementById("new-an") as HTMLElement;
 
 // Get references to the input fields for the new announcement form
-const startDateEl: HTMLElement = ensureHTMLElement(
-    document.getElementById("start-date")
-);
-const endDateEl: HTMLElement = ensureHTMLElement(
-    document.getElementById("end-date")
-);
-const anTr: HTMLElement = ensureHTMLElement(document.getElementById("new-tr"));
-const anAr: HTMLElement = ensureHTMLElement(document.getElementById("new-ar"));
-const anDe: HTMLElement = ensureHTMLElement(document.getElementById("new-de"));
+const startDateEl: HTMLElement =  document.getElementById("start-date") as HTMLElement;
+const endDateEl: HTMLElement =  document.getElementById("end-date") as HTMLElement;
+const anTr: HTMLElement = document.getElementById("new-tr") as HTMLElement;
+const anAr: HTMLElement = document.getElementById("new-ar") as HTMLElement;
+const anDe: HTMLElement = document.getElementById("new-de") as HTMLElement;
 
 // Get reference to the submit button for the new announcement form
-const anSubmit: HTMLElement = ensureHTMLElement(
-    document.getElementById("an-submit")
-);
+const anSubmit: HTMLElement =  document.getElementById("an-submit") as HTMLElement;
 
 // Different Views
-const loginView: HTMLElement = ensureHTMLElement(
-    document.querySelector(".card")
-);
-const announcementsView: HTMLElement = ensureHTMLElement(
-    document.querySelector(".announcements")
-);
+const loginView: HTMLElement =  document.querySelector(".card") as HTMLElement;
+const announcementsView: HTMLElement =  document.querySelector(".announcements") as HTMLElement;
 
 // Get reference for popup to show error messages
-const popupTitle: HTMLElement = ensureHTMLElement(
-    document.querySelector(".popup-title")
-);
-const popupText: HTMLElement = ensureHTMLElement(
-    document.querySelector(".popup-text")
-);
+const popupTitle: HTMLElement =  document.querySelector(".popup-title") as HTMLElement;
+const popupText: HTMLElement =  document.querySelector(".popup-text") as HTMLElement;
 
-const popupContainer: HTMLElement = ensureHTMLElement(
-    document.querySelector(".popup-container")
-);
-const popupButton: HTMLElement = ensureHTMLElement(
-    document.querySelector(".popup-button")
-);
+const popupContainer: HTMLElement =  document.querySelector(".popup-container") as HTMLElement;
+const popupButton: HTMLElement =  document.querySelector(".popup-button") as HTMLElement;
 
 if (localStorage.getItem("token")) {
     checkToken();
@@ -111,12 +87,8 @@ async function checkToken() {
     }
 }
 
-const showPassword: HTMLElement = ensureHTMLElement(
-    document.querySelector(".fa-eye")
-);
-const hidePassword: HTMLElement = ensureHTMLElement(
-    document.querySelector(".fa-eye-slash")
-);
+const showPassword: HTMLElement =  document.querySelector(".fa-eye") as HTMLElement;
+const hidePassword: HTMLElement =  document.querySelector(".fa-eye-slash") as HTMLElement;
 
 showPassword.addEventListener("click", () => {
     if (passwordInput instanceof HTMLInputElement) {
@@ -146,9 +118,7 @@ async function login(event:any) {
         return;
     }
     // Get the values of the input fields
-    const userNameField = ensureHTMLElement(
-        document.getElementById("l-username")
-    );
+    const userNameField =  document.getElementById("l-username") as HTMLElement;
     let username: string;
     if (userNameField instanceof HTMLInputElement) {
         username = userNameField.value;
@@ -156,9 +126,7 @@ async function login(event:any) {
         throw new Error("no username");
     }
 
-    const passwordField: HTMLElement = ensureHTMLElement(
-        document.getElementById("l-password")
-    );
+    const passwordField: HTMLElement =  document.getElementById("l-password") as HTMLElement;
     let password: string;
     if (passwordField instanceof HTMLInputElement) {
         password = passwordField.value;
@@ -181,9 +149,7 @@ async function login(event:any) {
     // If the request was successful, store the returned token in local storage
     // Otherwise, show an error with the error message
 
-    const submitButton: HTMLElement = ensureHTMLElement(
-        document.getElementById("submit-login")
-    );
+    const submitButton: HTMLElement =  document.getElementById("submit-login") as HTMLElement;
     if (result.status === "ok") {
         if (submitButton instanceof HTMLButtonElement) {
             submitButton.setAttribute("disabled", "true");
@@ -202,8 +168,12 @@ async function login(event:any) {
         popupText.innerText = result.error;
     }
 
-    resetInputField(ensureHTMLElement(document.getElementById("l-username")));
-    resetInputField(ensureHTMLElement(document.getElementById("l-password")));
+    resetInputField(document.getElementById("l-username") as HTMLElement);
+
+    resetInputField(document.getElementById("l-password") as HTMLElement);
+
+
+
 }
 
 // Set the current date as the minimum value for the start and end date fields
@@ -321,12 +291,8 @@ window.addEventListener("resize", () => {
     // If the window width is greater than 830 pixels
     if (window.innerWidth > 830) {
         // Get the elements with the class 'an-mid-left' and 'an-mid-right'
-        const newAn: HTMLElement = ensureHTMLElement(
-            document.querySelector(".an-mid-left")
-        );
-        const anList: HTMLElement = ensureHTMLElement(
-            document.querySelector(".an-mid-right")
-        );
+        const newAn: HTMLElement =  document.querySelector(".an-mid-left") as HTMLElement;
+        const anList: HTMLElement =  document.querySelector(".an-mid-right") as HTMLElement;
 
         // Remove the 'display' CSS attribute from both elements
         newAn.style.display = "";
@@ -349,9 +315,7 @@ function updateSubmitButtonLogin() {
     );
 
     // Get the submit button
-    const submitButtonLogin: HTMLElement = ensureHTMLElement(
-        document.getElementById("submit-login")
-    );
+    const submitButtonLogin: HTMLElement =  document.getElementById("submit-login") as HTMLElement;
 
     // If all input fields have a value, enable the submit button
     // Otherwise, disable it
@@ -362,12 +326,8 @@ function updateSubmitButtonLogin() {
     }
 }
 
-const usernameInput: HTMLElement = ensureHTMLElement(
-    document.getElementById("l-username")
-);
-const passwordInput: HTMLElement = ensureHTMLElement(
-    document.getElementById("l-password")
-);
+const usernameInput: HTMLElement =  document.getElementById("l-username") as HTMLElement;
+const passwordInput: HTMLElement =  document.getElementById("l-password") as HTMLElement;
 
 usernameInput.addEventListener("input", updateSubmitButtonLogin);
 passwordInput.addEventListener("input", updateSubmitButtonLogin);
@@ -386,9 +346,7 @@ function updateSubmitButton() {
     );
 
     // Get the submit button
-    const submitButton: HTMLElement = ensureHTMLElement(
-        document.getElementById("an-submit")
-    );
+    const submitButton: HTMLElement =  document.getElementById("an-submit") as HTMLElement;
 
     // If all input fields have a value, enable the submit button
     // Otherwise, disable it
@@ -398,35 +356,19 @@ function updateSubmitButton() {
         submitButton.setAttribute("disabled", "true");
     }
 }
-const anTrInput: HTMLElement = ensureHTMLElement(
-    document.getElementById("new-tr")
-);
-const anArInput: HTMLElement = ensureHTMLElement(
-    document.getElementById("new-ar")
-);
-const anDeInput: HTMLElement = ensureHTMLElement(
-    document.getElementById("new-de")
-);
+const anTrInput: HTMLElement =  document.getElementById("new-tr") as HTMLElement;
+const anArInput: HTMLElement =  document.getElementById("new-ar") as HTMLElement;
+const anDeInput: HTMLElement =  document.getElementById("new-de") as HTMLElement;
 
 anTrInput.addEventListener("input", updateSubmitButton);
 anArInput.addEventListener("input", updateSubmitButton);
 anDeInput.addEventListener("input", updateSubmitButton);
 
-const buttonAns: HTMLElement = ensureHTMLElement(
-    document.querySelector(".b-1")
-);
-const buttonNewAn: HTMLElement = ensureHTMLElement(
-    document.querySelector(".b-2")
-);
-const newAn: HTMLElement = ensureHTMLElement(
-    document.querySelector(".an-mid-left")
-);
-const anList: HTMLElement = ensureHTMLElement(
-    document.querySelector(".an-mid-right")
-);
-const title: HTMLElement = ensureHTMLElement(
-    document.querySelector(".title-tr")
-);
+const buttonAns: HTMLElement =  document.querySelector(".b-1") as HTMLElement;
+const buttonNewAn: HTMLElement =  document.querySelector(".b-2") as HTMLElement;
+const newAn: HTMLElement =  document.querySelector(".an-mid-left") as HTMLElement;
+const anList: HTMLElement =  document.querySelector(".an-mid-right") as HTMLElement;
+const title: HTMLElement =  document.querySelector(".title-tr") as HTMLElement;
 
 buttonNewAn.addEventListener("click", () => {
     announcementsView.scrollTop = 0;
@@ -463,9 +405,7 @@ function updateTable() {
         })
         .then((jsonData) => {
             jsonData = jsonData.result;
-            let anListElement: HTMLElement = ensureHTMLElement(
-                document.querySelector(".an-list")
-            );
+            let anListElement: HTMLElement =  document.querySelector(".an-list") as HTMLElement;
             if (jsonData.length === 0 && document !== null) {
                 anListElement.innerHTML = "";
                 return;
@@ -528,9 +468,9 @@ function updateTable() {
                         </div>
                     </div>`;
 
-                ensureHTMLElement(
-                    document.querySelector(".an-list")
-                ).innerHTML = anList;
+                
+                    const anListElement:HTMLElement = document.querySelector(".an-list") as HTMLElement
+                    anListElement.innerHTML = anList;
             });
         });
 }
@@ -561,25 +501,13 @@ buttonLogout.addEventListener("click", () => {
     announcementsView.style.display = "none";
 });
 
-const impressumA: HTMLElement = ensureHTMLElement(
-    document.querySelector(".a-impressum")
-);
-const impressumA1: HTMLElement = ensureHTMLElement(
-    document.querySelector(".a-impressum-1")
-);
-const impressumA2: HTMLElement = ensureHTMLElement(
-    document.querySelector(".a-impressum-2")
-);
+const impressumA: HTMLElement =  document.querySelector(".a-impressum") as HTMLElement;
+const impressumA1: HTMLElement =  document.querySelector(".a-impressum-1") as HTMLElement;
+const impressumA2: HTMLElement =  document.querySelector(".a-impressum-2") as HTMLElement;
 
-const impressumContainer: HTMLElement = ensureHTMLElement(
-    document.querySelector(".impressum-container")
-);
-const impressumContainer1: HTMLElement = ensureHTMLElement(
-    document.querySelector(".impressum-container-1")
-);
-const impressumContainer2: HTMLElement = ensureHTMLElement(
-    document.querySelector(".impressum-container-2")
-);
+const impressumContainer: HTMLElement =  document.querySelector(".impressum-container") as HTMLElement;
+const impressumContainer1: HTMLElement =  document.querySelector(".impressum-container-1") as HTMLElement;
+const impressumContainer2: HTMLElement =  document.querySelector(".impressum-container-2") as HTMLElement;
 
 let containerCollapsed = true;
 let containerCollapsed1 = true;

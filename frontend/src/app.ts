@@ -1,8 +1,3 @@
-
-//eslint-disable-next-line
-import d3 from "d3";
-import { ensureHTMLElement } from "./helper";
-
 //@ts-ignore
 const serverUrl: string = "https://namaz-backend.herokuapp.com";
 // edit these for local testing
@@ -36,129 +31,66 @@ let testInterval: number | null = null;
  * @default 30
  */
 const secondsToChangeLanguage: number = 30;
-/**
- * checks if element is an instanceof HTMLElement
- *
- * @param element takes any kind of object and checks the type
- * @returns the very same object as a HTMLElement
- */
-// function ensureHTMLElement(element: Element | null): HTMLElement {
-//     if (element instanceof HTMLElement) {
-//         return element;
-//     } else {
-//         throw new Error();
-//     }
-// }
+
 let now = new Date();
 
 let todaysAnnouncement: { [x: string]: string };
 let todayIsAnAnnouncement: boolean;
 
 //HTML-Elements
-const hoursHTML: HTMLElement = ensureHTMLElement(
-    document.querySelector(".l-3-1")
-);
-const minutesHTML: HTMLElement = ensureHTMLElement(
-    document.querySelector(".l-3-3")
-);
+const hoursHTML: HTMLElement = document.querySelector(".l-3-1") as HTMLElement;
+const minutesHTML: HTMLElement = document.querySelector(".l-3-3") as HTMLElement;
 
-const countdownHour: HTMLElement = ensureHTMLElement(
-    document.querySelector(".countdown-hour")
-);
-const countdownMinute: HTMLElement = ensureHTMLElement(
-    document.querySelector(".countdown-minute")
-);
+const countdownHour: HTMLElement = document.querySelector(".countdown-hour") as HTMLElement;
+const countdownMinute: HTMLElement = document.querySelector(".countdown-minute") as HTMLElement;
 
-const infoTitle: HTMLElement = ensureHTMLElement(
-    document.querySelector(".l-4-1 ")
-);
-const infoText: HTMLElement = ensureHTMLElement(
-    document.querySelector(".l-4-2")
-);
-const infoSource: HTMLElement = ensureHTMLElement(
-    document.querySelector(".l-4-3")
-);
+const infoTitle: HTMLElement = document.querySelector(".l-4-1 ") as HTMLElement;
+const infoText: HTMLElement = document.querySelector(".l-4-2") as HTMLElement;
+const infoSource: HTMLElement = document.querySelector(".l-4-3") as HTMLElement;
 
-const dateNormal: HTMLElement = ensureHTMLElement(
-    document.querySelector(".dateNormal")
-);
-const monthNormal: HTMLElement = ensureHTMLElement(
-    document.querySelector(".monthNormal")
-);
-const yearNormal: HTMLElement = ensureHTMLElement(
-    document.querySelector(".yearNormal")
-);
+const dateNormal: HTMLElement = document.querySelector(".dateNormal") as HTMLElement;
+const monthNormal: HTMLElement = document.querySelector(".monthNormal") as HTMLElement;
+const yearNormal: HTMLElement = document.querySelector(".yearNormal") as HTMLElement;
 
-const dateHicri: HTMLElement = ensureHTMLElement(
-    document.querySelector(".dateHicri")
-);
-const monthHicri: HTMLElement = ensureHTMLElement(
-    document.querySelector(".monthHicri")
-);
-const yearHicri: HTMLElement = ensureHTMLElement(
-    document.querySelector(".yearHicri")
-);
+const dateHicri: HTMLElement = document.querySelector(".dateHicri") as HTMLElement;
+const monthHicri: HTMLElement = document.querySelector(".monthHicri") as HTMLElement;
+const yearHicri: HTMLElement = document.querySelector(".yearHicri") as HTMLElement;
 
-const point1: HTMLElement = ensureHTMLElement(document.querySelector("#p1"));
-const point2: HTMLElement = ensureHTMLElement(document.querySelector("#p2"));
+const point1: HTMLElement =document.querySelector("#p1") as HTMLElement;
+
+const point2: HTMLElement =document.querySelector("#p2") as HTMLElement;
 
 /**
  * Represents an array of moon elements.
  * @type {HTMLElement[]}
  */
 const moonElements: HTMLElement[] = [
-    ensureHTMLElement(document.querySelector(".moon1")),
-    ensureHTMLElement(document.querySelector(".moon2")),
-    ensureHTMLElement(document.querySelector(".moon3")),
-    ensureHTMLElement(document.querySelector(".moon4")),
-    ensureHTMLElement(document.querySelector(".moon5")),
+    document.querySelector(".moon1") as HTMLElement,
+    document.querySelector(".moon2") as HTMLElement,
+    document.querySelector(".moon3") as HTMLElement,
+    document.querySelector(".moon4") as HTMLElement,
+    document.querySelector(".moon5") as HTMLElement,
 ];
 
-const timeLeft: HTMLElement = ensureHTMLElement(
-    document.querySelector(".timeLeft")
-);
-const countdownText: HTMLElement = ensureHTMLElement(
-    document.querySelector(".timeLeft-before")
-);
-const timeLeftAfter: HTMLElement = ensureHTMLElement(
-    document.querySelector(".timeLeft-after")
-);
+const timeLeft: HTMLElement = document.querySelector(".timeLeft") as HTMLElement;
+const countdownText: HTMLElement = document.querySelector(".timeLeft-before") as HTMLElement;
+const timeLeftAfter: HTMLElement = document.querySelector(".timeLeft-after") as HTMLElement;
 
-const importantDate1: HTMLElement = ensureHTMLElement(
-    document.querySelector("#box1")
-);
+const importantDate1: HTMLElement = document.querySelector("#box1") as HTMLElement;
 
-const importantDate1Text: HTMLElement = ensureHTMLElement(
-    document.querySelector(".l-6-2-2")
-);
-const importantDate2Text: HTMLElement = ensureHTMLElement(
-    document.querySelector(".l-6-4-2")
-);
+const importantDate1Text: HTMLElement = document.querySelector(".l-6-2-2") as HTMLElement;
+const importantDate2Text: HTMLElement = document.querySelector(".l-6-4-2") as HTMLElement;
 
-const importantDate1Day: HTMLElement = ensureHTMLElement(
-    document.querySelector("#importantDate1Day")
-);
-const importantDate2Day: HTMLElement = ensureHTMLElement(
-    document.querySelector("#importantDate2Day")
-);
+const importantDate1Day: HTMLElement = document.querySelector("#importantDate1Day") as HTMLElement;
+const importantDate2Day: HTMLElement = document.querySelector("#importantDate2Day") as HTMLElement;
 
-const importantDate1Month: HTMLElement = ensureHTMLElement(
-    document.querySelector("#importantDate1Month")
-);
-const importantDate2Month: HTMLElement = ensureHTMLElement(
-    document.querySelector("#importantDate2Month")
-);
+const importantDate1Month: HTMLElement = document.querySelector("#importantDate1Month") as HTMLElement;
+const importantDate2Month: HTMLElement = document.querySelector("#importantDate2Month") as HTMLElement;
 
-const importantDate1Year: HTMLElement = ensureHTMLElement(
-    document.querySelector("#importantDate1Year")
-);
-const importantDate2Year: HTMLElement = ensureHTMLElement(
-    document.querySelector("#importantDate2Year")
-);
+const importantDate1Year: HTMLElement = document.querySelector("#importantDate1Year") as HTMLElement;
+const importantDate2Year: HTMLElement = document.querySelector("#importantDate2Year") as HTMLElement;
 
-const countdownContainer: HTMLElement = ensureHTMLElement(
-    document.querySelector(".timeLeft")
-);
+const countdownContainer: HTMLElement = document.querySelector(".timeLeft") as HTMLElement;
 
 /**
  * Returns a formatted date string in the format "YYYY-MM-DDT00:00:00.000Z".
@@ -1010,9 +942,7 @@ function animateSvg(idx: number) {
         .duration(1000)
         .attr("font-weight", "600");
 
-    const elClassElement: HTMLElement = ensureHTMLElement(
-        document.querySelector(elClass)
-    );
+    const elClassElement: HTMLElement =  document.querySelector(elClass) as HTMLElement;
 
     elClassElement.style.width = "42.5vw";
 
@@ -1056,9 +986,7 @@ function animateSvg(idx: number) {
         .duration(1000)
         .attr("font-weight", "normal");
 
-    let dElClassElement: HTMLElement = ensureHTMLElement(
-        document.querySelector(dElClass)
-    );
+    let dElClassElement: HTMLElement =  document.querySelector(dElClass) as HTMLElement;
     dElClassElement.style.width = "37vw";
 
     if (deactivateFromTop) {
@@ -1097,22 +1025,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
         switch (k) {
             case ".imsak":
-                imsakSVG = ensureHTMLElement(svgElement);
+                imsakSVG = svgElement as HTMLElement
                 break;
             case ".gunes":
-                gunesSVG = ensureHTMLElement(svgElement);
+                gunesSVG = svgElement as HTMLElement;
                 break;
             case ".ogle":
-                ogleSVG = ensureHTMLElement(svgElement);
+                ogleSVG = svgElement as HTMLElement
                 break;
             case ".ikindi":
-                ikindiSVG = ensureHTMLElement(svgElement);
+                ikindiSVG = svgElement as HTMLElement
                 break;
             case ".aksam":
-                aksamSVG = ensureHTMLElement(svgElement);
+                aksamSVG = svgElement as HTMLElement
                 break;
             case ".yatsi":
-                yatsiSVG = ensureHTMLElement(svgElement);
+                yatsiSVG = svgElement as HTMLElement
                 break;
         }
     });
@@ -1472,7 +1400,7 @@ const fontSizeImportantDates: FontSizeMap = {
 function autoSizeText(): void {
     const elements: HTMLElement[] = Array.from(
         document.querySelectorAll(".resize")
-    ).map((el) => ensureHTMLElement(el));
+    ).map((el) => el as HTMLElement);
 
     let fontSizeImportantDateLeft, fontSizeImportantDateRight;
 

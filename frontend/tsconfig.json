@@ -1,25 +1,16 @@
 {
     "compilerOptions": {
-        "outDir": "../dist/frontend",
-        "rootDir": "./",
-        "target": "ES2020",
-        "useDefineForClassFields": true,
-        "module": "ESNext",
-        "lib": ["ES2020", "DOM", "DOM.Iterable"],
-        "skipLibCheck": true,
-
-        /* Bundler mode */
-        "moduleResolution": "bundler",
-        "allowImportingTsExtensions": true,
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "noEmit": true,
-
-        /* Linting */
-        "strict": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "noFallthroughCasesInSwitch": true,
+      "target": "es5", // Kompatibilität mit älteren Browsern
+      "module": "es6", // Verwendung von ECMAScript-Modulen
+      "strict": true, // Aktiviert eine strengere Typüberprüfung
+      "outDir": "../dist/frontend/src", // Zielverzeichnis für kompilierten Code
+      "baseUrl": "./", // Basis-URL für die Auflösung von Modulnamen
+      "paths": { }, // Pfad-Aliase können hier definiert werden
+      "esModuleInterop": true, // Ermöglicht den Import von CommonJS-Modulen in ES6-Modulen
+      "skipLibCheck": true, // Überspringt die Typüberprüfung von .d.ts-Dateien
+      "forceConsistentCasingInFileNames": true // Erzwingt konsistente Groß-/Kleinschreibung in Dateinamen
     },
-    "include": ["./**/*.ts"],
-}
+    "include": ["./src/**/*.ts"], // Welche Dateien einbezogen werden sollen
+    "exclude": ["node_modules", "dist"] // Welche Verzeichnisse ausgeschlossen werden sollen
+  }
+   
