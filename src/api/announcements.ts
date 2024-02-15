@@ -1,17 +1,18 @@
 import express, {Request, Response} from 'express';
 import jwt, {JwtPayload} from "jsonwebtoken";
 import Announcement from "../model/announcement";
-import User from "../model/user";
 import {checkTokenExpiration, handleError} from "../utils";
-import {DeleteResult, IAnnouncement, IUser} from "../interfaces";
+import {DeleteResult, IAnnouncement} from "../interfaces";
+import { incrementApiCallCounter } from '../..';
 
 const JWT_SECRET: string = process.env.JWT_SECRET || "";
 
 
 const router = express.Router();
 
-//TODO: rename to camelCase
-router.post("/api/new-an", async (req: Request, res: Response): Promise<void> => {
+router.post("/api/newAn", async (req: Request, res: Response): Promise<void> => {
+    // api call counter
+    incrementApiCallCounter();
     const {token, startDate, endDate, text} = req.body;
 
     if (!token || !startDate || !endDate || !text) {
@@ -84,8 +85,9 @@ router.post("/api/new-an", async (req: Request, res: Response): Promise<void> =>
     }
 });
 
-//TODO: rename to camelCase
-router.get("/api/get-All-an", async (req: Request, res: Response): Promise<void> => {
+router.get("/api/getAllAn", async (req: Request, res: Response): Promise<void> => {
+    // api call counter
+    incrementApiCallCounter();
     const token = req.query.token;
 
     if (!token) {
@@ -125,6 +127,8 @@ router.get("/api/get-All-an", async (req: Request, res: Response): Promise<void>
 });
 
 router.post("/api/deleteAnnouncement", async (req: Request, res: Response): Promise<void> => {
+    // api call counter
+    incrementApiCallCounter();
     const {token, startDate} = req.body;
 
     if (!token || !startDate) {
@@ -162,8 +166,9 @@ router.post("/api/deleteAnnouncement", async (req: Request, res: Response): Prom
     }
 });
 
-//TODO: rename to camelCase
 router.get("/api/getAllAnnouncements", async (req: Request, res: Response): Promise<void> => {
+    // api call counter
+    incrementApiCallCounter();
     const urlPara = req.query.urlPara;
 
     if (!urlPara) {
