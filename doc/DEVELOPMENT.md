@@ -11,3 +11,15 @@ mongoose.connect(
   [...]
 )
 ```
+
+## redis docker image for test purposes
+```sh
+docker run --name redis-test -p 6379:6379 -d redis
+```
+
+
+## Generating OPENSSL TLS-certificate for dev purpose 
+```sh
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+```
+'-nodes' will skip the private key encryption!

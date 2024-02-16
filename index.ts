@@ -6,24 +6,28 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 dotenv.config();
 
-import userRoutes from './src/api/user';
-import announcementRoutes from './src/api/announcements';
-import tvRoutes from './src/api/tv';
+import userRoutes from "./src/api/user";
+import announcementRoutes from "./src/api/announcements";
+import tvRoutes from "./src/api/tv";
+import { client, countRequests } from "./src/redis/requestCounter";
 
-const MONGODB_CREDENTIALS: string = process.env.MONGODB || '';
+const MONGODB_CREDENTIALS: string = process.env.MONGODB || "";
 const PORT: string = process.env.PORT || "";
 
 const app = express();
+
+// redis middleware
+app.use(countRequests);
 
 async function connectToDatabase(): Promise<void> {
     try {
         await mongoose.connect(
             `mongodb+srv://${MONGODB_CREDENTIALS}@namazapp.ccw7t1d.mongodb.net/?retryWrites=true&w=majority`
         );
-        console.log('CONNECTED TO MONGODB');
+        console.log("CONNECTED TO MONGODB");
         app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
     } catch (err) {
-        console.error('FAILED TO CONNECT TO MONGODB');
+        console.error("FAILED TO CONNECT TO MONGODB");
         console.error(err);
     }
 }
@@ -43,11 +47,20 @@ app.get("/duyuru", function (req, res) {
     res.sendFile(path.join(__dirname, "frontend", "admin.html"));
 });
 
-app.use('/api/user', userRoutes);
+app.use("/api/user", userRoutes);
 
-app.use('/api/announcement', announcementRoutes)
+app.use("/api/announcement", async (req, res, next) => {
+    const key = `requests:${req.originalUrl}`;
+    try {
+        await client.incr(key);
+    } catch (err) {
+        console.error('redis failed to increment counter', err);
+    }
+    next();
+});
+app.use("/api/announcement", announcementRoutes);
 
-app.use('/api/tv', tvRoutes);
+app.use("/api/tv", tvRoutes);
 
 //TODO: unify req.query and req.body? research usecases
 //TODO: add counter for api calls?
