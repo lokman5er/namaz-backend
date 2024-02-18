@@ -39,26 +39,99 @@ let todayIsAnAnnouncement: boolean;
 
 //HTML-Elements
 const hoursHTML: HTMLElement = document.querySelector(".l-3-1") as HTMLElement;
-const minutesHTML: HTMLElement = document.querySelector(".l-3-3") as HTMLElement;
+const minutesHTML: HTMLElement = document.querySelector(
+    ".l-3-3"
+) as HTMLElement;
 
-const countdownHour: HTMLElement = document.querySelector(".countdown-hour") as HTMLElement;
-const countdownMinute: HTMLElement = document.querySelector(".countdown-minute") as HTMLElement;
+const countdownHour: HTMLElement = document.querySelector(
+    ".countdown-hour"
+) as HTMLElement;
+const countdownMinute: HTMLElement = document.querySelector(
+    ".countdown-minute"
+) as HTMLElement;
 
 const infoTitle: HTMLElement = document.querySelector(".l-4-1 ") as HTMLElement;
 const infoText: HTMLElement = document.querySelector(".l-4-2") as HTMLElement;
 const infoSource: HTMLElement = document.querySelector(".l-4-3") as HTMLElement;
 
-const dateNormal: HTMLElement = document.querySelector(".dateNormal") as HTMLElement;
-const monthNormal: HTMLElement = document.querySelector(".monthNormal") as HTMLElement;
-const yearNormal: HTMLElement = document.querySelector(".yearNormal") as HTMLElement;
+// MODAL SECTION
+const fridayModal: HTMLDialogElement = document.querySelector(
+    "#fridayModal"
+) as HTMLDialogElement;
+const fridayModalContent: HTMLElement = document.querySelector(
+    "#fridayModalContent"
+) as HTMLElement;
+const fridayModalTitle: HTMLElement = document.querySelector(
+    "#fridayModalTitle"
+) as HTMLElement;
 
-const dateHicri: HTMLElement = document.querySelector(".dateHicri") as HTMLElement;
-const monthHicri: HTMLElement = document.querySelector(".monthHicri") as HTMLElement;
-const yearHicri: HTMLElement = document.querySelector(".yearHicri") as HTMLElement;
+/**
+ * Opens the Friday modal.
+ * @returns {void}
+ */
+(document.getElementById("openBtn") as HTMLElement).addEventListener(
+    "click",
+    () => {
+        showFridayModal();
+    }
+);
 
-const point1: HTMLElement =document.querySelector("#p1") as HTMLElement;
+(document.getElementById("closeBtn") as HTMLElement).addEventListener(
+    "click",
+    () => {
+        closeFridayModal();
+    }
+);
 
-const point2: HTMLElement =document.querySelector("#p2") as HTMLElement;
+function showFridayModal(): void {
+    const fridayTitle: string = "Cuma";
+    const fridayText: string = "Cuma günüdür. Cuma namazı kılınacak.";
+
+    fridayModalTitle.innerHTML = fridayTitle;
+    fridayModalContent.innerHTML = fridayText;
+
+    fridayModal.showModal();
+    //add css class
+    fridayModal.classList.remove("dialog-fade-out");
+    fridayModal.classList.add("dialog-fade-in");
+}
+/**
+ * Closes the Friday modal.
+ * @returns {void}
+ */
+function closeFridayModal(): void {
+    fridayModal.classList.remove("dialog-fade-in");
+    fridayModal.classList.add("dialog-fade-out");
+    setTimeout(() => {
+        // let the animation finish
+        fridayModal.close();
+    }, 2000);
+}
+// END MODAL SECTION
+
+const dateNormal: HTMLElement = document.querySelector(
+    ".dateNormal"
+) as HTMLElement;
+const monthNormal: HTMLElement = document.querySelector(
+    ".monthNormal"
+) as HTMLElement;
+const yearNormal: HTMLElement = document.querySelector(
+    ".yearNormal"
+) as HTMLElement;
+
+const dateHicri: HTMLElement = document.querySelector(
+    ".dateHicri"
+) as HTMLElement;
+const monthHicri: HTMLElement = document.querySelector(
+    ".monthHicri"
+) as HTMLElement;
+const yearHicri: HTMLElement = document.querySelector(
+    ".yearHicri"
+) as HTMLElement;
+
+const point1: HTMLElement = document.querySelector("#p1") as HTMLElement;
+
+const point2: HTMLElement = document.querySelector("#p2") as HTMLElement;
 
 /**
  * Represents an array of moon elements.
@@ -72,25 +145,51 @@ const moonElements: HTMLElement[] = [
     document.querySelector(".moon5") as HTMLElement,
 ];
 
-const timeLeft: HTMLElement = document.querySelector(".timeLeft") as HTMLElement;
-const countdownText: HTMLElement = document.querySelector(".timeLeft-before") as HTMLElement;
-const timeLeftAfter: HTMLElement = document.querySelector(".timeLeft-after") as HTMLElement;
+const timeLeft: HTMLElement = document.querySelector(
+    ".timeLeft"
+) as HTMLElement;
+const countdownText: HTMLElement = document.querySelector(
+    ".timeLeft-before"
+) as HTMLElement;
+const timeLeftAfter: HTMLElement = document.querySelector(
+    ".timeLeft-after"
+) as HTMLElement;
 
-const importantDate1: HTMLElement = document.querySelector("#box1") as HTMLElement;
+const importantDate1: HTMLElement = document.querySelector(
+    "#box1"
+) as HTMLElement;
 
-const importantDate1Text: HTMLElement = document.querySelector(".l-6-2-2") as HTMLElement;
-const importantDate2Text: HTMLElement = document.querySelector(".l-6-4-2") as HTMLElement;
+const importantDate1Text: HTMLElement = document.querySelector(
+    ".l-6-2-2"
+) as HTMLElement;
+const importantDate2Text: HTMLElement = document.querySelector(
+    ".l-6-4-2"
+) as HTMLElement;
 
-const importantDate1Day: HTMLElement = document.querySelector("#importantDate1Day") as HTMLElement;
-const importantDate2Day: HTMLElement = document.querySelector("#importantDate2Day") as HTMLElement;
+const importantDate1Day: HTMLElement = document.querySelector(
+    "#importantDate1Day"
+) as HTMLElement;
+const importantDate2Day: HTMLElement = document.querySelector(
+    "#importantDate2Day"
+) as HTMLElement;
 
-const importantDate1Month: HTMLElement = document.querySelector("#importantDate1Month") as HTMLElement;
-const importantDate2Month: HTMLElement = document.querySelector("#importantDate2Month") as HTMLElement;
+const importantDate1Month: HTMLElement = document.querySelector(
+    "#importantDate1Month"
+) as HTMLElement;
+const importantDate2Month: HTMLElement = document.querySelector(
+    "#importantDate2Month"
+) as HTMLElement;
 
-const importantDate1Year: HTMLElement = document.querySelector("#importantDate1Year") as HTMLElement;
-const importantDate2Year: HTMLElement = document.querySelector("#importantDate2Year") as HTMLElement;
+const importantDate1Year: HTMLElement = document.querySelector(
+    "#importantDate1Year"
+) as HTMLElement;
+const importantDate2Year: HTMLElement = document.querySelector(
+    "#importantDate2Year"
+) as HTMLElement;
 
-const countdownContainer: HTMLElement = document.querySelector(".timeLeft") as HTMLElement;
+const countdownContainer: HTMLElement = document.querySelector(
+    ".timeLeft"
+) as HTMLElement;
 
 /**
  * Returns a formatted date string in the format "YYYY-MM-DDT00:00:00.000Z".
@@ -750,12 +849,12 @@ let importantDatesPointer = 0;
 /**
  * Represents the data for an event.
  */
-type EventData= {
+type EventData = {
     date: string;
     tr: string;
     de: string;
     ar: string;
-}
+};
 /**
  * Updates the important dates by fetching data from "importantDates.json" file.
  * @returns {Promise<void>} A promise that resolves when the important dates are updated.
@@ -772,7 +871,7 @@ async function updateImportantDates() {
 /**
  * Retrieves the next important date from the given array of EventData.
  * Updates the styles and content of the importantDate1 and importantDate2 elements accordingly.
- * 
+ *
  * @param arr - The array of EventData.
  */
 async function getNextImportantDate(arr: EventData[]) {
@@ -942,7 +1041,9 @@ function animateSvg(idx: number) {
         .duration(1000)
         .attr("font-weight", "600");
 
-    const elClassElement: HTMLElement =  document.querySelector(elClass) as HTMLElement;
+    const elClassElement: HTMLElement = document.querySelector(
+        elClass
+    ) as HTMLElement;
 
     elClassElement.style.width = "42.5vw";
 
@@ -986,7 +1087,9 @@ function animateSvg(idx: number) {
         .duration(1000)
         .attr("font-weight", "normal");
 
-    let dElClassElement: HTMLElement =  document.querySelector(dElClass) as HTMLElement;
+    let dElClassElement: HTMLElement = document.querySelector(
+        dElClass
+    ) as HTMLElement;
     dElClassElement.style.width = "37vw";
 
     if (deactivateFromTop) {
@@ -1025,22 +1128,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
         switch (k) {
             case ".imsak":
-                imsakSVG = svgElement as HTMLElement
+                imsakSVG = svgElement as HTMLElement;
                 break;
             case ".gunes":
                 gunesSVG = svgElement as HTMLElement;
                 break;
             case ".ogle":
-                ogleSVG = svgElement as HTMLElement
+                ogleSVG = svgElement as HTMLElement;
                 break;
             case ".ikindi":
-                ikindiSVG = svgElement as HTMLElement
+                ikindiSVG = svgElement as HTMLElement;
                 break;
             case ".aksam":
-                aksamSVG = svgElement as HTMLElement
+                aksamSVG = svgElement as HTMLElement;
                 break;
             case ".yatsi":
-                yatsiSVG = svgElement as HTMLElement
+                yatsiSVG = svgElement as HTMLElement;
                 break;
         }
     });
@@ -1060,7 +1163,7 @@ async function safePush(array: Element[], element: Element | null) {
 
 /**
  * Retrieves SVG elements and updates various components.
- * 
+ *
  * @returns {Promise<void>} A promise that resolves when the update is complete.
  */
 async function getSvgElements() {
@@ -1243,7 +1346,8 @@ async function changeLanguage(language: string) {
      * @returns {Promise<void>} A promise that resolves when the content is loaded.
      */
     async function loadAnnouncmentAndKnowledge(): Promise<void> {
-        const countdownObject: CountdownTextInterface = countdownTextArr[nextPrayer];
+        const countdownObject: CountdownTextInterface =
+            countdownTextArr[nextPrayer];
         countdownText.innerHTML = countdownObject[language];
 
         if (todayIsAnAnnouncement) {
@@ -1252,8 +1356,8 @@ async function changeLanguage(language: string) {
                 language === "ar"
                     ? "رسالة"
                     : language === "tr"
-                        ? "DUYURU"
-                        : "MITTEILUNG";
+                      ? "DUYURU"
+                      : "MITTEILUNG";
             infoText.innerHTML = todaysAnnouncement[language];
         } else {
             infoTitle.innerHTML =
@@ -1265,14 +1369,14 @@ async function changeLanguage(language: string) {
             language === "ar"
                 ? importantDates[importantDatesPointer]["ar"]
                 : language === "tr"
-                    ? importantDates[importantDatesPointer]["tr"]
-                    : importantDates[importantDatesPointer]["de"];
+                  ? importantDates[importantDatesPointer]["tr"]
+                  : importantDates[importantDatesPointer]["de"];
         importantDate2Text.innerHTML =
             language === "ar"
                 ? importantDates[importantDatesPointer + 1]["ar"]
                 : language === "tr"
-                    ? importantDates[importantDatesPointer + 1]["tr"]
-                    : importantDates[importantDatesPointer + 1]["de"];
+                  ? importantDates[importantDatesPointer + 1]["tr"]
+                  : importantDates[importantDatesPointer + 1]["de"];
 
         if (language === "ar") {
             importantDate1Text.style.fontFamily = "Hafs";
@@ -1383,7 +1487,7 @@ type FontSizeMap = {
     tr: string;
     ar: string;
     de: string;
-}
+};
 /**
  * Map of font sizes for important dates.
  */
