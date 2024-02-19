@@ -1,0 +1,468 @@
+[
+    {
+        "date": "23.01.2023",
+        "tr": "Üç Ayların Başlangıcı",
+        "de": "Beginn der 3 Monate",
+        "ar": "بداية الأشهر الحرم"
+    }, {
+        "date": "26.01.2023",
+        "tr": "Regaib Kandili",
+        "de": "Regaib Fest",
+        "ar": "ليلة الرغائب"
+    }, {
+        "date": "17.02.2023",
+        "tr": "Mirac Kandili",
+        "de": "Mirac Fest",
+        "ar": "معراج"
+    }, {
+        "date": "06.03.2023",
+        "tr": "Berat Kandili",
+        "de": "Berat Fest",
+        "ar": "ليلة منتصف شعبان"
+    }, {
+        "date": "23.03.2023",
+        "tr": "Ramazan Başlangıcı",
+        "de": "Start von Ramandan",
+        "ar": "بداية شهر رمضان" 
+    }, {
+        "date": "17.04.2023",
+        "tr": "Kadir Gecesi",
+        "de": "Nacht des Kadir",
+        "ar": "ليلة القدر"
+    }, {
+        "date": "20.04.2023",
+        "tr": "Arefe",
+        "de": "Tag von Arife",
+        "ar": "عرفة"
+    }, {
+        "date": "21.04.2023",
+        "tr": "Ramazan Bayramı (1. Gün)",
+        "de": "Ramadan Fest (1. Tag)",
+        "ar": "عيد الفطر (اليوم الأول)"
+    }, {
+        "date": "22.04.2023",
+        "tr": "Ramazan Bayramı (2. Gün)",
+        "de": "Ramadan Fest (2. Tag)",
+        "ar": "عيد الفطر (اليوم الثاني)"
+    }, {
+        "date": "23.04.2023",
+        "tr": "Ramazan Bayramı (3. Gün)",
+        "de": "Ramadan Fest (3. Tag)",
+        "ar": "عيد الفطر (اليوم الثالث)"
+    }, {
+        "date": "27.06.2023",
+        "tr": "Arefe",
+        "de": "Tag von Arife",
+        "ar": "عرفة"
+    }, {
+        "date": "28.06.2023",
+        "tr": "Kurban Bayramı (1. Gün)",
+        "de": "Opferfest (1. Tag)",
+        "ar": "عيد الأضحى (اليوم الأول)"
+    }, {
+        "date": "29.06.2023",
+        "tr": "Kurban Bayramı (2. Gün)",
+        "de": "Opferfest (2. Tag)",
+        "ar": "عيد الأضحى (اليوم الثاني)"
+    }, {
+        "date": "30.06.2023",
+        "tr": "Kurban Bayramı (3. Gün)",
+        "de": "Opferfest (3. Tag)",
+        "ar": "عيد الأضحى (اليوم الثالث)"
+    }, {
+        "date": "01.07.2023",
+        "tr": "Kurban Bayramı (4. Gün)",
+        "de": "Opferfest (4. Tag)",
+        "ar": "عيد الأضحى (يوم 4)"
+    }, {
+        "date": "19.07.2023",
+        "tr": "Hicri Yılbaşı",
+        "de": "Islamisches Neujahr",
+        "ar": "فاتح السنة الهجرية"
+    }, {
+        "date": "28.07.2023",
+        "tr": "Aşure Günü",
+        "de": "Tag der Aschure",
+        "ar": "عاشوراء"
+    }, {
+        "date": "26.09.2023",
+        "tr": "Mevlid Kandili",
+        "de": "Mevlid Fest",
+        "ar": "لیلة مواليد"
+    }, { 
+        "date": "11.01.2024",
+        "tr": "Regaib Kandili",
+        "de": "Regaib Fest",
+        "ar": "ليلة الرغائب"
+    }, {
+        "date": "12.01.2024",
+        "tr": "Üç Ayların Başlangıcı",
+        "de": "Beginn der 3 Monate",
+        "ar": "بداية الأشهر الحرم"
+    }, {
+        "date": "06.02.2024",
+        "tr": "Mirac Kandili",
+        "de": "Mirac Fest",
+        "ar": "معراج"
+    }, {
+        "date": "24.02.2024",
+        "tr": "Berat Kandili",
+        "de": "Berat Fest",
+        "ar": "ليلة منتصف شعبان"
+    }, {
+        "date": "11.03.2024",
+        "tr": "Ramazan Başlangıcı",
+        "de": "Start von Ramandan",
+        "ar": "بداية شهر رمضان" 
+    }, {
+        "date": "05.04.2024",
+        "tr": "Kadir Gecesi",
+        "de": "Nacht des Kadir",
+        "ar": "ليلة القدر"
+    }, {
+        "date": "09.04.2024",
+        "tr": "Arefe",
+        "de": "Tag von Arife",
+        "ar": "عرفة"
+    }, {
+        "date": "10.04.2024",
+        "tr": "Ramazan Bayramı (1. Gün)",
+        "de": "Ramadan Fest (1. Tag)",
+        "ar": "عيد الفطر (اليوم الأول)"
+    }, {
+        "date": "11.04.2024",
+        "tr": "Ramazan Bayramı (2. Gün)",
+        "de": "Ramadan Fest (2. Tag)",
+        "ar": "عيد الفطر (اليوم الثاني)"
+    }, {
+        "date": "12.04.2024",
+        "tr": "Ramazan Bayramı (3. Gün)",
+        "de": "Ramadan Fest (3. Tag)",
+        "ar": "عيد الفطر (اليوم الثالث)"
+    }, {
+        "date": "15.06.2024",
+        "tr": "Arefe",
+        "de": "Tag von Arife",
+        "ar": "عرفة"
+    }, {
+        "date": "16.06.2024",
+        "tr": "Kurban Bayramı (1. Gün)",
+        "de": "Opferfest (1. Tag)",
+        "ar": "عيد الأضحى (اليوم الأول)"
+    }, {
+        "date": "17.06.2024",
+        "tr": "Kurban Bayramı (2. Gün)",
+        "de": "Opferfest (2. Tag)",
+        "ar": "عيد الأضحى (اليوم الثاني)"
+    }, {
+        "date": "18.06.2024",
+        "tr": "Kurban Bayramı (3. Gün)",
+        "de": "Opferfest (3. Tag)",
+        "ar": "عيد الأضحى (اليوم الثالث)"
+    }, {
+        "date": "19.06.2024",
+        "tr": "Kurban Bayramı (4. Gün)",
+        "de": "Opferfest (4. Tag)",
+        "ar": "عيد الأضحى (يوم 4)"
+    }, {
+        "date": "07.07.2024",
+        "tr": "Hicri Yılbaşı",
+        "de": "Islamisches Neujahr",
+        "ar": "فاتح السنة الهجرية"
+    }, {
+        "date": "16.07.2024",
+        "tr": "Aşure Günü",
+        "de": "Tag der Aschure",
+        "ar": "عاشوراء"
+    }, {
+        "date": "14.09.2024",
+        "tr": "Mevlid Kandili",
+        "de": "Mevlid Fest",
+        "ar": "لیلة مواليد"
+    }, {
+        "date": "01.01.2025",
+        "tr": "Üç Ayların Başlangıcı",
+        "de": "Beginn der 3 Monate",
+        "ar": "بداية الأشهر الحرم"
+    }, {
+        "date": "02.01.2025",
+        "tr": "Regaib Kandili",
+        "de": "Regaib Fest",
+        "ar": "ليلة الرغائب"
+    }, {
+        "date": "26.01.2025",
+        "tr": "Mirac Kandili",
+        "de": "Mirac Fest",
+        "ar": "معراج"
+    }, {
+        "date": "13.02.2025",
+        "tr": "Berat Kandili",
+        "de": "Berat Fest",
+        "ar": "ليلة منتصف شعبان"
+    }, {
+        "date": "01.03.2025",
+        "tr": "Ramazan Başlangıcı",
+        "de": "Start von Ramandan",
+        "ar": "بداية شهر رمضان" 
+    }, {
+        "date": "26.03.2025",
+        "tr": "Kadir Gecesi",
+        "de": "Nacht des Kadir",
+        "ar": "ليلة القدر"
+    }, {
+        "date": "29.03.2025",
+        "tr": "Arefe",
+        "de": "Tag von Arife",
+        "ar": "عرفة"
+    }, {
+        "date": "30.03.2025",
+        "tr": "Ramazan Bayramı (1. Gün)",
+        "de": "Ramadan Fest (1. Tag)",
+        "ar": "عيد الفطر (اليوم الأول)"
+    }, {
+        "date": "31.03.2025",
+        "tr": "Ramazan Bayramı (2. Gün)",
+        "de": "Ramadan Fest (2. Tag)",
+        "ar": "عيد الفطر (اليوم الثاني)"
+    }, {
+        "date": "01.04.2025",
+        "tr": "Ramazan Bayramı (3. Gün)",
+        "de": "Ramadan Fest (3. Tag)",
+        "ar": "عيد الفطر (اليوم الثالث)"
+    }, {
+        "date": "05.06.2025",
+        "tr": "Arefe",
+        "de": "Tag von Arife",
+        "ar": "عرفة"
+    }, {
+        "date": "06.06.2025",
+        "tr": "Kurban Bayramı (1. Gün)",
+        "de": "Opferfest (1. Tag)",
+        "ar": "عيد الأضحى (اليوم الأول)"
+    }, {
+        "date": "07.06.2025",
+        "tr": "Kurban Bayramı (2. Gün)",
+        "de": "Opferfest (2. Tag)",
+        "ar": "عيد الأضحى (اليوم الثاني)"
+    }, {
+        "date": "08.06.2025",
+        "tr": "Kurban Bayramı (3. Gün)",
+        "de": "Opferfest (3. Tag)",
+        "ar": "عيد الأضحى (اليوم الثالث)"
+    }, {
+        "date": "09.06.2025",
+        "tr": "Kurban Bayramı (4. Gün)",
+        "de": "Opferfest (4. Tag)",
+        "ar": "عيد الأضحى (يوم 4)"
+    }, {
+        "date": "26.06.2025",
+        "tr": "Hicri Yılbaşı",
+        "de": "Islamisches Neujahr",
+        "ar": "فاتح السنة الهجرية"
+    }, {
+        "date": "05.07.2025",
+        "tr": "Aşure Günü",
+        "de": "Tag der Aschure",
+        "ar": "عاشوراء"
+    }, {
+        "date": "03.09.2025",
+        "tr": "Mevlid Kandili",
+        "de": "Mevlid Fest",
+        "ar": "لیلة مواليد"
+    }, {
+        "date": "21.12.2025",
+        "tr": "Üç Ayların Başlangıcı",
+        "de": "Beginn der 3 Monate",
+        "ar": "بداية الأشهر الحرم"
+    }, {
+        "date": "25.12.2025",
+        "tr": "Regaib Kandili",
+        "de": "Regaib Fest",
+        "ar": "ليلة الرغائب"
+    }, {
+        "date": "15.01.2026",
+        "tr": "Mirac Kandili",
+        "de": "Mirac Fest",
+        "ar": "معراج"
+    }, {
+        "date": "02.02.2026",
+        "tr": "Berat Kandili",
+        "de": "Berat Fest",
+        "ar": "ليلة منتصف شعبان"
+    }, {
+        "date": "19.02.2026",
+        "tr": "Ramazan Başlangıcı",
+        "de": "Start von Ramandan",
+        "ar": "بداية شهر رمضان" 
+    }, {
+        "date": "16.03.2026",
+        "tr": "Kadir Gecesi",
+        "de": "Nacht des Kadir",
+        "ar": "ليلة القدر"
+    }, {
+        "date": "19.03.2026",
+        "tr": "Arefe",
+        "de": "Tag von Arife",
+        "ar": "عرفة"
+    }, {
+        "date": "20.03.2026",
+        "tr": "Ramazan Bayramı (1. Gün)",
+        "de": "Ramadan Fest (1. Tag)",
+        "ar": "عيد الفطر (اليوم الأول)"
+    }, {
+        "date": "21.03.2026",
+        "tr": "Ramazan Bayramı (2. Gün)",
+        "de": "Ramadan Fest (2. Tag)",
+        "ar": "عيد الفطر (اليوم الثاني)"
+    }, {
+        "date": "22.03.2026",
+        "tr": "Ramazan Bayramı (3. Gün)",
+        "de": "Ramadan Fest (3. Tag)",
+        "ar": "عيد الفطر (اليوم الثالث)"
+    }, {
+        "date": "26.05.2026",
+        "tr": "Arefe",
+        "de": "Tag von Arife",
+        "ar": "عرفة"
+    }, {
+        "date": "27.05.2026",
+        "tr": "Kurban Bayramı (1. Gün)",
+        "de": "Opferfest (1. Tag)",
+        "ar": "عيد الأضحى (اليوم الأول)"
+    }, {
+        "date": "28.05.2026",
+        "tr": "Kurban Bayramı (2. Gün)",
+        "de": "Opferfest (2. Tag)",
+        "ar": "عيد الأضحى (اليوم الثاني)"
+    }, {
+        "date": "29.05.2026",
+        "tr": "Kurban Bayramı (3. Gün)",
+        "de": "Opferfest (3. Tag)",
+        "ar": "عيد الأضحى (اليوم الثالث)"
+    }, {
+        "date": "30.05.2026",
+        "tr": "Kurban Bayramı (4. Gün)",
+        "de": "Opferfest (4. Tag)",
+        "ar": "عيد الأضحى (يوم 4)"
+    }, {
+        "date": "16.06.2026",
+        "tr": "Hicri Yılbaşı",
+        "de": "Islamisches Neujahr",
+        "ar": "فاتح السنة الهجرية"
+    }, {
+        "date": "25.06.2026",
+        "tr": "Aşure Günü",
+        "de": "Tag der Aschure",
+        "ar": "عاشوراء"
+    }, {
+        "date": "24.08.2026",
+        "tr": "Mevlid Kandili",
+        "de": "Mevlid Fest",
+        "ar": "لیلة مواليد"
+    }, {
+        "date": "10.12.2026",
+        "tr": "Üç Ayların Başlangıcı",
+        "de": "Beginn der 3 Monate",
+        "ar": "بداية الأشهر الحرم"
+    }, {
+        "date": "10.12.2026",
+        "tr": "Regaib Kandili",
+        "de": "Regaib Fest",
+        "ar": "ليلة الرغائب"
+    }, {
+        "date": "04.01.2027",
+        "tr": "Mirac Kandili",
+        "de": "Mirac Fest",
+        "ar": "معراج"
+    }, {
+        "date": "22.01.2027",
+        "tr": "Berat Kandili",
+        "de": "Berat Fest",
+        "ar": "ليلة منتصف شعبان"
+    }, {
+        "date": "08.02.2027",
+        "tr": "Ramazan Başlangıcı",
+        "de": "Start von Ramandan",
+        "ar": "بداية شهر رمضان" 
+    }, {
+        "date": "05.03.2027",
+        "tr": "Kadir Gecesi",
+        "de": "Nacht des Kadir",
+        "ar": "ليلة القدر"
+    }, {
+        "date": "08.03.2027",
+        "tr": "Arefe",
+        "de": "Tag von Arife",
+        "ar": "عرفة"
+    }, {
+        "date": "09.03.2027",
+        "tr": "Ramazan Bayramı (1. Gün)",
+        "de": "Ramadan Fest (1. Tag)",
+        "ar": "عيد الفطر (اليوم الأول)"
+    }, {
+        "date": "10.03.2027",
+        "tr": "Ramazan Bayramı (2. Gün)",
+        "de": "Ramadan Fest (2. Tag)",
+        "ar": "عيد الفطر (اليوم الثاني)"
+    }, {
+        "date": "11.03.2027",
+        "tr": "Ramazan Bayramı (3. Gün)",
+        "de": "Ramadan Fest (3. Tag)",
+        "ar": "عيد الفطر (اليوم الثالث)"
+    }, {
+        "date": "15.05.2027",
+        "tr": "Arefe",
+        "de": "Tag von Arife",
+        "ar": "عرفة"
+    }, {
+        "date": "16.05.2027",
+        "tr": "Kurban Bayramı (1. Gün)",
+        "de": "Opferfest (1. Tag)",
+        "ar": "عيد الأضحى (اليوم الأول)"
+    }, {
+        "date": "17.05.2027",
+        "tr": "Kurban Bayramı (2. Gün)",
+        "de": "Opferfest (2. Tag)",
+        "ar": "عيد الأضحى (اليوم الثاني)"
+    }, {
+        "date": "18.05.2027",
+        "tr": "Kurban Bayramı (3. Gün)",
+        "de": "Opferfest (3. Tag)",
+        "ar": "عيد الأضحى (اليوم الثالث)"
+    }, {
+        "date": "19.05.2027",
+        "tr": "Kurban Bayramı (4. Gün)",
+        "de": "Opferfest (4. Tag)",
+        "ar": "عيد الأضحى (يوم 4)"
+    }, {
+        "date": "06.06.2027",
+        "tr": "Hicri Yılbaşı",
+        "de": "Islamisches Neujahr",
+        "ar": "فاتح السنة الهجرية"
+    }, {
+        "date": "15.06.2027",
+        "tr": "Aşure Günü",
+        "de": "Tag der Aschure",
+        "ar": "عاشوراء"
+    }, {
+        "date": "13.08.2027",
+        "tr": "Mevlid Kandili",
+        "de": "Mevlid Fest",
+        "ar": "لیلة مواليد"
+    }, {
+        "date": "29.11.2027",
+        "tr": "Üç Ayların Başlangıcı",
+        "de": "Beginn der 3 Monate",
+        "ar": "بداية الأشهر الحرم"
+    }, {
+        "date": "02.12.2027",
+        "tr": "Regaib Kandili",
+        "de": "Regaib Fest",
+        "ar": "ليلة الرغائب"
+    }, {
+        "date": "24.12.2027",
+        "tr": "Mirac Kandili",
+        "de": "Mirac Fest",
+        "ar": "معراج"
+    }
+]
