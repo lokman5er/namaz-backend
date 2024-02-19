@@ -1,6 +1,8 @@
 import {Response} from "express";
 import jwt, {JwtPayload} from "jsonwebtoken";
 import {Context, Telegraf} from 'telegraf';
+import axios from 'axios';
+import {TranslationResult} from "./interfaces";
 
 export function handleError(res: Response, error: unknown, serverLogMessage: string): void {
     console.error(serverLogMessage, error);
@@ -39,4 +41,30 @@ export function createMongooseDate(input: string): Date {
 export async function sendMessageToTelegramGroup(message: string): Promise<void> {
     const bot: Telegraf<Context> = new Telegraf(process.env.TELEGRAM_CREDENTIALS);
     await bot.telegram.sendMessage(process.env.TELEGRAM_GROUP_ID, message);
+}
+
+export async function translateText(text: string, targetLanguage: string): Promise<TranslationResult> {
+    const endpoint = 'https://api-free.deepl.com/v2/translate';
+    const authKey = process.env.DEEPL_API_KEY;
+
+    try {
+        const response = await axios.post(endpoint, {
+            text: [text],
+            target_lang: targetLanguage,
+        }, {
+            headers: {
+                'Authorization': `DeepL-Auth-Key ${authKey}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.error('Axios error:', error.response?.data || error.message);
+        } else {
+            console.error('Unexpected error:', error);
+        }
+        throw error;
+    }
 }

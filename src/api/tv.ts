@@ -47,7 +47,7 @@ router.get("/getDailyData", async (req: Request, res: Response): Promise<void> =
     }
 });
 
-router.post('/api/log-error', async (req: Request, res: Response): Promise<void> => {
+router.post('/log-error', async (req: Request, res: Response): Promise<void> => {
     console.log('Error received from client:', req.body);
     await sendMessageToTelegramGroup(req.body);
     res.status(204).send();

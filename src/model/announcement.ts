@@ -3,9 +3,9 @@ import {IAnnouncement} from "../interfaces";
 
 const AnnouncementSchema = new Schema<IAnnouncement>(
     {
-        urlPara: {
-            type: String,
-            required: true,
+        userId: {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
         },
         text: {
             tr: { type: String, required: true },

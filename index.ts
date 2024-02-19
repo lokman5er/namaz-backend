@@ -6,14 +6,19 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 dotenv.config();
 
-import userRoutes from "./src/api/user";
-import announcementRoutes from "./src/api/announcements";
-import tvRoutes from "./src/api/tv";
+import userRoutes from './src/api/user';
+import announcementRoutes from './src/api/announcements';
+import tvRoutes from './src/api/tv';
+import appRoutes from './src/api/app';
 
-const MONGODB_CREDENTIALS: string = process.env.MONGODB || "";
+const MONGODB_CREDENTIALS: string = process.env.MONGODB || '';
 const PORT: string = process.env.PORT || "";
 
 const app = express();
+
+import cors from 'cors';
+app.use(cors());
+
 
 async function connectToDatabase(): Promise<void> {
     try {
@@ -48,6 +53,8 @@ app.use("/api/user", userRoutes);
 app.use("/api/announcement", announcementRoutes);
 
 app.use("/api/tv", tvRoutes);
+
+app.use('/api/app', appRoutes);
 
 //TODO: unify req.query and req.body? research usecases
 //TODO: add counter for api calls?

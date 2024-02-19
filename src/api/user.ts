@@ -222,6 +222,8 @@ router.get("/check-token", async (req: Request, res: Response): Promise<void> =>
     }
 });
 
+// ################################################## APP API START ##################################################
+
 router.post('/app/login', async (req: Request, res: Response): Promise<void> => {
     const {username, password} = req.body;
 
@@ -230,7 +232,7 @@ router.post('/app/login', async (req: Request, res: Response): Promise<void> => 
         return;
     }
 
-    const user: IUser = await User.findOne({username}).lean();
+    const user: IUser = await User.findOne({ username: new RegExp(`^${username}$`, 'i') }).lean();
 
     if (!user) {
         res.status(400).send("Invalid username/password");
@@ -242,7 +244,7 @@ router.post('/app/login', async (req: Request, res: Response): Promise<void> => 
 
         const token = jwt.sign(
             {
-                id: user._id,
+                userId: user._id,
                 username: user.username,
                 urlPara: user.urlPara,
             },
@@ -252,7 +254,7 @@ router.post('/app/login', async (req: Request, res: Response): Promise<void> => 
 
         await User.updateOne({username: user.username}, {$set: {token}});
 
-        res.status(200).send("Login was successfully");
+        res.status(200).json({token});
         return;
     }
 
