@@ -1,4 +1,3 @@
-//@ts-ignore
 const serverUrl: string = "https://namaz-backend.herokuapp.com";
 // edit these for local testing
 
