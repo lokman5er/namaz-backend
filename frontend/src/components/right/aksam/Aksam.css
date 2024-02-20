@@ -1,0 +1,10 @@
+.aksam {
+    position: absolute;
+    width: 37vw;
+    bottom: 20%;
+    transform: translateY(32%);
+    opacity: 1;
+    transition: 0.65s ease;
+
+    /* background-color: rgb(138, 138, 138); */
+}

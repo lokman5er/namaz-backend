@@ -1,0 +1,10 @@
+.ogle {
+    position: absolute;
+    width: 37vw;
+    top: 35%;
+    right: 0%;
+    opacity: 1;
+    transition: 0.65s ease;
+
+    /* background-color: rgb(242, 0, 255); */
+}

@@ -1,0 +1,66 @@
+.l-3 {
+    height: 20%;
+    width: 85%;
+    background-color: #d5e7ea;
+    border-radius: 50px;
+    position: relative;
+}
+
+.l-3-timecontainer {
+    color: #1f4e5f;
+    font-weight: 800;
+    font-size: 7vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 75%;
+}
+
+.timeLeft {
+    position: absolute;
+    bottom: 3%;
+    width: 85%;
+    height: 20%;
+    margin-left: 7.5%;
+    font-size: 1.5vw;
+    color: #1f4e5f;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.timeLeft-before {
+    font-weight: 500;
+}
+
+.timeLeft-after {
+    font-weight: bold;
+}
+
+.seperator {
+    position: absolute;
+    top: 72%;
+    width: 90%;
+    left: 5%;
+}
+
+.timeMiddle {
+    position: relative;
+    top: -2px;
+}
+
+.l-3-1 {
+    overflow: hidden;
+    width: 47.5%;
+}
+
+.l-3-2 {
+    margin-top: -1vh;
+    width: 5%;
+}
+
+.l-3-3 {
+    overflow: hidden;
+    width: 47.5%;
+}
+

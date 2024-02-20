@@ -1,0 +1,41 @@
+.l-2 {
+    height: 10%;
+    width: 85%;
+    font-size: 2vw;
+    line-height: 10vh;
+    color: #d5e7ea;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.l-2-1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 46%;
+}
+
+.l-2-3 {
+    width: 46%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dateNormal,
+.dateHicri {
+    padding-right: 7px;
+}
+
+.monthNormal,
+.monthHicri {
+    padding: 0 7px;
+    font-weight: 800;
+}
+
+.yearNormal,
+.yearHicri {
+    padding-left: 10px;
+}

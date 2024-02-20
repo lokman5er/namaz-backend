@@ -1,0 +1,10 @@
+.yatsi {
+    position: absolute;
+    width: 37vw;
+    bottom: 2%;
+    transform: translateY(17%);
+    opacity: 1;
+    transition: 0.65s ease;
+
+    /* background-color: red; */
+}

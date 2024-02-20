@@ -1,0 +1,8 @@
+.imsak {
+    position: absolute;
+    width: 37vw;
+    top: 2%;
+    opacity: 1;
+    transition: 0.65s ease;
+    /* background-color: red; */
+}

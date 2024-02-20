@@ -1,0 +1,118 @@
+.l-6 {
+    height: 15%;
+    width: 95%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.l-6-1,
+.l-6-5 {
+    color: #3b6773;
+}
+
+.l-6-3 {
+    color: #d5e7ea;
+}
+
+.l6-title {
+    font-size: 2vw;
+    height: 50%;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    padding: 0;
+    line-height: 100%;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.l6-description {
+    font-size: 1.5vw;
+    font-style: italic;
+    font-weight: light;
+    width: 90%;
+    height: 40%;
+    padding: 0 3vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.l-6 {
+    height: 15%;
+    width: 95%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.l-6-1,
+.l-6-5 {
+    color: #3b6773;
+}
+
+.l-6-3 {
+    color: #d5e7ea;
+}
+
+.tri {
+    font-size: 2vw;
+    width: 10%;
+}
+
+.rec {
+    width: 35%;
+    height: 65%;
+    background-color: #d5e7ea;
+    border-radius: 20px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    color: #1f4e5f;
+}
+
+#box1 {
+    transition: 0.65s ease;
+}
+
+.l6-title {
+    font-size: 2vw;
+    height: 50%;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    padding: 0;
+    line-height: 100%;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.l6-description {
+    font-size: 1.5vw;
+    font-style: italic;
+    font-weight: light;
+    width: 90%;
+    height: 40%;
+    padding: 0 3vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#importantDate1Day,
+#importantDate2Day {
+    padding-right: 5px;
+}
+
+#importantDate1Month,
+#importantDate2Month {
+    padding: 0 5px;
+}
+
+#importantDate1Year,
+#importantDate2Year {
+    padding-left: 7px;
+}
+

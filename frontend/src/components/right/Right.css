@@ -1,0 +1,19 @@
+.right {
+    width: 48%;
+    height: 100vh;
+    background-color: #d5e7ea;
+    border-top-left-radius: 100px;
+    border-bottom-left-radius: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    flex-direction: column;
+    color: white;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 3.5vw;
+    line-height: 7vh;
+    position: relative;
+    overflow: hidden;
+}
+

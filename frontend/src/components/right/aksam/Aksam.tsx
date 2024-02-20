@@ -1,0 +1,188 @@
+import "./Aksam.css";
+
+function Aksam() {
+    return (
+        <>
+            <svg
+                id="aksam"
+                className="aksam"
+                data-name="aksam"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 775.92 228.35"
+            >
+                <defs>
+                    <style type="text/css">
+                        {`   @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900");
+                            @font-face {
+                                font - family: "Hafs";
+                            src: url("hafs.otf");
+                            fontWeight: normal;
+                       `}
+                    </style>
+                    <linearGradient
+                        id="linear-gradient"
+                        x1="2394.8"
+                        y1="-1218.57"
+                        x2="2394.72"
+                        y2="-995.63"
+                        gradientTransform="translate(-864.7 2404.26) rotate(-36.02)"
+                        gradientUnits="userSpaceOnUse"
+                    >
+                        <stop offset="0" stopColor="#083640" />
+                        <stop
+                            offset="0.81"
+                            stopColor="#083640"
+                            stopOpacity="0"
+                        />
+                    </linearGradient>
+                    <linearGradient
+                        id="linear-gradient-2"
+                        x1="276.3"
+                        y1="70.18"
+                        x2="422.55"
+                        y2="70.18"
+                        gradientUnits="userSpaceOnUse"
+                    >
+                        <stop id="stop1" offset="0" stopColor="#2c7291" />
+                        <stop id="stop2" offset="1" stopColor="#1f5260" />
+                    </linearGradient>
+                </defs>
+                <title>Artboard 7 copy</title>
+                <rect
+                    id="s1"
+                    fill="#2c7291"
+                    x="386.98"
+                    y="0.01"
+                    width="388.94"
+                    height="108.21"
+                />
+                <path
+                    id="s2"
+                    fill="url(#linear-gradient)"
+                    d="M431,22.29h0A54.11,54.11,0,0,0,343.5,85.93h0l91.2,142.42,103.69-75.41Z"
+                />
+                <path
+                    id="s3"
+                    fill="url(#linear-gradient-2)"
+                    d="M440.33,54.12c0-.91,0-1.81-.07-2.71,0-.18,0-.36,0-.55,0-.72-.09-1.44-.16-2.16,0-.18-.05-.36-.07-.54q-.11-1.08-.27-2.16c0-.14-.05-.27-.07-.41-.12-.77-.25-1.53-.41-2.29,0-.07,0-.14,0-.21A54.48,54.48,0,0,0,392.65.1c-.15,0-1.29,0-2.87.07C388.61.09,387.43,0,386.24,0a54.56,54.56,0,0,0-7.83.57h-.08l-.24,0-.18,0-83.84,12.8,25.62,126.85,86.72-35.78v0a54.58,54.58,0,0,0,31.45-34.19l.06-.22c.23-.72.43-1.44.62-2.17,0-.16.09-.32.13-.48.16-.65.31-1.3.45-2l.15-.69c.12-.6.22-1.2.32-1.8.05-.29.1-.57.14-.85.09-.57.15-1.15.22-1.72,0-.32.08-.63.11-1,.06-.58.1-1.16.13-1.75,0-.31.06-.62.07-.93,0-.83.06-1.66.06-2.5,0-.06,0-.13,0-.19Z"
+                />
+                <path
+                    id="s4"
+                    fill="#1f5260"
+                    d="M294.51,13.49l41.11-3.6c-.7,0-41-.05-41.7-.05H66a66,66,0,0,0,0,132H293.92a65.77,65.77,0,0,0,27.35-5.94Z"
+                />
+                <path
+                    id="s1"
+                    fill="#2c7291"
+                    d="M358.67,79.85a66.41,66.41,0,0,0-64.6-66.38v0H66.42a66.42,66.42,0,1,0,0,132.83c.39,0,.77,0,1.16,0H291.09c.39,0,.77,0,1.16,0l1.17,0h.65A66.41,66.41,0,0,0,358.67,79.85Z"
+                />
+                <text
+                    id="tr"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    x="180"
+                    y="85"
+                    fontSize="1.2em"
+                    fill="white"
+                    fontWeight="bold"
+                    className="text"
+                    opacity="1"
+                    style={{ fontFamily: "Montserrat, sans-serif" }}
+                >
+                    İKİNDİ
+                </text>
+                <text
+                    id="ar"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    x="180"
+                    y="85"
+                    fontSize="1.2em"
+                    fill="white"
+                    fontWeight="bold"
+                    className="text"
+                    opacity="0"
+                    style={{ fontFamily: "Hafs" }}
+                >
+                    العصر
+                </text>
+                <text
+                    id="de"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    x="180"
+                    y="85"
+                    fontSize="0.9em"
+                    fill="white"
+                    fontWeight="bold"
+                    className="text"
+                    opacity="0"
+                    style={{ fontFamily: "Montserrat, sans-serif" }}
+                >
+                    NACHM.
+                </text>
+                <text
+                    textAnchor="middle"
+                    x="535"
+                    y="80"
+                    fontSize="1.2em"
+                    fill="white"
+                    fontWeight="normal"
+                    className="hour1 time"
+                    style={{ fontFamily: "Montserrat, sans-serif" }}
+                >
+                    0
+                </text>
+                <text
+                    textAnchor="middle"
+                    x="582"
+                    y="80"
+                    fontSize="1.2em"
+                    fill="white"
+                    fontWeight="normal"
+                    className="hour2 time"
+                    style={{ fontFamily: "Montserrat, sans-serif" }}
+                >
+                    0
+                </text>
+                <text
+                    x="610"
+                    y="75"
+                    fontSize="1.2em"
+                    fill="white"
+                    fontWeight="normal"
+                    className="time"
+                    style={{ fontFamily: "Montserrat, sans-serif" }}
+                >
+                    :
+                </text>
+                <text
+                    textAnchor="middle"
+                    x="653"
+                    y="80"
+                    fontSize="1.2em"
+                    fill="white"
+                    fontWeight="normal"
+                    className="minute1 time"
+                    style={{ fontFamily: "Montserrat, sans-serif" }}
+                >
+                    0
+                </text>
+                <text
+                    textAnchor="middle"
+                    x="701"
+                    y="80"
+                    fontSize="1.2em"
+                    fill="white"
+                    fontWeight="normal"
+                    className="minute2 time"
+                    style={{ fontFamily: "Montserrat, sans-serif" }}
+                >
+                    0
+                </text>
+            </svg>
+        </>
+    );
+}
+
+export default Aksam;

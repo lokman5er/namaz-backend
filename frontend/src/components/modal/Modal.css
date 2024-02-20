@@ -1,0 +1,54 @@
+dialog {
+    border: 2px solid #000;
+    border-radius: 5px;
+    padding: 20px;
+    width: 100vw;
+    height: 100vh;
+    opacity: 0;
+}
+
+#modalTitle {
+    font-size: 2.5vw;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 2vh;
+    height: 7vh;
+}
+
+#modalContent {
+    font-size: 2vw;
+    text-align: justify;
+    height: 70vh;
+    overflow-y: auto;
+    padding-right: 2vw;
+    padding-left: 2vw;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+.dialog-fade-in {
+    animation: fadeIn 1.5s forwards;
+}
+
+.dialog-fade-out {
+    animation: fadeOut 1.5s forwards;
+}
+

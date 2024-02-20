@@ -1,0 +1,9 @@
+.ikindi {
+    position: absolute;
+    opacity: 1;
+    width: 37vw;
+    bottom: 35%;
+    transform: translateY(35%);
+    /* background-color: rgb(55, 0, 255); */
+    transition: 0.65s ease;
+}
