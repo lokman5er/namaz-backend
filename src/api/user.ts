@@ -101,7 +101,7 @@ router.post("/change-password", async (req: Request, res: Response): Promise<voi
     }
 
     try {
-        const user: IUser = await User.findOne({urlPara});
+        const user: IUser = await User.findOne({urlPara}) as IUser;
         userId = user?.id;
 
         const password = await bcrypt.hash(newpassword, 12);
@@ -128,7 +128,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
         return;
     }
 
-    const user: IUser = await User.findOne({username}).lean();
+    const user: IUser = await User.findOne({username}).lean() as IUser;
 
     if (!user) {
         res.status(400).send("Invalid username/password");
@@ -232,7 +232,7 @@ router.post('/app/login', async (req: Request, res: Response): Promise<void> => 
         return;
     }
 
-    const user: IUser = await User.findOne({ username: new RegExp(`^${username}$`, 'i') }).lean();
+    const user: IUser = await User.findOne({ username: new RegExp(`^${username}$`, 'i') }).lean() as IUser;
 
     if (!user) {
         res.status(400).send("Invalid username/password");

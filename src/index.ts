@@ -6,10 +6,10 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 dotenv.config();
 
-import userRoutes from './src/api/user';
-import announcementRoutes from './src/api/announcements';
-import tvRoutes from './src/api/tv';
-import appRoutes from './src/api/app';
+import userRoutes from './api/user';
+import announcementRoutes from './api/announcements';
+import tvRoutes from './api/tv';
+import appRoutes from './api/app';
 
 const MONGODB_CREDENTIALS: string = process.env.MONGODB || '';
 const PORT: string = process.env.PORT || "";

@@ -39,8 +39,8 @@ export function createMongooseDate(input: string): Date {
 }
 
 export async function sendMessageToTelegramGroup(message: string): Promise<void> {
-    const bot: Telegraf<Context> = new Telegraf(process.env.TELEGRAM_CREDENTIALS);
-    await bot.telegram.sendMessage(process.env.TELEGRAM_GROUP_ID, message);
+    const bot: Telegraf<Context> = new Telegraf(process.env.TELEGRAM_CREDENTIALS as string);
+    await bot.telegram.sendMessage(process.env.TELEGRAM_GROUP_ID as string, message);
 }
 
 export async function translateText(text: string, targetLanguage: string): Promise<TranslationResult> {

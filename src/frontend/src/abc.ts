@@ -1,0 +1,1 @@
+export const henlo = () => console.log('modular!');

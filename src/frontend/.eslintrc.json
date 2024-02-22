@@ -1,0 +1,19 @@
+{
+    "root": true,
+    "env": {
+        "node": false,
+        "browser": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "prettier"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": { "project": ["./tsconfig.json"] },
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "rules": {
+    },
+    "ignorePatterns": ["src/**/*.test.ts", "src/frontend/generated/*"]
+}

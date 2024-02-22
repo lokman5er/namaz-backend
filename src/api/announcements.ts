@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import Announcement from "../model/announcement";
 import { checkTokenExpiration, handleError } from "../utils";
-import { DeleteResult, IAnnouncement } from "../interfaces";
+import { DeleteResult, IAnnouncement, ITokenPayload } from "../interfaces";
 
 const JWT_SECRET: string = process.env.JWT_SECRET || "";
 
@@ -143,7 +143,7 @@ router.post("/api/deleteAnnouncement", async (req: Request, res: Response): Prom
                 startDate
             });
 
-            if (result.deletedCount > 0) {
+            if (result.deletedCount && result.deletedCount > 0) {
                 res.status(200).send("Announcement deleted successfully");
             } else {
                 res.status(404).send("No announcement found to delete");

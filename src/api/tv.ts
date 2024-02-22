@@ -16,7 +16,7 @@ router.get("/getDailyData", async (req: Request, res: Response): Promise<void> =
 
     const user: IUser = await User.findOne({
         username,
-    });
+    }) as IUser;
 
     if (!user) {
         res.status(404).send("No user found with username: " + username);
