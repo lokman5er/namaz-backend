@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./Clock.css";
 
 function Clock() {
-    const [time, setTime] = useState({ hours: "", minutes: "" });
+    const [time, setTime] = useState({ hours: "", minutes: ""});
 
     useEffect(() => {
         const formatTime = (unit: number) => (unit < 10 ? "0" : "") + unit;
@@ -11,31 +11,18 @@ function Clock() {
             const now = new Date();
             const hours = formatTime(now.getHours());
             const minutes = formatTime(now.getMinutes());
-            const minutes_number = now.getMinutes();
 
-            setTime({ hours, minutes });
-
-            const intervalMinutes = 60; // Setze dein Intervall hier
-            if (
-                (intervalMinutes === 60 &&
-                    hours === "00" &&
-                    minutes === "00") ||
-                minutes_number % intervalMinutes === 0
-            ) {
-                runOnNewDay();
-            }
+            setTime({ hours, minutes});
         };
 
-        const runOnNewDay = () => {
-            // Hier die Logik für runOnNewDay
-            console.log("Ein neuer Tag!");
-        };
+        const interval = 1000;
+        const timerId = setInterval(updateClock, interval);
 
-        const timerId = setInterval(updateClock, 1000);
-        updateClock(); // Initialer Aufruf, um die Uhr sofort zu starten
+        updateClock();
 
-        return () => clearInterval(timerId); // Cleanup bei Unmount
+        return () => clearInterval(timerId);
     }, []);
+
     return (
         <>
             <div className="l-3">
