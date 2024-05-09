@@ -5,7 +5,7 @@
     "main": "./dist/index.js",
     "scripts": {
         "copy": "cpy 'frontend/public/**/*' ./dist/frontend/public/ --cwd=./ --parents && cpy 'frontend/**/*.html' 'frontend/**/*.css' ./dist/frontend/ --cwd=./ --parents",
-        "tsc":"tsc && tsc -p ./frontend",
+        "tsc": "tsc && tsc -p ./frontend",
         "delete-ts": "find ./dist -type f -name '*.ts' -exec rm {} +",
         "build": "npm run copy && npm run tsc && npm run delete-ts",
         "start": "node .",
@@ -15,6 +15,7 @@
     "author": "lokman5er",
     "license": "ISC",
     "dependencies": {
+        "@sendgrid/mail": "^8.1.1",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.20.2",
         "cheerio": "^1.0.0-rc.12",

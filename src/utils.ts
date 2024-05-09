@@ -68,3 +68,13 @@ export async function translateText(text: string, targetLanguage: string): Promi
         throw error;
     }
 }
+
+export function isFriday(date: Date): boolean {
+    return date.getDay() === 5;
+}
+
+export function validateTextFields(text: any, limit: number): boolean {
+    return Object.values(text).every(
+        (value) => typeof value === 'string' && value.trim() !== "" && value.trim().length <= limit
+    );
+}

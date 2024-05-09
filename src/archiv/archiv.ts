@@ -22,10 +22,8 @@ interface Translation {
 
 async function fetchAndStoreTranslationsWithVerification(suraNumber: number) {
     const languages = {
-        english: 'english_rwwad',
         german: 'german_bubenheim',
         turkish: 'turkish_shaban',
-        // english: 'english_saheeh'
     };
 
     let translationResults: any = {};
@@ -50,18 +48,17 @@ async function fetchAndStoreTranslationsWithVerification(suraNumber: number) {
                 arabic: translationResults.german[i].arabic_text,
                 german: translationResults.german[i].translation,
                 turkish: translationResults.turkish[i].translation,
-                english: translationResults.english[i].translation,
             },
-            textLength: {
-                arabic: translationResults.german[i].arabic_text.length,
-                german: translationResults.german[i].translation.length,
-                turkish: translationResults.turkish[i].translation.length,
-                english: translationResults.english[i].translation.length,
-                min: Math.min(
-                    translationResults.german[i].arabic_text.length, translationResults.german[i].translation.length, translationResults.turkish[i].translation.length, translationResults.english[i].translation.length),
-                max: Math.max(
-                    translationResults.german[i].arabic_text.length, translationResults.german[i].translation.length, translationResults.turkish[i].translation.length, translationResults.english[i].translation.length),
-            }
+            textMin: Math.min(
+                translationResults.german[i].arabic_text.length,
+                translationResults.german[i].translation.length,
+                translationResults.turkish[i].translation.length
+            ),
+            textMax: Math.max(
+                translationResults.german[i].arabic_text.length,
+                translationResults.german[i].translation.length,
+                translationResults.turkish[i].translation.length,
+                ),
         });
 
         try {

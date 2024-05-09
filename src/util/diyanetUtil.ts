@@ -1,57 +1,42 @@
+import request from "request";
+import {IDailyData} from "../interfaces";
+import mongoose from "mongoose";
+import {createMongooseDate} from "../utils";
 import DailyData from "../model/dailyData";
 import util from "util";
-import request from "request";
-import {createMongooseDate} from "../utils";
-import {IDailyData, IUser} from "../interfaces";
-import mongoose from "mongoose";
-import User from "../model/user";
 
 const DIYANET_MAIL: string = process.env.DIYANET_MAIL || "";
 const DIYANET_PW: string = process.env.DIYANET_PW || "";
 
 const requestPromise = util.promisify(request);
 
-export async function schedulerJob(): Promise<void> {
-    const dayOfMonth: number = new Date().getDate();
-
-    // needed since the Heroku Scheduler can be configured to run at least once a day
-    // if (!(dayOfMonth === 1 || dayOfMonth === 15)) {
-    //     console.log("No need to fetch new DiyanetData today, as it's not the 1st or 15th day of the month");
-    //     return;
-    // }
-
-    const allUsers: IUser[] = await User.find();
-
-    let uniqueUrlParas: string[] = [];
-
-    for (const user of allUsers) {
-        if (uniqueUrlParas.indexOf(user.urlPara) === -1) {
-            uniqueUrlParas.push(user.urlPara);
-        }
-    }
-
-    let accessToken: string = await getAccessTokenByDiyanet();
-
-    for (const urlPara of uniqueUrlParas) {
-        //TODO osman: check here if accesstoken expired
-        // https://awqatsalah.diyanet.gov.tr/files/56d83ac4-f7f5-4f6e-9b9e-b1ffeebf1b6a.pdf
-        // if(accesstoken is expired) {accessToken = refreshAccessToken() or something like that}
-        await fetchMonthlyData(Number(urlPara), accessToken);
-    }
-
-    console.log("Successfully saved monthly data for following urlParas: " + uniqueUrlParas);
+let diyanetAuthentication = {
+    accessToken: "",
+    refreshToken: "",
+    creationTime: new Date()
 }
 
-async function fetchMonthlyData(urlPara: number, accessToken: string): Promise<void> {
+export async function fetchMonthlyData(urlPara: number): Promise<void> {
 
-    const highestDate: Promise<Date | null> = getHighestDateByUrlPara(urlPara);
+    const highestDate = await getHighestDateByUrlPara(urlPara);
+    //
+
+    if (highestDate && isDateAtLeast20DaysAhead(highestDate)) {
+        return;
+    }
+
+    if (diyanetAuthentication.accessToken === "") {
+        await loginWithDiyanet();
+    } else if (isCreationTimeMoreThan15MinutesAgo(diyanetAuthentication.creationTime)){
+        //get new token with refreshToken
+    }
 
     const monthlyDataOptions: request.Options = {
         method: "GET",
         url: `https://awqatsalah.diyanet.gov.tr/api/PrayerTime/Monthly/${urlPara}`,
         headers: {
             accept: "text/plain",
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${diyanetAuthentication.accessToken}`,
         },
     };
 
@@ -125,13 +110,18 @@ async function getHighestDateByUrlPara(urlPara: number): Promise<Date> {
         return null;
     }
 
-    const highestDate: IDailyData = result.sort((a: any, b: any) => b.date - a.date)[0];
+    let maxDate = null;
+    for (const entry of result) {
+        if (entry.date > maxDate || maxDate === null) {
+            maxDate = entry.date;
+        }
+    }
 
-    return highestDate.date;
+    return maxDate;
 }
 
 
-async function getAccessTokenByDiyanet(): Promise<string> {
+async function loginWithDiyanet(): Promise<void> {
     const loginOptions: request.Options = {
         method: "POST",
         url: "https://awqatsalah.diyanet.gov.tr/Auth/Login",
@@ -144,10 +134,32 @@ async function getAccessTokenByDiyanet(): Promise<string> {
         }),
     };
 
-    const loginResponse: request.Response = await requestPromise(loginOptions);
-    const loginBody = JSON.parse(loginResponse.body);
+    try {
+        const loginResponse: request.Response = await requestPromise(loginOptions);
+        const loginBody = JSON.parse(loginResponse.body);
 
-    return loginBody.data.accessToken;
+        diyanetAuthentication.accessToken = loginBody.data.accessToken;
+        diyanetAuthentication.refreshToken = loginBody.data.refreshToken;
+    } catch (error) {
+        console.error("Login failed with error: ", error);
+        throw error;
+    }
+
+    return;
 }
 
-schedulerJob();
+function isDateAtLeast20DaysAhead(highestDate: Date): boolean {
+    const today = new Date();
+    const dateIn20Days = new Date();
+    dateIn20Days.setDate(today.getDate() + 20);
+
+    return highestDate >= dateIn20Days;
+}
+
+function isCreationTimeMoreThan15MinutesAgo(creationTime: Date): boolean {
+    const currentTime = new Date(); // Aktuelle Zeit
+    const fifteenMinutes = 15 * 60 * 1000; // 15 Minuten in Millisekunden
+    const timeDifference = currentTime.getTime() - creationTime.getTime(); // Differenz in Millisekunden
+
+    return timeDifference >= fifteenMinutes;
+}

@@ -190,7 +190,6 @@ router.post("/logout", async (req: Request, res: Response): Promise<void> => {
     }
 });
 
-//TODO: rename to camelCase
 router.get("/check-token", async (req: Request, res: Response): Promise<void> => {
     const token = req.query.token;
 
@@ -252,9 +251,10 @@ router.post('/app/login', async (req: Request, res: Response): Promise<void> => 
             {expiresIn: "30d"}
         );
 
+        //todo nicht mehr im user speichern!
         await User.updateOne({username: user.username}, {$set: {token}});
 
-        res.status(200).json({token});
+        res.status(200).json({username, token});
         return;
     }
 
