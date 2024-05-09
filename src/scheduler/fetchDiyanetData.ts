@@ -104,7 +104,7 @@ async function saveData(data: IDailyData[]): Promise<void> {
     }
 }
 
-function getMoon(url: string): string {
+function getMoon(url: string): string | null {
     var regex = /http:\/\/namazvakti\.diyanet\.gov\.tr\/images\/(.*?)\.gif/;
     var match = url.match(regex);
     if (match) {
@@ -113,7 +113,7 @@ function getMoon(url: string): string {
     return null;
 }
 
-async function getHighestDateByUrlPara(urlPara: number): Promise<Date> {
+async function getHighestDateByUrlPara(urlPara: number): Promise<Date | null> {
     const today: string = new Date().toISOString().slice(0, 10);
 
     const result: IDailyData[] = await DailyData.find({
@@ -125,7 +125,7 @@ async function getHighestDateByUrlPara(urlPara: number): Promise<Date> {
         return null;
     }
 
-    const highestDate: IDailyData = result.sort((a: any, b: any) => b.date - a.date)[0];
+    const highestDate: IDailyData | null = result.sort((a: any, b: any) => b.date - a.date)[0];
 
     return highestDate.date;
 }

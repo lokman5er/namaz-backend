@@ -1,9 +1,13 @@
+import { henlo } from "./abc";
+import * as d3 from "d3";
+
 //@ts-ignore
 const serverUrl: string = "https://namaz-backend.herokuapp.com";
 // edit these for local testing
 
-// import { stringify } from 'querystring';
+henlo();
 
+// import { stringify } from 'querystring';
 /**
  * Specifies the number of minutes in which a new day is simulated.
  * If set to 5, for instance, a new day is simulated every 5 minutes.
