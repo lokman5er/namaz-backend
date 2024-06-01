@@ -7,7 +7,7 @@
         "copy": "cpy 'frontend/public/**/*' ./dist/frontend/public/ --cwd=./ --parents && cpy 'frontend/**/*.html' 'frontend/**/*.css' ./dist/frontend/ --cwd=./ --parents",
         "tsc": "tsc && tsc -p ./frontend",
         "delete-ts": "find ./dist -type f -name '*.ts' -exec rm {} +",
-        "build": "npm run copy && npm run tsc && npm run delete-ts",
+        "build": "npm run tsc && npm run delete-ts",
         "start": "node .",
         "run-daily-task": "node fetchDiyanetData.js",
         "debug": "nodemon --exec \"node --inspect-brk=0.0.0.0:9229 --require ts-node/register index.ts\""
