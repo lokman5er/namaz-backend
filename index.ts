@@ -39,10 +39,10 @@ async function connectToDatabase(): Promise<void> {
 connectToDatabase();
 
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, "src", "frontend")));
+app.use(express.static(path.join(__dirname, "frontend")));
 
 app.get("/", function (req, res) {
-    res.sendFile(path.join(__dirname, "src", "frontend", "index.html"));
+    res.sendFile(path.join(__dirname, "frontend", "index.html"));
 });
 
 app.use("/api/user", userRoutes);
