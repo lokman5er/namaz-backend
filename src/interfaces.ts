@@ -101,3 +101,8 @@ export interface LocalizedTextSchema {
     ar: string;
     de: string;
 }
+
+export interface ITermsAccepted extends Document {
+    deviceId: string;
+    termsVersion: string;
+}

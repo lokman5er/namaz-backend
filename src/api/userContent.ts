@@ -212,7 +212,7 @@ router.put("/app/update/verse", async (req: Request, res: Response): Promise<voi
         const userId = tokenPayload.userId;
 
         if (userId) {
-            const verseContent: IUserContent = await UserContent.findOne({userId, _id: id})
+            const verseContent: IUserContent | null = await UserContent.findOne({userId, _id: id})
 
             if (!verseContent) {
                 res.status(401).json("No verse found to update");
@@ -282,7 +282,7 @@ router.put("/app/update/announcement", async (req: Request, res: Response): Prom
         const userId = tokenPayload.userId;
 
         if (userId) {
-            const announcementContent: IUserContent = await UserContent.findOne({userId, _id: id})
+            const announcementContent: IUserContent | null = await UserContent.findOne({userId, _id: id})
 
             if (!announcementContent) {
                 res.status(401).json("No announcement found to update");
@@ -339,7 +339,7 @@ router.delete("/app/delete/verse", async (req: Request, res: Response): Promise<
         const userId = tokenPayload.userId;
 
         if (userId) {
-            const verseContent: IUserContent = await VerseContent.findById(id);
+            const verseContent: IUserContent | null = await VerseContent.findById(id);
 
             if (!verseContent) {
                 res.status(401).json("No verse found to delete");
@@ -395,7 +395,7 @@ router.delete("/app/delete/announcement", async (req: Request, res: Response): P
         const userId = tokenPayload.userId;
 
         if (userId) {
-            const announcementContent: IAnnouncementContent = await AnnouncementContent.findById(id);
+            const announcementContent: IAnnouncementContent | null = await AnnouncementContent.findById(id);
 
             if (!announcementContent) {
                 res.status(401).json("No announcement found to delete");

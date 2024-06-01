@@ -95,10 +95,10 @@ function getMoon(url: string): string {
     if (match) {
         return match[1];
     }
-    return null;
+    return "";
 }
 
-async function getHighestDateByUrlPara(urlPara: number): Promise<Date> {
+async function getHighestDateByUrlPara(urlPara: number): Promise<Date | null> {
     const today: string = new Date().toISOString().slice(0, 10);
 
     const result: IDailyData[] = await DailyData.find({
@@ -112,7 +112,7 @@ async function getHighestDateByUrlPara(urlPara: number): Promise<Date> {
 
     let maxDate = null;
     for (const entry of result) {
-        if (entry.date > maxDate || maxDate === null) {
+        if (maxDate === null || entry.date > maxDate) {
             maxDate = entry.date;
         }
     }

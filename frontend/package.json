@@ -11,8 +11,5 @@
   "devDependencies": {
     "typescript": "^5.2.2",
     "vite": "^5.0.12"
-  },
-  "dependencies": {
-    "js-arabic-reshaper": "^1.0.0"
   }
 }

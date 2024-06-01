@@ -175,7 +175,7 @@ router.post("/preach/add", async (req: Request, res: Response): Promise<void> =>
         const userId = tokenPayload.userId;
 
         if (userId) {
-            const result: IFridayPreach = await PreachSettings.findOne({userId, date})
+            const result: IFridayPreach | null = await PreachSettings.findOne({userId, date})
 
             if (result) {
                 res.status(401).json("There is already a preach for that date");
@@ -287,7 +287,7 @@ router.put("/preach/update", async (req: Request, res: Response): Promise<void> 
         const userId = tokenPayload.userId;
 
         if (userId) {
-            const fridayPreach: IFridayPreach = await PreachSettings.findOne({userId, _id: id})
+            const fridayPreach: IFridayPreach | null = await PreachSettings.findOne({userId, _id: id})
 
             if (!fridayPreach) {
                 res.status(401).json("No preach found to update");
@@ -344,7 +344,7 @@ router.delete("/preach/delete", async (req: Request, res: Response): Promise<voi
         const userId = tokenPayload.userId;
 
         if (userId) {
-            const fridayPreach: IFridayPreach = await PreachSettings.findById(id);
+            const fridayPreach: IFridayPreach | null = await PreachSettings.findById(id);
 
             if (!fridayPreach) {
                 res.status(401).json("No preach found to delete");
