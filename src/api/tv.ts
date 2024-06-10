@@ -159,13 +159,13 @@ router.get("/user-content", async (req: Request, res: Response): Promise<void> =
         }
 
         const result = {
-            cumaPrayingTime: "12:45",
-            fajrPrayingTime: "05:12",
+            cumaPrayingTime: "13:45",
+            fajrPrayingTime: "03:12",
             content: {
                 type: "announcement",
-                de: "das hier ist eine Mitteilung auf DE",
-                tr: "das hier ist eine Mittelung auf TR",
-                ar: "Das hier ist eine Mitteilung auf AR"
+                de: "das hier ist eine Mitteilung auf DEr ist eine Mitteilung auf DEr ist eine Mitteilung auf DE",
+                tr: "das hier ist eine Mittelung auf TRelung auf TRelung auf TRelung auf TRelung auf TRelung auf TR",
+                ar: "Das hier ist eine Mitteilung auf ARitteilung auf ARitteilung auf ARitteilung auf ARitteilung auf ARitteilung auf AR"
             }
         }
 
@@ -180,7 +180,7 @@ router.get("/user-content", async (req: Request, res: Response): Promise<void> =
             }
         }
 
-        res.status(200).send("");
+        res.status(200).send({});
     } catch (error) {
         const serverLogMessage = "Error while trying to find userContent with username: " + username;
 
@@ -201,7 +201,7 @@ function checkTvVersion (headers: IncomingHttpHeaders, res: Response): boolean {
     const appVersion = headers['app-version'];
 
     if (appVersion !== CURRENT_TV_VERSION) {
-        res.status(426).send("App-Version is outdated, please update to newest version.");
+        res.status(426).send({data: "App-Version is outdated, please update to newest version."});
         return true;
     }
     return false;
