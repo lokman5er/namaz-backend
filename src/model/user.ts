@@ -8,6 +8,11 @@ const UserSchema = new Schema<IUser>(
             unique: true,
             required: true,
         },
+        email: {
+            type: String,
+            unique: true,
+            required: true,
+        },
         password: {
             type: String,
             required: true,
@@ -15,6 +20,7 @@ const UserSchema = new Schema<IUser>(
         urlPara: {
             type: String,
             required: true,
+            unique: false
         },
         token: {
             type: String,

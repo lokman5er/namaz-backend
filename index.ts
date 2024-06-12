@@ -39,6 +39,7 @@ async function connectToDatabase(): Promise<void> {
 connectToDatabase();
 
 app.use(bodyParser.json());
+
 app.use(express.static(path.join(__dirname, "frontend")));
 
 app.get("/", function (req, res) {

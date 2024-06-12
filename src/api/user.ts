@@ -5,11 +5,13 @@ import {handleError} from "../utils";
 import jwt, {JwtPayload} from "jsonwebtoken";
 import mongoose from "mongoose";
 import {IUser} from "../interfaces";
+import axios from "axios";
 
 const router = express.Router();
 
 const API_KEY: string = process.env.API_KEY || "";
 const JWT_SECRET: string = process.env.JWT_SECRET || "";
+const RECAPTCHA_SECRET_KEY: string = process.env.RECAPTCHA_SECRET_KEY || "";
 
 router.post("/register", async (req: Request, res: Response): Promise<void> => {
     const {username, password: plainTextPassword, urlPara, apiKey} = req.body;
@@ -261,5 +263,102 @@ router.post('/app/login', async (req: Request, res: Response): Promise<void> => 
     res.status(400).json({error: 'Invalid username/password'});
 });
 
+router.post("/signup", async (req: Request, res: Response): Promise<void> => {
+    const {username, email, password: plainTextPassword, urlPara} = req.body;
+    const token = req.body.recaptcha_token;
 
+    if (!token) {
+        res.status(400).json({ error: 'No reCAPTCHA token provided' });
+        return;
+    }
+
+    if (!email || typeof email !== "string") {
+        res.status(400).send("Invalid username");
+        return;
+    }
+
+    if (!username || typeof username !== "string") {
+        res.status(400).send("Invalid username");
+        return;
+    }
+
+    if (username.length < 6) {
+        res.status(400).send("username too short");
+        return;
+    }
+
+    if (username.length > 15) {
+        res.status(400).send("username too long");
+        return;
+    }
+
+    if (!plainTextPassword || typeof plainTextPassword !== "string") {
+        res.status(400).send("Invalid password");
+        return;
+    }
+
+    if (plainTextPassword.length < 6) {
+        res.status(400).send("Password too short");
+        return;
+    }
+
+    if (plainTextPassword.length > 15) {
+        res.status(400).send("Password too long");
+        return;
+    }
+
+    if (!urlPara) {
+        res.status(400).send("urlPara missing");
+        return;
+    }
+
+    const response = await axios.post(
+        `https://www.google.com/recaptcha/api/siteverify`,
+        {},
+        {
+            params: {
+                secret: RECAPTCHA_SECRET_KEY,
+                response: token
+            }
+        }
+    );
+
+    const data = response.data;
+
+    if (!data.success || data.score <= 0.5) {
+        res.json({ success: false, message: 'Bot detected' });
+    }
+
+    const password: string = await bcrypt.hash(plainTextPassword, 12);
+
+    try {
+
+        const response = await User.create({
+            username,
+            email,
+            password,
+            urlPara
+        });
+        console.log("User created successfully: ", response);
+        res.status(201).send({message: "User created successfully"});
+        return;
+    } catch (error) {
+        console.log("error: " + error)
+        //TODO: test this properly
+        if (error instanceof mongoose.Error.ValidationError) {
+            res.status(400).send("Database validation failed");
+            return;
+        } else if (typeof error === 'object' && error !== null && 'code' in error) {
+            const mongoError = error as { code: number; [key: string]: any };
+            if (mongoError.code === 11000) {
+                res.status(409).send("Username or urlPara already in use"); // 409 Conflict
+                return;
+            }
+        } else {
+            const serverLogMessage = "Error while trying to register new user";
+
+            handleError(res, error, serverLogMessage);
+        }
+    }
+});
 export default router;

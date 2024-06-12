@@ -3,6 +3,7 @@ import {JwtPayload} from "jsonwebtoken";
 
 export interface IUser extends Document {
     username: string;
+    email: string;
     password: string;
     urlPara: string;
     token?: string;
