@@ -35,7 +35,7 @@
            data-lang='{"de":"Die mobile App zur Verwaltung von Benachrichtigungen ist derzeit in Bearbeitung und wird in Kürze verfügbar sein. Benutzer erhalten eine E-Mail, sobald sie online ist.","en":"The mobile app to manage notifications is currently under development and will be available soon. Users will receive an email once it is online.","tr":"Bildirimleri yönetmek için mobil uygulama şu anda geliştirilmektedir ve yakında kullanıma sunulacaktır. Çevrimiçi olduğunda kullanıcılar bir e-posta alacaklardır."}'></p>
         <p class="mb-4 text-gray-700 text-center"
            data-lang='{"de":"Mit dem Erstellen des Accounts auf dieser Seite stimmen Sie zu, dass eine E-Mail gesendet werden darf, um Benachrichtigungen zu verwalten.","en":"By creating an account on this site, you agree that an email may be sent to manage notifications.","tr":"Bu sitede bir hesap oluşturarak, bildirimleri yönetmek için bir e-posta gönderilebileceğini kabul etmiş olursunuz."}'></p>
-        <form action="http://localhost:9999/api/user/signup" method="POST" id="form">
+        <form action="https://www.salah.tv/api/user/signup" method="POST" id="form">
             <div class="mb-4">
                 <label for="username" class="block text-gray-700"
                        data-lang='{"de":"Benutzername","en":"Username","tr":"Kullanıcı Adı"}'>Benutzername</label>
@@ -105,7 +105,7 @@
                     });
                     jsonData["urlPara"] = document.getElementById("city").value;
 
-                    fetch('http://localhost:9999/api/user/signup', {
+                    fetch('https://www.salah.tv/api/user/signup', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -161,7 +161,7 @@
         }
 
         try {
-            const response = await fetch('http://localhost:9999/api/tv/check-username', {
+            const response = await fetch('https://www.salah.tv/api/tv/check-username', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
