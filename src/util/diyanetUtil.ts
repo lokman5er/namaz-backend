@@ -46,6 +46,11 @@ export async function fetchMonthlyData(urlPara: number): Promise<void> {
     let monthlyData: IDailyData[] = [];
     const DailyDataModel: mongoose.Model<IDailyData> = mongoose.model<IDailyData>('DailyData');
 
+    if (!monthlyBody.data) {
+        console.error(monthlyBody);
+        return;
+    }
+
     monthlyBody.data.forEach((element: any): void => {
         const newDailyData: IDailyData = new DailyDataModel({
             urlPara: Number(urlPara),
@@ -90,11 +95,12 @@ async function saveData(data: IDailyData[]): Promise<void> {
 }
 
 function getMoon(url: string): string {
-    var regex = /http:\/\/namazvakti\.diyanet\.gov\.tr\/images\/(.*?)\.gif/;
+    var regex = /https:\/\/awqatsalah\.diyanet\.gov\.tr\/images\/(.*?)\.gif/;
     var match = url.match(regex);
     if (match) {
         return match[1];
     }
+    console.error(url);
     return "";
 }
 

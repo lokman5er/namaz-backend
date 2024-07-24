@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, {Schema} from 'mongoose';
 import {IFridayPreach} from "../interfaces";
 
 const FridayPreachSchema = new Schema<IFridayPreach>({
@@ -7,14 +7,22 @@ const FridayPreachSchema = new Schema<IFridayPreach>({
             ref: 'User'
         },
         text: {
-            tr: { type: String, required: true },
-            ar: { type: String, required: true },
-            de: { type: String, required: true },
+            tr: {type: String, required: true},
+            ar: {type: String, required: true},
+            de: {type: String, required: true},
         },
         date: {
             type: Date,
             required: true,
             //unique for users stack
+        },
+        startTime: {
+            type: String,
+            required: true,
+        },
+        endTime: {
+            type: String,
+            required: true,
         },
     },
     {

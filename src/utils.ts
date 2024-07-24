@@ -78,3 +78,12 @@ export function validateTextFields(text: any, limit: number): boolean {
         (value) => typeof value === 'string' && value.trim() !== "" && value.trim().length <= limit
     );
 }
+
+export function validateEmail(mail: string): boolean {
+    const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return re.test(String(mail).toLowerCase());
+}
+
+export function validateLanguage(language: string): boolean {
+    return language === "en" || language === "tr" || language === "de";
+}

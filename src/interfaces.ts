@@ -7,6 +7,9 @@ export interface IUser extends Document {
     password: string;
     urlPara: string;
     token?: string;
+    pendingEmail?: string;
+    emailConfirmationToken?: string;
+    emailConfirmationExpires?: Date;
 }
 
 type TimeSetting = {
@@ -36,6 +39,8 @@ export interface IFridayPreach extends Document {
         de: string;
     }
     date: Date;
+    startTime: string;
+    endTime: string;
 }
 
 

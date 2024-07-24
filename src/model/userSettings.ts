@@ -6,11 +6,6 @@ const UserSettingsSchema = new Schema<IUserSettings>({
             type: Schema.Types.ObjectId,
             ref: 'User'
         },
-        preach: {
-            active: { type: Boolean, required: true },
-            startTime: { type: String, required: true }, // Format: "hh:mm"
-            endTime: { type: String, required: true }, // Format: "hh:mm"
-        },
         cumaPrayingTime: {
             active: { type: Boolean, required: true },
             time: { type: String, required: true }, // Format: "hh:mm"

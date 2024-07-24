@@ -225,44 +225,6 @@ router.get("/check-token", async (req: Request, res: Response): Promise<void> =>
 
 // ################################################## APP API START ##################################################
 
-router.post('/app/login', async (req: Request, res: Response): Promise<void> => {
-    const {username, password} = req.body;
-
-    if (!username || !password) {
-        res.status(400).send("try harder ;)");
-        return;
-    }
-
-    const user: IUser = await User.findOne({ username: new RegExp(`^${username}$`, 'i') }).lean() as IUser;
-
-    if (!user) {
-        res.status(400).send("Invalid username/password");
-        return;
-    }
-
-    if (await bcrypt.compare(password, user.password)) {
-        //username + password combination is successful
-
-        const token = jwt.sign(
-            {
-                userId: user._id,
-                username: user.username,
-                urlPara: user.urlPara,
-            },
-            JWT_SECRET,
-            {expiresIn: "30d"}
-        );
-
-        //todo nicht mehr im user speichern!
-        await User.updateOne({username: user.username}, {$set: {token}});
-
-        res.status(200).json({username, token});
-        return;
-    }
-
-    res.status(400).json({error: 'Invalid username/password'});
-});
-
 router.post("/signup", async (req: Request, res: Response): Promise<void> => {
     const {username, email, password: plainTextPassword, urlPara} = req.body;
     const token = req.body.recaptcha_token;

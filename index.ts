@@ -7,10 +7,10 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import userRoutes from './src/api/user';
-// import announcementRoutes from './src/api/announcements';
 import tvRoutes from './src/api/tv';
 import appRoutes from './src/api/app';
 import userContentRoutes from './src/api/userContent';
+import generalRoutes from "./src/api/general";
 
 const MONGODB_CREDENTIALS: string = process.env.MONGODB || '';
 const PORT: string = process.env.PORT || "";
@@ -20,6 +20,7 @@ const app = express();
 import cors from 'cors';
 import {fetchAndStoreAllTranslations} from "./src/archiv/quran";
 import {schedulerJob} from "./src/scheduler/fetchDiyanetData";
+import AWS from "aws-sdk";
 app.use(cors());
 
 
@@ -56,6 +57,8 @@ app.use('/api/app', appRoutes);
 
 app.use('/api/user-content', userContentRoutes);
 
+app.use(generalRoutes);
+
 //TODO: unify req.query and req.body? research usecases
 //TODO: add counter for api calls?
 //TODO: add proper logging to api calls
@@ -76,3 +79,12 @@ const msg = {
 //ES6
 // sgMail.send(msg).then((result:any) => console.log("result: " + result));
 
+AWS.config.update({
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string
+    },
+    region: process.env.AWS_REGION
+});
+
+export const ses = new AWS.SES({ apiVersion: '2010-12-01' });

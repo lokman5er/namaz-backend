@@ -11,7 +11,7 @@ const UserSchema = new Schema<IUser>(
         email: {
             type: String,
             unique: true,
-            required: true,
+            required: false,
         },
         password: {
             type: String,
@@ -24,6 +24,18 @@ const UserSchema = new Schema<IUser>(
         },
         token: {
             type: String,
+            required: false,
+        },
+        pendingEmail: {
+            type: String,
+            required: false,
+        },
+        emailConfirmationToken: {
+            type: String,
+            required: false,
+        },
+        emailConfirmationExpires: {
+            type: Date,
             required: false,
         },
     },
