@@ -507,7 +507,7 @@ async function fetchMonthlyData(urlPara, highestDate) {
 }
 
 function getMoon(url) {
-    var regex = /http:\/\/namazvakti\.diyanet\.gov\.tr\/images\/(.*?)\.gif/;
+    var regex = /http:\/\/awqatsalah\.diyanet\.gov\.tr\/images\/(.*?)\.gif/;
     var match = url.match(regex);
     if (match) {
         return match[1];
