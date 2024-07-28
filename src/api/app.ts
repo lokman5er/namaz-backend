@@ -299,7 +299,7 @@ router.post("/preach/add", async (req: Request, res: Response): Promise<void> =>
     }
 
     if (!isFriday(dateObj)) {
-        res.status(401).json("Selected day is not a friday");
+        res.status(400).json("Selected day is not a friday");
         return;
     }
 
@@ -312,7 +312,7 @@ router.post("/preach/add", async (req: Request, res: Response): Promise<void> =>
             const result: IFridayPreach | null = await PreachSettings.findOne({userId, date})
 
             if (result) {
-                res.status(401).json("There is already a preach for that date");
+                res.status(400).json("There is already a preach for that date");
                 return;
             }
 
