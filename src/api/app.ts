@@ -536,8 +536,6 @@ router.get("/get-all", async (req: Request, res: Response): Promise<void> => {
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(' ')[1];
 
-    console.log("get-all was called")
-
     if (!token) {
         res.status(400).json("Missing required token");
         return;
@@ -550,7 +548,7 @@ router.get("/get-all", async (req: Request, res: Response): Promise<void> => {
 
         if (userId) {
             const today = new Date();
-            today.setUTCHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
 
             const result: IUserContent[] = await UserContent.find({
                 userId,
@@ -558,7 +556,6 @@ router.get("/get-all", async (req: Request, res: Response): Promise<void> => {
             });
 
             console.log("Today's date:", today);
-            console.log("Found results:", result);
 
             const responseObjects = result.map(item => ({
                 _id: item._id,
