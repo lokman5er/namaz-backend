@@ -60,6 +60,9 @@ const JWT_SECRET: string = process.env.JWT_SECRET || "";
 router.post('/login', async (req: Request, res: Response): Promise<void> => {
     const {username, password} = req.body;
 
+    console.log("username: " + username);
+    console.log("password: " + password);
+
     if (!username || !password) {
         res.status(400).send("try harder ;)");
         return;
@@ -71,6 +74,8 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
         res.status(400).send("Invalid username/password");
         return;
     }
+
+    console.log("found user");
 
     if (await bcrypt.compare(password, user.password)) {
         //username + password combination is successful
@@ -95,6 +100,8 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
         };
 
         res.status(200).json(responseObject);
+        console.log("send 200er for login");
+
         return;
     }
 
