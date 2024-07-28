@@ -550,12 +550,15 @@ router.get("/get-all", async (req: Request, res: Response): Promise<void> => {
 
         if (userId) {
             const today = new Date();
-            today.setHours(0, 0, 0, 0);
+            today.setUTCHours(0, 0, 0, 0);
 
             const result: IUserContent[] = await UserContent.find({
                 userId,
                 startDate: { $gte: today }
             });
+
+            console.log("Today's date:", today);
+            console.log("Found results:", result);
 
             const responseObjects = result.map(item => ({
                 _id: item._id,
