@@ -51,14 +51,13 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, "frontend")));
 
-app.get("/", function (req, res) {
-    res.sendFile(path.join(__dirname, "frontend", "index.html"));
-});
-
 app.get("/delete-account", function (req, res) {
     res.sendFile(path.join(__dirname, "frontend", "delete.html"));
 });
 
+app.get("/", function (req, res) {
+    res.sendFile(path.join(__dirname, "frontend", "index.html"));
+});
 
 app.use("/api/user", userRoutes);
 
