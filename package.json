@@ -6,8 +6,7 @@
     "scripts": {
         "tsc": "tsc",
         "create-dist-frontend": "mkdir -p dist/frontend",
-        "copy-html": "npm run create-dist-frontend && cp src/frontend/index.html dist/frontend/index.html",
-        "delete-ts": "find ./dist -type f -name '*.ts' -exec rm {} +",
+        "copy-html": "npm run create-dist-frontend && cp src/frontend/index.html dist/frontend/index.html && cp src/frontend/delete.html dist/frontend/delete.html",        "delete-ts": "find ./dist -type f -name '*.ts' -exec rm {} +",
         "build": "npm run tsc && npm run copy-html && npm run delete-ts",
         "start": "node .",
         "debug": "nodemon --exec \"node --inspect-brk=0.0.0.0:9229 --require ts-node/register index.ts\""
