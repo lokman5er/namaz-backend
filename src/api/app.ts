@@ -555,8 +555,6 @@ router.get("/get-all", async (req: Request, res: Response): Promise<void> => {
                 startDate: { $gte: today }
             });
 
-            console.log("Today's date:", today);
-
             const responseObjects = result.map(item => ({
                 _id: item._id,
                 type: item.type,

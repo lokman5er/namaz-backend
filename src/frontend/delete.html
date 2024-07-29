@@ -62,7 +62,9 @@
 <div id="impressum">
     <h3>Impressum</h3>
     <span>Lokman Beser</span>
+    <br>
     <span>Dr.-Golm-Str. 24</span>
+    <br>
     <span>27232 Sulingen</span>
 </div>
 
@@ -114,7 +116,7 @@
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('https://salah.tv/api/delete-user', {
+            const response = await fetch('http://localhost:9999/delete-user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -124,10 +126,11 @@
                     password: password.value
                 })
             });
+            console.log("response: " + JSON.stringify(response));
             if (response.ok) {
                 alert('Account deleted successfully');
             } else {
-                alert('Failed to delete account');
+                alert('Failed to delete account, make sure your username and password are correct');
             }
         } catch (error) {
             console.error('Error:', error);

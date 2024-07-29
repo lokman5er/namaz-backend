@@ -18,15 +18,9 @@ const PORT: string = process.env.PORT || "";
 const app = express();
 
 import cors from 'cors';
-import {fetchAndStoreAllTranslations} from "./src/archiv/quran";
-import {schedulerJob} from "./src/scheduler/fetchDiyanetData";
 import AWS from "aws-sdk";
-import {handleError, validateTextFields} from "./src/utils";
-import {TEXT_LIMIT_PREACH} from "./src/constants/constants";
-import jwt from "jsonwebtoken";
-import {ITokenPayload, IUser} from "./src/interfaces";
-import {AnnouncementContent} from "./src/model/userContent";
-import router from "./src/api/app";
+import {handleError} from "./src/utils";
+import { IUser} from "./src/interfaces";
 import User from "./src/model/user";
 import bcrypt from "bcryptjs";
 app.use(cors());
@@ -79,39 +73,6 @@ app.use(generalRoutes);
 //TODO: automatisch vergangene gebetszeiten wieder aus DB löschen
 
 
-router.post("/api/delete-user", async (req: Request, res: Response): Promise<void> => {
-    const {username, password} = req.body;
-
-    if (!username || !password) {
-        res.status(400).json("Missing required fields");
-        return;
-    }
-
-    try {
-        const user: IUser = await User.findOne({ username }) as IUser;
-
-        const isMatch = await bcrypt.compare(password, user.password);
-
-        if (!isMatch) {
-            res.status(400).json("Wrong password");
-            return;
-        }
-
-        const result = await User.deleteOne({username});
-
-        if (result.deletedCount !== 1) {
-            res.status(200).json("User deleted successfully");
-            return;
-        } else {
-            res.status(400).json("User not found");
-            return;
-        }
-    } catch (error) {
-        const serverLogMessage = "Error while trying to delete account";
-
-        handleError(res, error, serverLogMessage);
-    }
-});
 
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
