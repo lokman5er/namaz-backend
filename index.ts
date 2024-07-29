@@ -24,10 +24,11 @@ import AWS from "aws-sdk";
 import {handleError, validateTextFields} from "./src/utils";
 import {TEXT_LIMIT_PREACH} from "./src/constants/constants";
 import jwt from "jsonwebtoken";
-import {ITokenPayload} from "./src/interfaces";
+import {ITokenPayload, IUser} from "./src/interfaces";
 import {AnnouncementContent} from "./src/model/userContent";
 import router from "./src/api/app";
 import User from "./src/model/user";
+import bcrypt from "bcryptjs";
 app.use(cors());
 
 
@@ -88,6 +89,15 @@ router.post("/api/delete-user", async (req: Request, res: Response): Promise<voi
     }
 
     try {
+        const user: IUser = await User.findOne({ username }) as IUser;
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            res.status(400).json("Wrong password");
+            return;
+        }
+
         const result = await User.deleteOne({username});
 
         if (result.deletedCount !== 1) {
