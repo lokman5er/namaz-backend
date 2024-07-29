@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SALAH.TV - Account Deletion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .lang-select {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .lang-select button {
+            margin-left: 5px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input, button {
+            margin-top: 10px;
+        }
+        #deleteButton {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+        #deleteButton:disabled {
+            background-color: gray;
+            cursor: not-allowed;
+        }
+        #impressum {
+            margin-top: 50px;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+<h1>SALAH.TV</h1>
+<div class="lang-select">
+    <button onclick="setLanguage('de')">DE</button>
+    <button onclick="setLanguage('en')">EN</button>
+    <button onclick="setLanguage('tr')">TR</button>
+</div>
+<h2 id="title">Account Deletion</h2>
+<form id="deleteForm">
+    <label>
+        <input type="checkbox" id="confirmCheckbox">
+        <span id="confirmText">I confirm that I want to remove my account. This will delete your account.</span>
+    </label>
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button type="submit" id="deleteButton" disabled>Delete Account</button>
+</form>
+<div id="impressum">
+    <h3>Impressum</h3>
+    <span>Lokman Beser</span>
+    <span>Dr.-Golm-Str. 24</span>
+    <span>27232 Sulingen</span>
+</div>
+
+<script>
+    const translations = {
+        de: {
+            title: "Konto löschen",
+            confirmText: "Ich bestätige hiermit, dass ich meinen Account unwiderruflich löschen möchte. Mir ist bewusst, dass dadurch alle meine Daten und Inhalte permanent entfernt werden.",
+            username: "Benutzername",
+            password: "Passwort",
+            deleteButton: "Konto löschen"
+        },
+        en: {
+            title: "Account Deletion",
+            confirmText: "I hereby confirm that I want to irreversibly delete my account. I understand that this will permanently remove all my data and content.",
+            username: "Username",
+            password: "Password",
+            deleteButton: "Delete Account"
+        },
+        tr: {
+            title: "Hesap Silme",
+            confirmText: "Hesabımı geri alınamaz şekilde silmek istediğimi onaylıyorum. Bunun tüm verilerimi ve içeriklerimi kalıcı olarak kaldıracağının farkındayım.",
+            username: "Kullanıcı adı",
+            password: "Şifre",
+            deleteButton: "Hesabı Sil"
+        }
+    };
+
+    function setLanguage(lang) {
+        document.getElementById('title').textContent = translations[lang].title;
+        document.getElementById('confirmText').textContent = translations[lang].confirmText;
+        document.getElementById('username').placeholder = translations[lang].username;
+        document.getElementById('password').placeholder = translations[lang].password;
+        document.getElementById('deleteButton').textContent = translations[lang].deleteButton;
+    }
+
+    const form = document.getElementById('deleteForm');
+    const checkbox = document.getElementById('confirmCheckbox');
+    const username = document.getElementById('username');
+    const password = document.getElementById('password');
+    const deleteButton = document.getElementById('deleteButton');
+
+    function updateButtonState() {
+        deleteButton.disabled = !(checkbox.checked && username.value && password.value);
+    }
+
+    [checkbox, username, password].forEach(el => el.addEventListener('input', updateButtonState));
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch('https://salah.tv/api/delete-user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username.value,
+                    password: password.value
+                })
+            });
+            if (response.ok) {
+                alert('Account deleted successfully');
+            } else {
+                alert('Failed to delete account');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the account');
+        }
+    });
+
+    setLanguage('en');
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-import express from "express";
+import express, {Request, Response} from "express";
 import mongoose from "mongoose";
 import path from "path";
 import bodyParser from "body-parser";
@@ -21,6 +21,13 @@ import cors from 'cors';
 import {fetchAndStoreAllTranslations} from "./src/archiv/quran";
 import {schedulerJob} from "./src/scheduler/fetchDiyanetData";
 import AWS from "aws-sdk";
+import {handleError, validateTextFields} from "./src/utils";
+import {TEXT_LIMIT_PREACH} from "./src/constants/constants";
+import jwt from "jsonwebtoken";
+import {ITokenPayload} from "./src/interfaces";
+import {AnnouncementContent} from "./src/model/userContent";
+import router from "./src/api/app";
+import User from "./src/model/user";
 app.use(cors());
 
 
@@ -47,6 +54,11 @@ app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, "frontend", "index.html"));
 });
 
+app.get("/delete-account", function (req, res) {
+    res.sendFile(path.join(__dirname, "frontend", "delete.html"));
+});
+
+
 app.use("/api/user", userRoutes);
 
 // app.use("/api/announcement", announcementRoutes);
@@ -66,6 +78,31 @@ app.use(generalRoutes);
 //TODO: modelListener um beim Erstellen von einem User auch direkt UserSettings zu erstellen, oder direkt in register mit rein?
 //TODO: automatisch vergangene gebetszeiten wieder aus DB löschen
 
+
+router.post("/api/delete-user", async (req: Request, res: Response): Promise<void> => {
+    const {username, password} = req.body;
+
+    if (!username || !password) {
+        res.status(400).json("Missing required fields");
+        return;
+    }
+
+    try {
+        const result = await User.deleteOne({username});
+
+        if (result.deletedCount !== 1) {
+            res.status(200).json("User deleted successfully");
+            return;
+        } else {
+            res.status(400).json("User not found");
+            return;
+        }
+    } catch (error) {
+        const serverLogMessage = "Error while trying to delete account";
+
+        handleError(res, error, serverLogMessage);
+    }
+});
 
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
