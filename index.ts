@@ -49,6 +49,10 @@ app.get("/delete-account", function (req, res) {
     res.sendFile(path.join(__dirname, "frontend", "delete.html"));
 });
 
+app.get("/legal", function (req, res) {
+    res.sendFile(path.join(__dirname, "frontend", "legal.html"));
+});
+
 app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, "frontend", "index.html"));
 });
