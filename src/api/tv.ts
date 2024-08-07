@@ -200,7 +200,7 @@ export default router;
 function checkTvVersion (headers: IncomingHttpHeaders, res: Response): boolean {
     const appVersion = headers['app-version'];
 
-    if (appVersion !== CURRENT_TV_VERSION) {
+    if (appVersion !== CURRENT_TV_VERSION && appVersion !== "1.0.0") {
         res.status(426).send({data: "App-Version is outdated, please update to newest version."});
         return true;
     }
