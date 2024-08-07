@@ -6,4 +6,6 @@ export const CURRENT_APP_VERSION = "1.0.0";
 
 export const CURRENT_TV_VERSION = "1.0.0";
 
+export const CURRENT_TV_TERMS_VERSION = "1.0.1";
+
 export const TV_TERMS_AND_CONDITIONS_VERSION = 1;

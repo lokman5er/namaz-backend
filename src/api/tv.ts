@@ -4,7 +4,7 @@ import User from "../model/user";
 import {IDailyData, ITermsAccepted, IUser} from "../interfaces";
 import {handleError, sendMessageToTelegramGroup} from "../utils";
 import {fetchMonthlyData} from "../util/diyanetUtil";
-import {CURRENT_TV_VERSION, TV_TERMS_AND_CONDITIONS_VERSION} from "../constants/constants";
+import {CURRENT_TV_TERMS_VERSION, CURRENT_TV_VERSION, TV_TERMS_AND_CONDITIONS_VERSION} from "../constants/constants";
 import {IncomingHttpHeaders} from "http";
 import TermsAccepted from "../model/termsAccepted";
 
@@ -94,7 +94,7 @@ router.get("/terms-accepted", async (req: Request, res: Response): Promise<void>
     try {
         const result: ITermsAccepted | null = await TermsAccepted.findOne({deviceId});
 
-        if (!result) {
+        if (!result || result.termsVersion !== CURRENT_TV_TERMS_VERSION) {
             res.status(412).send("Terms not accepted by deviceId: " + deviceId);
             return;
         }
