@@ -8,4 +8,4 @@ export const CURRENT_TV_VERSION = "1.0.1";
 
 export const CURRENT_TV_TERMS_VERSION = "1.0.1";
 
-export const TV_TERMS_AND_CONDITIONS_VERSION = 1;
+export const TV_TERMS_AND_CONDITIONS_VERSION = 2;

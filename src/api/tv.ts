@@ -45,7 +45,17 @@ router.get("/daily-data", async (req: Request, res: Response): Promise<void> => 
             date: {$gte: today}
         }).sort({date: 1});
 
-        res.status(200).json(result);
+        const filteredResult = result.reduce((acc: IDailyData[], current) => {
+            const x = acc.find(item => item.date.getTime() === current.date.getTime());
+            if (!x) {
+                return acc.concat([current]);
+            } else {
+                return acc;
+            }
+        }, []);
+
+        res.status(200).json(filteredResult);
+
     } catch (error) {
         const serverLogMessage = "Error while trying to get daily data for username: " + username;
 
@@ -92,9 +102,12 @@ router.get("/terms-accepted", async (req: Request, res: Response): Promise<void>
     }
 
     try {
-        const result: ITermsAccepted | null = await TermsAccepted.findOne({deviceId});
+        const result: ITermsAccepted | null = await TermsAccepted.findOne({
+            deviceId,
+            termsVersion: TV_TERMS_AND_CONDITIONS_VERSION
+        });
 
-        if (!result || result.termsVersion !== CURRENT_TV_TERMS_VERSION) {
+        if (!result) {
             res.status(412).send("Terms not accepted by deviceId: " + deviceId);
             return;
         }
@@ -110,9 +123,9 @@ router.get("/terms-accepted", async (req: Request, res: Response): Promise<void>
 router.post("/accept-terms", async (req: Request, res: Response): Promise<void> => {
     if (checkTvVersion(req.headers, res)) return;
 
-    const {deviceId} = req.body;
+    const {deviceId, termsVersion} = req.body;
 
-    if (!deviceId) {
+    if (!deviceId || !termsVersion) {
         res.status(400).send("try harder ;)");
         return;
     }
@@ -121,14 +134,19 @@ router.post("/accept-terms", async (req: Request, res: Response): Promise<void> 
         const result: ITermsAccepted | null = await TermsAccepted.findOne({deviceId});
 
         if (result) {
-            res.status(409).send("Terms already accepted by deviceId: " + deviceId);
-            return;
+            if (result.termsVersion === termsVersion.toString()) {
+                res.status(409).send("Terms already accepted by deviceId: " + deviceId);
+                return;
+            } else {
+                result.termsVersion = termsVersion.toString();
+                await result.save();
+            }
+        } else {
+            await TermsAccepted.create({
+                deviceId,
+                termsVersion
+            });
         }
-
-        await TermsAccepted.create({
-            deviceId,
-            termsVersion: TV_TERMS_AND_CONDITIONS_VERSION
-        });
 
         res.status(200).send("Terms accepted by deviceId: " + deviceId);
     } catch (error) {
