@@ -104,7 +104,7 @@ router.get("/terms-accepted", async (req: Request, res: Response): Promise<void>
     try {
         const result: ITermsAccepted | null = await TermsAccepted.findOne({
             deviceId,
-            termsVersion: TV_TERMS_AND_CONDITIONS_VERSION
+            termsVersion: TV_TERMS_AND_CONDITIONS_VERSION.toString()
         });
 
         if (!result) {
