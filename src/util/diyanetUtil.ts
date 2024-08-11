@@ -27,8 +27,9 @@ export async function fetchMonthlyData(urlPara: number): Promise<void> {
 
     if (diyanetAuthentication.accessToken === "") {
         await loginWithDiyanet();
-    } else if (isCreationTimeMoreThan15MinutesAgo(diyanetAuthentication.creationTime)){
-        //get new token with refreshToken
+    } else if (isCreationTimeMoreThan14MinutesAgo(diyanetAuthentication.creationTime)){
+        diyanetAuthentication.creationTime = new Date();
+        await loginWithDiyanet();
     }
 
     const monthlyDataOptions: request.Options = {
@@ -162,10 +163,10 @@ function isDateAtLeast20DaysAhead(highestDate: Date): boolean {
     return highestDate >= dateIn20Days;
 }
 
-function isCreationTimeMoreThan15MinutesAgo(creationTime: Date): boolean {
-    const currentTime = new Date(); // Aktuelle Zeit
-    const fifteenMinutes = 15 * 60 * 1000; // 15 Minuten in Millisekunden
-    const timeDifference = currentTime.getTime() - creationTime.getTime(); // Differenz in Millisekunden
+function isCreationTimeMoreThan14MinutesAgo(creationTime: Date): boolean {
+    const currentTime = new Date();
+    const fourteenMinutes = 14 * 60 * 1000;
+    const timeDifference = currentTime.getTime() - creationTime.getTime();
 
-    return timeDifference >= fifteenMinutes;
+    return timeDifference >= fourteenMinutes;
 }
