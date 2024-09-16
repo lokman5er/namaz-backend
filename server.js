@@ -388,7 +388,7 @@ app.get('/api/getAllAnnouncements', async (req, res) => {
             endDate: new Date('2024-09-23T23:59:59')
         }
 
-        res.json({ result: announcement })
+        res.json({ result: [announcement] })
 
     } catch (error) {
         console.log(error)
