@@ -376,14 +376,20 @@ app.get('/api/getAllAnnouncements', async (req, res) => {
     const urlPara = user.urlPara
 
     try {
-        // Find all announcements whose endDate is greater than or equal to today at midnight
-        const today = new Date()
-        today.setHours(0, 0, 0, 0) // Set the time to midnight
-        const result = await Announcement.find({
-            urlPara,
-            endDate: { $gte: today }
-        }).sort({ startDate: 1 })
-        res.json({ result })
+
+        const announcement = {
+            urlPara: urlPara,
+            text: {
+                tr: "Önemli duyuru: Bu uygulama 24.09.2024 tarihinde kapatılacaktır. Hizmetlerimizi kullanmaya devam etmek istiyorsanız, lütfen yeni versiyon hakkında bilgi almak için www.salah.tv adresini ziyaret edin. Bugüne kadarki kullanımınız için teşekkür eder, sizi gelecekte de kullanıcımız olarak görmekten mutluluk duyarız.",
+                ar: "إشعار هام: سيتم إيقاف هذا التطبيق في ٢٤.٠٩.٢٠٢٤. إذا كنت ترغب في الاستمرار في استخدام خدماتنا، يرجى زيارة www.salah.tv للحصول على معلومات حول الإصدار الجديد. نشكرك على استخدامك حتى الآن ونأمل أن نرحب بك كمستخدم في المستقبل.",
+                de: "Wichtige Mitteilung: Diese App wird am 24.09.2024 eingestellt. Falls Sie unsere Dienste weiterhin nutzen möchten, besuchen Sie bitte www.salah.tv für Informationen über die neue Version. Wir danken Ihnen für Ihre bisherige Nutzung und hoffen, Sie auch in Zukunft als Nutzer begrüßen zu dürfen."
+            },
+            startDate: new Date('2024-09-15T00:00:00'),
+            endDate: new Date('2024-09-23T23:59:59')
+        }
+
+        res.json({ announcement })
+
     } catch (error) {
         console.log(error)
     }
